@@ -1,0 +1,31 @@
+# secrets
+.env
+*.env.local
+
+# datasets (downloaded, large, licensed separately)
+data/raw/
+data/cache/
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# node
+node_modules/
+dist/
+dev-dist/
+coverage/
+*.tsbuildinfo
+
+# editors / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+Thumbs.db
+.DS_Store

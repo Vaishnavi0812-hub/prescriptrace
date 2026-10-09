@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. Warm, clinical-but-human palette: no pure black, no cool grey.
+ * Severity colours are never used alone; always paired with an icon and a text label.
+ * Each token becomes a Tailwind utility (bg-cream, text-espresso, border-sand, bg-sev-major…)
+ * and a CSS variable (var(--color-primary)).
+ */
+@theme {
+  --color-cream: #fbf7f0;
+  --color-surface: #ffffff;
+  --color-primary: #1f5f4a;
+  --color-primary-hover: #164536;
+  --color-accent: #e07a5f;
+  --color-espresso: #2b2118;
+  --color-muted: #6b5b4d;
+  --color-sand: #e6dccb;
+
+  --color-sev-contraindicated: #b3261e;
+  --color-sev-major: #d9622b;
+  --color-sev-moderate: #e3a72f;
+  --color-sev-minor: #7a9a3a;
+  --color-sev-none: #1f5f4a;
+
+  --font-sans: "Noto Sans", "Noto Sans Devanagari", "Noto Sans Kannada", system-ui,
+    -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-cream);
+    color: var(--color-espresso);
+    font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Visible, high-contrast focus ring for keyboard users. */
+  :focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}

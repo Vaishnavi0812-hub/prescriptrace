@@ -1,0 +1,27 @@
+{
+  "app": {
+    "name": "PrescripTrace",
+    "tagline": "Medicine safety check"
+  },
+  "check": {
+    "addMedicine": "Add medicine",
+    "addMedicineHint": "Type a brand or generic name, e.g. Dolo 650 or paracetamol",
+    "scan": "Scan prescription",
+    "comingSoon": "Coming in a later build stage"
+  },
+  "footer": {
+    "disclaimer": "Decision support only. Not a diagnosis or prescription. If something looks wrong, consider confirming with the prescriber.",
+    "about": "About & data sources",
+    "dataStatus": "Data status",
+    "apiOk": "Connected · {{count}} datasets loaded",
+    "apiDown": "Offline or server unreachable",
+    "apiChecking": "Checking connection…"
+  },
+  "about": {
+    "title": "About PrescripTrace",
+    "what": "PrescripTrace checks a list of medicines for known interactions, duplicated ingredients and official recall or quality alerts. Every warning shows where it came from.",
+    "notWhat": "It does not detect fake medicines. It matches medicines against official alert lists and gives you a checklist for inspecting the pack.",
+    "back": "Back to check"
+  },
+  "notFound": "Page not found"
+}

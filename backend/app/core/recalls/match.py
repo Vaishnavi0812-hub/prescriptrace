@@ -56,7 +56,7 @@ class MedicineRef:
 class RecallFlag:
     medicine_id: str
     medicine_label: str
-    match: str  # batch | product | ingredient
+    match: str  # batch | product | related | ingredient
     level: str  # serious | warning | info
     region: str
     kind: str  # e.g. "Spurious (CDSCO)", "Class II recall (US FDA)"
@@ -94,7 +94,7 @@ class RecallResult:
 
 
 LEVEL_RANK = {"serious": 0, "warning": 1, "info": 2}
-MATCH_RANK = {"batch": 0, "product": 1, "ingredient": 2}
+MATCH_RANK = {"batch": 0, "product": 1, "related": 2, "ingredient": 3}
 
 
 def check_recalls(
@@ -111,14 +111,19 @@ def check_recalls(
         for rec in records:
             shares_ingredient = bool(set(med.ingredients) & set(rec.ingredients))
             same_product = bool(set(med.product_rxcuis) & set(rec.product_rxcuis)) or any(
-                _brand_matches(key, b) for key in keys for b in rec.brands
+                _brand_relation(key, b) == "same" for key in keys for b in rec.brands
             )
-            if not (shares_ingredient or same_product):
+            related = not same_product and any(
+                _brand_relation(key, b) == "related" for key in keys for b in rec.brands
+            )
+            if not (shares_ingredient or same_product or related):
                 continue
             if batch and _batch_listed(batch, rec.lot_info):
                 flags.append(_flag(med, rec, "batch", datasets))
             elif same_product:
                 flags.append(_flag(med, rec, "product", datasets))
+            elif related:
+                flags.append(_flag(med, rec, "related", datasets))
             else:
                 by_ingredient[(med.id, rec.region)].append(_flag(med, rec, "ingredient", datasets))
     flags.sort(
@@ -170,10 +175,17 @@ def brand_keys(names: tuple[str, ...]) -> set[str]:
     return keys
 
 
-def _brand_matches(key: str, recall_brand: str) -> bool:
-    """'telma' matches 'Telma 40' and 'TELMA-H'; 'crocin' does not match 'crocinol'."""
+def _brand_relation(key: str, recall_brand: str) -> str | None:
+    """'same': 'telma' vs 'Telma 40' (only strength differs).
+    'related': 'telma' vs 'Telma H' (same brand family, different product).
+    None: 'crocin' vs 'crocinol'.
+    """
     other = strength_free(norm(recall_brand))
-    return other == key or other.startswith(key + " ")
+    if other == key:
+        return "same"
+    if other.startswith(key + " "):
+        return "related"
+    return None
 
 
 # ------------------------------------------------------------------ wording
@@ -212,6 +224,14 @@ def _flag(
             "the alert are affected."
         )
         consider = "Consider checking the batch number on your pack against the alert."
+    elif match == "related":
+        level = "warning" if level == "serious" else level
+        title = f"{med.label}: a related product with a similar name is in a {kind}"
+        simple = (
+            f"An official alert lists {rec.product_description}, which has a similar brand name "
+            "but is a different product. Counterfeiters often copy popular brand names."
+        )
+        consider = "Consider checking that your pack is genuine using the checklist below."
     else:
         level = "info"
         title = f"{med.label}: other products with the same ingredient were in a {kind}"

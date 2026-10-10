@@ -20,7 +20,8 @@ from dataclasses import dataclass, replace
 from rapidfuzz import fuzz, process
 
 from app.core.normalise.parse import ParsedLine, Strength, ocr_variants, parse
-from app.core.normalise.vocab import Entry, Vocabulary
+from app.core.normalise.vocab import KIND_RANK, Entry, Vocabulary
+from app.core.text import norm
 
 # Common pharmacy shorthand. Each expansion must itself be an exact vocabulary name, so a
 # wrong or missing expansion yields no match rather than a wrong one.
@@ -132,6 +133,37 @@ class Normaliser:
             strengths=parsed.strengths,
             dose_form=parsed.dose_form,
         )
+
+    def suggest(self, text: str, limit: int = 10) -> list[Candidate]:
+        """Autocomplete: names starting with the typed text, then typo-tolerant matches.
+
+        Unlike normalise(), several names for the same drug may appear (brand and generic shown
+        together), but each name appears once. Never calls external services.
+        """
+        query = parse(text).full or norm(text)
+        if len(query) < 2:
+            return []
+        keys = self.vocab.fuzzy_keys
+        seen: set[str] = set()
+        out: list[Candidate] = []
+        for key in keys[bisect.bisect_left(keys, query) :]:
+            if not key.startswith(query) or len(out) >= limit * 3:
+                break
+            for entry in self.vocab.exact[key]:
+                if entry.ref not in seen:
+                    seen.add(entry.ref)
+                    out.append(self._candidate(entry, 1.0, "prefix"))
+        out.sort(key=lambda c: (KIND_RANK.get(c.kind, 9), len(c.label), c.label.lower()))
+        out = out[:limit]
+        if len(out) < limit and len(query) >= MIN_PREFIX:
+            for cand in self._fuzzy(parse(text).core or query):
+                # Only genuine typo matches, never weak look-alikes ("telma" → "elm").
+                if cand.confidence < self.confirm_min:
+                    continue
+                if cand.ref not in seen and len(out) < limit:
+                    seen.add(cand.ref)
+                    out.append(cand)
+        return out
 
     # ------------------------------------------------------------------ steps
 

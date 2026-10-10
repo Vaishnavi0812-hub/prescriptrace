@@ -56,8 +56,10 @@ def test_counterfeit_telma_batch_is_flagged(session, normaliser) -> None:  # typ
 def test_telma_without_batch_points_to_brand_alert(session, normaliser) -> None:  # type: ignore[no-untyped-def]
     need_cdsco(session)
     result = run(session, med(normaliser, "Telma 40"))
-    assert result.flags and all(f.match == "product" for f in result.flags)
-    assert any("Telma 40" in f.title for f in result.flags)
+    matches = {(f.match, f.product_description.split(" (")[0]) for f in result.flags}
+    assert any(m == "product" for m, _ in matches)  # the Telma 40 batches
+    assert ("related", "Telma H") in matches  # same brand family, different product
+    assert not [f for f in result.flags if f.match == "batch"]
 
 
 def test_paracetamol_us_recalls_are_information_only(session, normaliser) -> None:  # type: ignore[no-untyped-def]

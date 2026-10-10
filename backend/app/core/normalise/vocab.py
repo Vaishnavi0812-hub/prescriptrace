@@ -32,6 +32,7 @@ class Vocabulary:
     entries: list[Entry]
     exact: dict[str, list[Entry]] = field(init=False)
     fuzzy_keys: list[str] = field(init=False)
+    by_ref: dict[str, Entry] = field(init=False)  # "brand:151392" → entry
 
     def __post_init__(self) -> None:
         exact: dict[str, list[Entry]] = defaultdict(list)
@@ -46,6 +47,10 @@ class Vocabulary:
         for bucket in exact.values():
             bucket.sort(key=lambda e: (KIND_RANK.get(e.kind, 9), e.text))
         self.exact = dict(exact)
+        self.by_ref = {}
+        for entry in self.entries:
+            if entry.ingredients:
+                self.by_ref.setdefault(entry.ref, entry)
         self.fuzzy_keys = sorted(
             key for key, bucket in self.exact.items() if any(e.kind in FUZZY_KINDS for e in bucket)
         )

@@ -64,7 +64,8 @@ def test_batch_on_a_different_products_alert_still_counts() -> None:
 def test_brand_prefix_rules() -> None:
     tylenol = MedicineRef("2", "Tylenol", ("PCM",), ("Tylenol",))
     flags = check_recalls([tylenol], ALL).flags
-    assert [(f.match, f.level, f.region) for f in flags] == [("product", "serious", "US")]
+    # "TYLENOL EXTRA STRENGTH" is the same brand family but a different product.
+    assert [(f.match, f.level, f.region) for f in flags] == [("related", "warning", "US")]
     crocinol = MedicineRef("3", "Tylenolix", ("ZZZ",), ("Tylenolix",))
     assert check_recalls([crocinol], ALL).flags == ()
 
@@ -98,3 +99,16 @@ def test_recall_wording_never_tells_anyone_to_stop_a_medicine(phrase: str) -> No
     text = " ".join(f.title + f.simple + f.consider for f in flags)
     text += " ".join(i.check + i.why for i in CHECKLIST)
     assert phrase not in text.lower()
+
+
+def test_related_brand_is_a_warning_not_a_same_product_match() -> None:
+    telma_h = rec(
+        5,
+        classification="Spurious",
+        ingredients=("TEL", "HCT"),
+        brands=("Telma H",),
+        product_description="Telma H (Telmisartan 40mg & Hydrochlorothiazide 12.5mg)",
+    )
+    (flag,) = check_recalls([TELMA], [telma_h]).flags
+    assert (flag.match, flag.level) == ("related", "warning")
+    assert "different product" in flag.simple

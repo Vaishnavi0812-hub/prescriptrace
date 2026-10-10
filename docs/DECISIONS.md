@@ -148,3 +148,21 @@ implemented and finalised in Stage 10.
   dataset limitations and must be shown in the UI. WHO Medical Product Alerts were assessed and
   deferred: the list exposes only ~10 alerts without JavaScript, and affected batches are in
   narrative text or images, so extraction would be unreliable (future work).
+
+## ADR-014 API shape: one check call, never guess, compact responses
+- **Context:** Cheap phones on slow networks; staff need one answer, and unclear items must not
+  silently change the result.
+- **Decision:** `POST /api/v1/check` returns everything for one screen (headline, findings,
+  check-the-label notes, recall flags, checklist, data versions, disclaimer). Items that are not
+  "resolved" (≥0.90) and have no user selection are returned in `unresolved` with candidates and
+  are excluded until the user picks one. A selection must name known RxCUIs (422 otherwise).
+  Headline (`app/core/summary.py`): needs attention = contraindicated/major findings + medicines
+  with a serious recall flag (counted once per medicine); worth checking = moderate findings +
+  medicines with recall warnings. Recall brand matching applies only to medicines identified as
+  a brand (generics would otherwise match US records whose "brand" field is the generic name);
+  same brand name = "product", same brand family (e.g. Telma H for Telma 40) = "related", capped
+  at warning. Responses are gzip-compressed (5-drug check: 71 KB → 12 KB). Per-IP rate limits
+  (slowapi; search 120/min, normalise 60/min, check 30/min). Invalid input is always 422, even
+  before data is loaded (the normaliser is fetched inside handlers, not as a dependency).
+- **Consequences:** Measured on this machine: 5-drug check p50 ~130 ms, p95 ~190 ms. No accounts,
+  no request bodies stored or logged.

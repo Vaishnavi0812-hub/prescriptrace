@@ -18,6 +18,14 @@ class Settings(BaseSettings):
     normalise_auto_accept: float = Field(0.90, ge=0, le=1)
     normalise_confirm_min: float = Field(0.60, ge=0, le=1)
 
+    # Ask RxNav for suggestions when nothing local matches (capped below auto-accept).
+    normalise_external: bool = True
+
+    rate_limit_enabled: bool = True
+    rate_limit_search: str = "120/minute"
+    rate_limit_normalise: str = "60/minute"
+    rate_limit_check: str = "30/minute"
+
     openfda_api_key: str = ""
     ocr_engine: str = "tesseract"
     llm_provider: str = "none"

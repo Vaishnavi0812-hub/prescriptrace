@@ -12,9 +12,11 @@ cites its source.
 > recall and alert lists, plus a physical-verification checklist (packaging, batch, seal, price,
 > supplier).
 
-**Status:** Stage 1 of 10 (skeleton). The full README (screenshots, architecture, data licences,
-evaluation) comes in Stage 10. See [docs/PLAN.md](docs/PLAN.md) and
-[docs/DATA_FEASIBILITY.md](docs/DATA_FEASIBILITY.md).
+**Status:** Stages 1–4 of 10 done: real data loaded (RxNorm, DDInter, openFDA recalls and
+labels, RxClass/MED-RT, curated Indian brands), drug-name normalisation and the interaction
+engine are working and tested. The user interface arrives in Stage 7. The full README
+(screenshots, architecture, evaluation) comes in Stage 10. See [docs/PLAN.md](docs/PLAN.md),
+[docs/DATA_FEASIBILITY.md](docs/DATA_FEASIBILITY.md) and [docs/DECISIONS.md](docs/DECISIONS.md).
 
 ## Run it on Windows (Docker)
 
@@ -29,6 +31,12 @@ git clone <repo-url> prescriptrace; cd prescriptrace
 
 - App: http://localhost:5173
 - API docs: http://localhost:8000/api/docs
+
+Load the datasets (first run takes 1–2 hours, mostly API calls; later runs reuse the cache):
+
+```powershell
+docker compose run --rm backend python -m app.ingest all
+```
 
 Other tasks: `.\scripts\dev.ps1 test | lint | fmt | migrate | logs | down`
 (`make <target>` does the same from bash).

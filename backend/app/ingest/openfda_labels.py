@@ -283,7 +283,7 @@ def _write_flags(
 
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
     with (REPORT_DIR / "label_flag_candidates.csv").open("w", newline="", encoding="utf-8") as fh:
-        writer = csv.writer(fh)
+        writer = csv.writer(fh, lineterminator="\n")
         writer.writerow(
             ["flag", "ingredient_rxcui", "label_title", "set_id", "section", "sentence", "status"]
         )

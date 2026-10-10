@@ -201,7 +201,7 @@ def _write_unmapped_report(
         counts[id_b] = counts.get(id_b, 0) + 1
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as fh:
-        writer = csv.writer(fh)
+        writer = csv.writer(fh, lineterminator="\n")
         writer.writerow(["ddinter_id", "name", "name_norm", "pairs_lost"])
         for ddi_id, name in sorted(unmapped, key=lambda x: -counts.get(x[0], 0)):
             writer.writerow([ddi_id, name, norm(name), counts.get(ddi_id, 0)])

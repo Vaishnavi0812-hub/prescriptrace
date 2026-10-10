@@ -27,14 +27,17 @@ from app.ingest.common import IngestError
 
 REPORT_DIR = Path(__file__).resolve().parents[2] / "data" / "reports"
 
+# Dependency order. Every source except `classes` may add ingredients (via RxNav gap-fill), so
+# `classes` runs last: otherwise ingredients such as aceclofenac would have no drug classes and
+# the duplicate-therapy/cumulative rules would silently miss them.
 SOURCES: dict[str, Callable[..., None]] = {
     "rxnorm": rxnorm.run,
+    "synonyms": synonyms.run,
+    "india_brands": india_brands.run,
     "ddinter": lambda s, refresh: ddinter.run(s, refresh, report_dir=REPORT_DIR),
     "recalls": openfda_recalls.run,
     "labels": openfda_labels.run,
     "classes": rxclass.run,
-    "india_brands": india_brands.run,
-    "synonyms": synonyms.run,
 }
 
 

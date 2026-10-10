@@ -118,7 +118,7 @@ def verify() -> int:
             }
         )
     with VERIFIED.open("w", newline="", encoding="utf-8") as fh:
-        writer = csv.DictWriter(fh, VERIFIED_FIELDS)
+        writer = csv.DictWriter(fh, VERIFIED_FIELDS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(out)
     log.info("verified %s/%s rows -> %s", len(out) - failures, len(out), VERIFIED.name)

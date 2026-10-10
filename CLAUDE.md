@@ -100,9 +100,8 @@ Engine: `check(medicines, load_snapshot(session, rxcuis), PatientContext(...))`.
 selector exists in the data). Never write rule text that tells anyone to stop/change a medicine
 (`FORBIDDEN_PHRASES` test).
 
-Editing gotcha: do not use `sed` or Python heredocs to write `
-`, `` or other escapes into
-source files (Git Bash/Python turned them into real newlines/backspaces three times). Use the
+Editing gotcha: do not use sed or Python heredocs to write backslash escapes (newline, word
+boundary) into source files (Git Bash/Python turned them into real newlines/backspaces three times). Use the
 Edit tool for such changes, and never `# fmt: skip` inside an expression (ruff RUF028).
 
 Ingestion gotchas: Alembic autogenerate misses CHECK-constraint changes (write those migrations by

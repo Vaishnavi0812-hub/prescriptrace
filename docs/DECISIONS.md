@@ -166,3 +166,21 @@ implemented and finalised in Stage 10.
   before data is loaded (the normaliser is fetched inside handlers, not as a dependency).
 - **Consequences:** Measured on this machine: 5-drug check p50 ~130 ms, p95 ~190 ms. No accounts,
   no request bodies stored or logged.
+
+## ADR-015 Accessible colour use of the brief's palette
+- **Context:** Measured WCAG 2.1 contrast on white: moderate amber #E3A72F 2.1:1 (fails even for
+  icons, which need 3:1), accent #E07A5F 2.95:1, major #D9622B 3.7:1 and minor #7A9A3A 3.2:1
+  (fail for text, which needs 4.5:1), border #E6DCCB 1.4:1 (too faint for form fields).
+- **Decision:** Keep the brief's colours for fills, tints and card stripes; add "-ink" shades of
+  the same hues for text, icons and focus rings (major #B04A18 5.5:1, moderate #8A5B00 5.9:1,
+  minor #56702A 5.6:1, accent #B5523A 4.7:1 on cream) and a form-field border #9C866D (≥3.2:1).
+  Severity is always icon + text label + colour.
+- **Consequences:** The warm character is preserved and every text/icon pairing meets AA.
+
+## ADR-016 Results screen built for small phones
+- **Decision:** Order = headline → needs attention → recalls/alerts (+ checklist) → duplicates →
+  worth checking → check-the-label notes → other (collapsed) → careful "no known issues" →
+  sources. One recall card per medicine (its most serious alert), further alerts for that
+  medicine collapsed; label quotes collapsed to one line each; Simple/Professional toggle (a
+  per-device preference in localStorage, not patient data); medicine list in sessionStorage only.
+  Verified in a real browser at 360 px: no horizontal overflow, interactive targets ≥44 px.

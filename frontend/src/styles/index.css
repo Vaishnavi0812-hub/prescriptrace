@@ -2,25 +2,35 @@
 
 /*
  * Design tokens. Warm, clinical-but-human palette: no pure black, no cool grey.
- * Severity colours are never used alone; always paired with an icon and a text label.
- * Each token becomes a Tailwind utility (bg-cream, text-espresso, border-sand, bg-sev-major…)
- * and a CSS variable (var(--color-primary)).
+ * Each token becomes a Tailwind utility (bg-cream, text-espresso, border-sand…) and a CSS variable.
+ *
+ * Contrast (WCAG 2.1, measured): the brief's severity colours and accent are kept for fills, tints
+ * and stripes, but several are too light for text/icons on white (moderate amber 2.1:1, accent
+ * 2.95:1, major 3.7:1, minor 3.2:1). "-ink" shades of the same hues are used for text, icons and
+ * focus rings (all ≥4.6:1). Inputs use border-strong (≥3.2:1) since sand (1.4:1) is too faint
+ * for a form-field boundary. Severity is never shown by colour alone: always icon + text label.
  */
 @theme {
   --color-cream: #fbf7f0;
   --color-surface: #ffffff;
-  --color-primary: #1f5f4a;
+  --color-primary: #1f5f4a; /* 7.5:1 on white */
   --color-primary-hover: #164536;
   --color-accent: #e07a5f;
-  --color-espresso: #2b2118;
-  --color-muted: #6b5b4d;
-  --color-sand: #e6dccb;
+  --color-accent-ink: #b5523a; /* 4.7:1 on cream: focus rings, accent text */
+  --color-espresso: #2b2118; /* 14.8:1 on cream */
+  --color-muted: #6b5b4d; /* 6.1:1 on cream */
+  --color-sand: #e6dccb; /* dividers and card borders only */
+  --color-border-strong: #9c866d; /* form-field borders, 3.3:1 on cream */
 
-  --color-sev-contraindicated: #b3261e;
+  --color-sev-contraindicated: #b3261e; /* 6.5:1, also used as ink */
   --color-sev-major: #d9622b;
   --color-sev-moderate: #e3a72f;
   --color-sev-minor: #7a9a3a;
   --color-sev-none: #1f5f4a;
+
+  --color-sev-major-ink: #b04a18; /* 5.5:1 */
+  --color-sev-moderate-ink: #8a5b00; /* 5.9:1 */
+  --color-sev-minor-ink: #56702a; /* 5.6:1 */
 
   --font-sans: "Noto Sans", "Noto Sans Devanagari", "Noto Sans Kannada", system-ui,
     -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -36,7 +46,16 @@
 
   /* Visible, high-contrast focus ring for keyboard users. */
   :focus-visible {
-    outline: 3px solid var(--color-accent);
+    outline: 3px solid var(--color-accent-ink);
     outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }

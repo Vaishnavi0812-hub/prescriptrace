@@ -2,8 +2,10 @@ import { useTranslation } from "react-i18next";
 import { Route, Routes } from "react-router-dom";
 
 import Layout from "./components/Layout";
+import { MedicationsProvider } from "./lib/medications";
 import AboutPage from "./routes/AboutPage";
 import CheckPage from "./routes/CheckPage";
+import ResultsPage from "./routes/ResultsPage";
 
 function NotFound() {
   const { t } = useTranslation();
@@ -12,12 +14,15 @@ function NotFound() {
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route index element={<CheckPage />} />
-        <Route path="about" element={<AboutPage />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+    <MedicationsProvider>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<CheckPage />} />
+          <Route path="results" element={<ResultsPage />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </MedicationsProvider>
   );
 }

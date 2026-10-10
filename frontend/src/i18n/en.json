@@ -3,11 +3,166 @@
     "name": "PrescripTrace",
     "tagline": "Medicine safety check"
   },
+  "common": {
+    "retry": "Try again"
+  },
   "check": {
     "addMedicine": "Add medicine",
-    "addMedicineHint": "Type a brand or generic name, e.g. Dolo 650 or paracetamol",
+    "placeholder": "e.g. Dolo 650 or paracetamol",
+    "addMedicineHint": "Type a brand or generic name. Pick from the list, or press Add.",
+    "add": "Add",
+    "contains": "Contains: {{names}}",
+    "noMatches": "No matching medicine. Press Add to use what you typed.",
+    "searchOffline": "Suggestions are unavailable (no connection). You can still press Add.",
     "scan": "Scan prescription",
-    "comingSoon": "Coming in a later build stage"
+    "comingSoon": "coming soon",
+    "empty": "No medicines yet. Add each medicine the patient takes.",
+    "listTitle_one": "{{count}} medicine",
+    "listTitle_other": "{{count}} medicines",
+    "clear": "Clear list",
+    "remove": "Remove {{name}}",
+    "recognising": "Checking the name…",
+    "pleaseConfirm": "Please confirm which medicine this is",
+    "notRecognised": "We could not recognise this name",
+    "choices": "Possible matches",
+    "tryGeneric": "Try typing the generic name, for example the ingredient printed under the brand name.",
+    "noneOfThese": "None of these? Remove it and type the generic name.",
+    "recogniseFailed": "Could not check this name (connection problem).",
+    "addBatch": "Add batch number (optional)",
+    "batch": "Batch number (from the strip or box)",
+    "batchPlaceholder": "e.g. K18230707",
+    "batchHelp": "Used only to look for this batch in official recall and quality alerts.",
+    "run": "Check safety",
+    "waiting_one": "{{count}} medicine still needs confirming",
+    "waiting_other": "{{count}} medicines still need confirming"
+  },
+  "kind": {
+    "india_brand": "Brand (India)",
+    "brand": "Brand",
+    "ingredient": "Generic",
+    "synonym": "Generic",
+    "product": "Product",
+    "combination": "Combination",
+    "external": "Suggestion"
+  },
+  "context": {
+    "title": "About the patient (optional)",
+    "selected_one": "{{count}} selected",
+    "selected_other": "{{count}} selected",
+    "privacy": "Optional. No names or ID numbers are asked for or stored.",
+    "age": "Age group",
+    "ages": {
+      "unknown": "Not given",
+      "child": "Child",
+      "adult": "Adult",
+      "older": "Older adult (65+)"
+    },
+    "conditions": "Conditions",
+    "pregnant": "Pregnant",
+    "renal": "Kidney problems",
+    "hepatic": "Liver problems"
+  },
+  "contextName": {
+    "pregnancy": "pregnancy",
+    "renal": "kidney problems",
+    "hepatic": "liver problems",
+    "paediatric": "children",
+    "geriatric": "older adults"
+  },
+  "severity": {
+    "contraindicated": "Do not combine",
+    "major": "Major",
+    "moderate": "Moderate",
+    "minor": "Minor",
+    "unknown": "Not graded",
+    "serious": "Serious alert",
+    "warning": "Alert",
+    "info": "For information",
+    "none": "No known issues"
+  },
+  "results": {
+    "notReady": "Add and confirm at least one medicine first.",
+    "back": "Back to the medicine list",
+    "edit": "Change the medicine list",
+    "loading": "Checking the medicines…",
+    "offlineTitle": "No connection",
+    "offlineBody": "We could not reach the server. Check the internet connection and try again.",
+    "errorTitle": "Something went wrong",
+    "checked_one": "{{count}} medicine checked",
+    "checked_other": "{{count}} medicines checked",
+    "worthCount_one": "{{count}} more worth checking",
+    "worthCount_other": "{{count}} more worth checking",
+    "detailLabel": "Explanation detail",
+    "detail": {
+      "simple": "Simple",
+      "professional": "Professional"
+    },
+    "attention": "Needs attention",
+    "duplicates": "Duplicate medicines",
+    "worth": "Worth checking",
+    "notes": "Check the label (for this patient)",
+    "readLabel": "Read the full label",
+    "other_one": "{{count}} other listed interaction (minor or not graded)",
+    "other_other": "{{count}} other listed interactions (minor or not graded)",
+    "noKnown": "No known issues found in our data",
+    "quietPairs_one": "{{count}} pair checked with nothing found",
+    "quietPairs_other": "{{count}} pairs checked with nothing found",
+    "sources": "Data sources used",
+    "whatItMeans": "What this means:",
+    "whatToConsider": "What to consider:",
+    "alsoApplies": "Also:",
+    "fromLabel": "From an FDA label (lower confidence)",
+    "evidence_one": "Show source ({{count}})",
+    "evidence_other": "Show sources ({{count}})",
+    "record": "Record",
+    "openSource": "Open source",
+    "confidence": {
+      "high": "Based on a structured dataset.",
+      "medium": "Based on label text or a rule; reviewed automatically.",
+      "low": "Based only on label wording; lower confidence."
+    },
+    "notesHelp": "Quoted from the official label. Tap a line to read it."
+  },
+  "recalls": {
+    "title": "Recalls and quality alerts",
+    "notDetection": "This app cannot tell whether a medicine is fake. It looks for official alerts and gives a checklist to inspect the pack.",
+    "none": "No recall or quality alert for these products in our data.",
+    "match": {
+      "batch": "Your batch is listed",
+      "product": "Same product name",
+      "related": "Similar brand name",
+      "ingredient": "Same ingredient, different product"
+    },
+    "product": "Product",
+    "batch": "Batch / lot",
+    "reason": "Reason",
+    "firm": "Company",
+    "date": "Date",
+    "sameIngredient_one": "{{count}} alert about other products with the same ingredient",
+    "sameIngredient_other": "{{count}} alerts about other products with the same ingredient",
+    "sameIngredientHelp": "These are different products. They are shown for information and do not mean your product is affected.",
+    "summaryLine": "{{medicine}}: {{count}} in {{region}}",
+    "coverage": "Alert data",
+    "more_one": "{{count}} more alert for {{medicine}}",
+    "more_other": "{{count}} more alerts for {{medicine}}"
+  },
+  "region": {
+    "US": "the USA (FDA)",
+    "IN": "India (CDSCO)",
+    "WHO": "WHO alerts"
+  },
+  "checklist": {
+    "title": "Checklist: inspect the pack",
+    "source": "Source"
+  },
+  "glossary": {
+    "QT interval": "A part of the heartbeat seen on an ECG. If it gets too long, a dangerous irregular heartbeat can happen.",
+    "QT prolongation": "Lengthening of the QT interval on an ECG, which raises the risk of a dangerous irregular heartbeat.",
+    "serotonin syndrome": "A reaction to too much serotonin: shaking, sweating, fever, fast heartbeat and confusion. It can be serious.",
+    "NSAID": "A group of pain and swelling medicines such as ibuprofen, diclofenac and aspirin.",
+    "contraindicated": "Listed as not to be used together, or not to be used in this situation.",
+    "hyperkalaemia": "Too much potassium in the blood, which can affect the heart.",
+    "CNS": "The brain and spinal cord (central nervous system)."
   },
   "footer": {
     "disclaimer": "Decision support only. Not a diagnosis or prescription. If something looks wrong, consider confirming with the prescriber.",
@@ -21,6 +176,15 @@
     "title": "About PrescripTrace",
     "what": "PrescripTrace checks a list of medicines for known interactions, duplicated ingredients and official recall or quality alerts. Every warning shows where it came from.",
     "notWhat": "It does not detect fake medicines. It matches medicines against official alert lists and gives you a checklist for inspecting the pack.",
+    "privacy": "The medicine list stays in this browser tab only and is cleared when you close it. No patient names or ID numbers are asked for or stored.",
+    "disclaimer": "Decision support only, not a diagnosis or prescription. Absence of a warning is not proof of safety. Consider confirming with the prescriber.",
+    "dataTitle": "Data sources",
+    "dataError": "Could not load the data sources (no connection).",
+    "version": "Version",
+    "updated": "Loaded on",
+    "records": "Records",
+    "licence": "Licence",
+    "region": "Region",
     "back": "Back to check"
   },
   "notFound": "Page not found"

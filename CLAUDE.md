@@ -16,7 +16,8 @@ pregnancy, renal/hepatic) → one prioritised, plain-language safety summary wit
 - [x] Stage 4: interaction engine + tests (`app/core/engine`, rules in `rules.yaml`, ADR-010/011)
 - [x] Stage 5: recall/alert flagging (`app/core/recalls`, CDSCO alerts, checklist; ADR-012/013)
 - [x] Stage 6: API layer (`app/api/v1.py`, `app/services/check_service.py`, ADR-014)
-- [ ] Stages 7–10 (see "Build stages" below). Stop for review after each stage; commit per stage.
+- [x] Stage 7: frontend core flow (search, confirm, context, results, About; ADR-015/016)
+- [ ] Stages 8–10 (see "Build stages" below). Stop for review after each stage; commit per stage.
 
 ## Approved data sources
 - Interactions: DDInter 2.0 (CC BY-NC-SA 4.0, **non-commercial**; all 14 ATC files incl. unlisted

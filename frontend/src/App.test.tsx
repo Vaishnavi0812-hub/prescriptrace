@@ -28,8 +28,8 @@ describe("App shell", () => {
   it("lands on the check tool, not a marketing page", () => {
     mockFetch(new Promise(() => {}));
     renderAt("/");
-    expect(screen.getByLabelText("Add medicine")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Scan prescription" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Add medicine" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Scan prescription/ })).toBeInTheDocument();
   });
 
   it("always shows the decision-support disclaimer", () => {

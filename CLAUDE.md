@@ -25,7 +25,8 @@ pregnancy, renal/hepatic) → one prioritised, plain-language safety summary wit
 - Indian brands: curated table, every row cites a source. No Kaggle scrape.
 - Classes: RxClass EPC + MED-RT; QT/serotonergic/CNS-depressant flags from label text with a
   committed human-review file.
-- Recalls: openFDA enforcement bulk. CDSCO/WHO = Stage 5 stretch.
+- Recalls: openFDA enforcement bulk + CDSCO NSQ/spurious PDFs (validated; coverage ends mid-2025,
+  newer CDSCO portal not accessible). WHO alerts deferred (not reliably extractable).
 - Excluded: RxNav interaction API (404), TWOSIDES, DrugBank. Eval: CRESCENDDI (CC0).
 
 ## Honesty rules (non-negotiable)

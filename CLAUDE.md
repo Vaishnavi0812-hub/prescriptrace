@@ -13,7 +13,8 @@ pregnancy, renal/hepatic) → one prioritised, plain-language safety summary wit
 - [x] Stage 1: skeleton, docker-compose, DB + initial migration, CI
 - [x] Stage 2: ingestion with real data (user will run everything together later)
 - [x] Stage 3: normalisation module + tests (`app/core/normalise`, ADR-009)
-- [ ] Stages 4–10 (see "Build stages" below). Stop for review after each stage; commit per stage.
+- [x] Stage 4: interaction engine + tests (`app/core/engine`, rules in `rules.yaml`, ADR-010/011)
+- [ ] Stages 5–10 (see "Build stages" below). Stop for review after each stage; commit per stage.
 
 ## Approved data sources
 - Interactions: DDInter 2.0 (CC BY-NC-SA 4.0, **non-commercial**; all 14 ATC files incl. unlisted
@@ -93,6 +94,11 @@ Data ingestion (run in the backend container; order matters, `all` runs them in 
 Normaliser: `Normaliser(load_vocabulary(session)).normalise(text)`; thresholds in config
 (`NORMALISE_AUTO_ACCEPT`, `NORMALISE_CONFIRM_MIN`). Add shorthand to `ABBREVIATIONS` in
 `app/core/normalise/matcher.py` only if the expansion is an exact vocabulary name.
+
+Engine: `check(medicines, load_snapshot(session, rxcuis), PatientContext(...))`. Rules live in
+`backend/app/core/engine/rules.yaml` (validated on load; `tests/db/test_engine_real.py` checks every
+selector exists in the data). Never write rule text that tells anyone to stop/change a medicine
+(`FORBIDDEN_PHRASES` test).
 
 Ingestion gotchas: Alembic autogenerate misses CHECK-constraint changes (write those migrations by
 hand with `op.f(name)`; `tests/db/test_constraints.py` catches drift). RxNorm RRF relation rows read

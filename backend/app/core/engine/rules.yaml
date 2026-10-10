@@ -1,0 +1,248 @@
+# PrescripTrace rule table: duplicate-therapy and cumulative (3+ drug) risk rules.
+#
+# This file is the single, auditable source of the engine's rule-based findings. Pairwise
+# interactions come from datasets (DDInter, MED-RT, FDA labels), not from here.
+#
+# Selectors (a drug belongs to a group if ANY selector matches one of its ingredients):
+#   EPC:<name>   FDA Established Pharmacologic Class (via RxClass), exact class name
+#   ATC:<code>   WHO ATC level-4 code, exact (prefix matching is deliberately NOT supported:
+#                N02AJ lists aspirin under "opioids in combination", M01AX lists glucosamine)
+#   FLAG:<name>  label-derived class flag (qt_prolonging | serotonergic | cns_depressant);
+#                only flags with review_status auto/accepted count
+#   ING:<name>   one RxNorm ingredient by exact name (for gaps in EPC/ATC coverage)
+#
+# Wording rules (enforced by tests): plain language (~grade 8), never tell anyone to stop or
+# change a medicine; suggest confirming with the prescriber instead.
+
+version: 1
+
+groups:
+  nsaid:
+    label: NSAID pain relievers
+    select: ["EPC:Nonsteroidal Anti-inflammatory Drug", "ATC:M01AA", "ATC:M01AB", "ATC:M01AC",
+             "ATC:M01AE", "ATC:M01AG", "ATC:M01AH", "ING:nimesulide", "ING:nabumetone"]
+  anticoagulant:
+    label: blood thinners (anticoagulants)
+    select: ["EPC:Vitamin K Antagonist", "EPC:Factor Xa Inhibitor", "EPC:Direct Thrombin Inhibitor",
+             "ATC:B01AA", "ATC:B01AB", "ATC:B01AE", "ATC:B01AF"]
+  antiplatelet:
+    label: antiplatelet medicines
+    select: ["EPC:Platelet Aggregation Inhibitor", "EPC:P2Y12 Platelet Inhibitor", "ATC:B01AC"]
+  systemic_steroid:
+    label: steroid tablets or injections
+    select: ["ATC:H02AB"]
+  ppi:
+    label: acid reducers (proton pump inhibitors)
+    select: ["EPC:Proton Pump Inhibitor", "ATC:A02BC"]
+  h2_blocker:
+    label: acid reducers (H2 blockers)
+    select: ["EPC:Histamine-2 Receptor Antagonist", "ATC:A02BA"]
+  ssri:
+    label: SSRI antidepressants
+    select: ["EPC:Serotonin Reuptake Inhibitor", "ATC:N06AB"]
+  snri:
+    label: SNRI antidepressants
+    select: ["EPC:Serotonin and Norepinephrine Reuptake Inhibitor"]
+  tca:
+    label: tricyclic antidepressants
+    select: ["EPC:Tricyclic Antidepressant", "ATC:N06AA"]
+  benzodiazepine:
+    label: benzodiazepine sedatives
+    select: ["EPC:Benzodiazepine", "ATC:N05BA", "ATC:N05CD"]
+  opioid:
+    label: opioid pain relievers
+    select: ["EPC:Opioid Agonist", "EPC:Partial Opioid Agonist", "EPC:Opioid Agonist/Antagonist",
+             "EPC:Partial Opioid Agonist/Antagonist", "ATC:N02AA", "ATC:N02AB", "ATC:N02AC",
+             "ATC:N02AD", "ATC:N02AE", "ATC:N02AF", "ATC:N02AX"]
+  statin:
+    label: cholesterol medicines (statins)
+    select: ["EPC:HMG-CoA Reductase Inhibitor", "ATC:C10AA"]
+  sulfonylurea:
+    label: sulfonylurea diabetes medicines
+    select: ["EPC:Sulfonylurea", "ATC:A10BB"]
+  beta_blocker:
+    label: beta blockers
+    select: ["EPC:beta-Adrenergic Blocker", "ATC:C07AA", "ATC:C07AB"]
+  dhp_ccb:
+    label: calcium channel blockers (amlodipine type)
+    select: ["EPC:Dihydropyridine Calcium Channel Blocker", "ATC:C08CA"]
+  ace_inhibitor:
+    label: ACE inhibitors (blood pressure)
+    select: ["EPC:Angiotensin Converting Enzyme Inhibitor", "ATC:C09AA"]
+  arb:
+    label: ARBs (blood pressure)
+    select: ["EPC:Angiotensin 2 Receptor Blocker", "ATC:C09CA"]
+  potassium_sparing:
+    label: potassium-sparing diuretics
+    select: ["EPC:Potassium-sparing Diuretic", "EPC:Aldosterone Antagonist", "ATC:C03DA"]
+  potassium_supplement:
+    label: potassium supplements
+    select: ["EPC:Potassium Salt", "ATC:A12BA"]
+  diuretic:
+    label: water tablets (thiazide or loop diuretics)
+    select: ["EPC:Thiazide Diuretic", "EPC:Thiazide-like Diuretic", "EPC:Loop Diuretic",
+             "ATC:C03AA", "ATC:C03BA", "ATC:C03CA"]
+  macrolide:
+    label: macrolide antibiotics
+    select: ["EPC:Macrolide Antimicrobial", "EPC:Macrolide Antibacterial", "ATC:J01FA"]
+  fluoroquinolone:
+    label: quinolone antibiotics
+    select: ["EPC:Fluoroquinolone Antibacterial", "ATC:J01MA"]
+  antihistamine:
+    label: antihistamines (allergy tablets)
+    select: ["EPC:Histamine-1 Receptor Antagonist", "ATC:R06AE", "ATC:R06AX"]
+  qt_prolonging:
+    label: medicines that can affect heart rhythm (QT prolongation)
+    select: ["FLAG:qt_prolonging"]
+  serotonergic:
+    label: medicines that raise serotonin
+    select: ["FLAG:serotonergic", "EPC:Serotonin Reuptake Inhibitor",
+             "EPC:Serotonin and Norepinephrine Reuptake Inhibitor", "ATC:N06AB"]
+  sedating:
+    label: sedating medicines (opioids, benzodiazepines, other CNS depressants)
+    select: ["FLAG:cns_depressant", "EPC:Benzodiazepine", "EPC:Opioid Agonist",
+             "ATC:N05BA", "ATC:N05CD", "ATC:N02AA", "ATC:N02AX"]
+
+duplicate_ingredient:
+  id: DUP_INGREDIENT
+  severity: major
+  title: "The same medicine appears more than once: {ingredient}"
+  simple: >-
+    {drugs} all contain {ingredient}. Taking them together adds up the dose, which can lead to
+    taking too much.
+  professional: >-
+    Therapeutic duplication: {ingredient} is present in {drugs}. Cumulative daily dose may exceed
+    the labelled maximum.
+  consider: >-
+    Consider confirming with the prescriber whether both products are intended, and check the
+    total daily dose against the label.
+
+duplicate_class:
+  # One finding per group below when 2+ different ingredients from different medicines match.
+  id: DUP_CLASS
+  title: "Two {group} in the same list"
+  simple: >-
+    {drugs} are both {group}. Using two medicines that do the same job usually adds side effects
+    without adding benefit.
+  professional: >-
+    Possible therapeutic duplication within {group} ({ingredients}).
+  consider: >-
+    Consider confirming with the prescriber whether both are intended.
+  groups:
+    nsaid: major
+    anticoagulant: major
+    antiplatelet: moderate
+    opioid: major
+    benzodiazepine: major
+    ppi: moderate
+    h2_blocker: moderate
+    ssri: major
+    snri: major
+    statin: moderate
+    sulfonylurea: major
+    beta_blocker: moderate
+    dhp_ccb: moderate
+    ace_inhibitor: moderate
+    arb: moderate
+    macrolide: moderate
+    fluoroquinolone: moderate
+    antihistamine: minor
+
+cumulative:
+  - id: QT_STACK
+    groups: [qt_prolonging]
+    min_drugs: 2
+    severity: major
+    title: "{count} medicines that can affect heart rhythm"
+    simple: >-
+      {drugs} can each affect the heart's rhythm (the "QT interval"). Together the risk of a
+      dangerous irregular heartbeat is higher.
+    professional: >-
+      Additive QT-prolongation risk: each agent's FDA label warns of QT prolongation (quoted in the
+      evidence). Risk rises with electrolyte disturbance, bradycardia and structural heart disease.
+    consider: >-
+      Consider confirming with the prescriber, especially if the patient has heart disease, low
+      potassium or magnesium, or faints.
+    rationale: FDA labels of each flagged drug warn of QT prolongation and advise caution with
+      other QT-prolonging drugs.
+
+  - id: SEROTONIN_STACK
+    groups: [serotonergic]
+    min_drugs: 2
+    severity: major
+    title: "{count} medicines that raise serotonin"
+    simple: >-
+      {drugs} each raise serotonin in the brain. Together they can cause serotonin syndrome
+      (shaking, sweating, fever, confusion), which can be serious.
+    professional: >-
+      Additive serotonergic effect; serotonin syndrome is named in each agent's label warnings or
+      class (quoted in the evidence).
+    consider: >-
+      Consider confirming with the prescriber, and tell the patient which warning signs to look for.
+    rationale: FDA labels of these drugs warn of serotonin syndrome with other serotonergic drugs.
+
+  - id: SEDATION_STACK
+    groups: [sedating]
+    min_drugs: 2
+    severity: major
+    title: "{count} medicines that cause drowsiness or slow breathing"
+    simple: >-
+      {drugs} can each make a person sleepy and slow their breathing. Together the effect is
+      stronger and can be dangerous, especially with alcohol.
+    professional: >-
+      Additive CNS and respiratory depression (opioid / benzodiazepine / other CNS depressant
+      labelling, quoted in the evidence).
+    consider: >-
+      Consider confirming with the prescriber; advise avoiding alcohol and driving.
+    rationale: FDA boxed warnings for opioids and benzodiazepines describe profound sedation and
+      respiratory depression when combined with other CNS depressants.
+
+  - id: BLEEDING_STACK
+    groups: [nsaid, anticoagulant, antiplatelet, systemic_steroid]
+    min_drugs: 3
+    min_groups: 2
+    severity: major
+    title: "{count} medicines that raise bleeding risk"
+    simple: >-
+      {drugs} each raise the chance of bleeding, especially from the stomach. Three or more
+      together add up the risk.
+    professional: >-
+      Stacked bleeding risk across {groups}. GI bleeding risk is additive; consider gastric
+      protection and bleeding history.
+    consider: >-
+      Consider confirming with the prescriber whether all are needed, and whether stomach
+      protection is appropriate.
+    rationale: Each class carries bleeding or GI-ulcer warnings in its labelling; risk is additive.
+
+  - id: POTASSIUM_STACK
+    groups: [ace_inhibitor, arb, potassium_sparing, potassium_supplement]
+    min_drugs: 2
+    min_groups: 2
+    severity: major
+    title: "Medicines that can raise potassium levels"
+    simple: >-
+      {drugs} can each raise the level of potassium in the blood. Together, potassium can get too
+      high, which affects the heart.
+    professional: >-
+      Additive hyperkalaemia risk ({groups}); higher with kidney impairment, diabetes and older age.
+    consider: >-
+      Consider confirming with the prescriber whether potassium and kidney tests are planned.
+    rationale: Labels of ACE inhibitors, ARBs and potassium-sparing diuretics warn of hyperkalaemia,
+      particularly in combination.
+
+  - id: KIDNEY_TRIPLE
+    groups: [nsaid, ace_inhibitor, arb, diuretic]
+    require_groups: [[nsaid], [ace_inhibitor, arb], [diuretic]]
+    min_drugs: 3
+    severity: major
+    title: "Pain reliever + blood pressure medicine + water tablet together"
+    simple: >-
+      {drugs} together can strain the kidneys and sometimes cause sudden kidney damage, especially
+      if the person is dehydrated or unwell.
+    professional: >-
+      "Triple whammy": NSAID with an ACE inhibitor/ARB and a diuretic increases the risk of acute
+      kidney injury.
+    consider: >-
+      Consider confirming with the prescriber whether the NSAID is needed, and whether kidney
+      function will be checked.
+    rationale: NSAID labels warn of renal toxicity, greater with ACE inhibitors/ARBs and diuretics.

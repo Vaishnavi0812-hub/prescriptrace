@@ -91,3 +91,30 @@ implemented and finalised in Stage 10.
   can be ported to the offline PWA. Thresholds are provisional; Stage 10 calibrates them on the
   ≥200-case evaluation set. A near-tie between different drugs or a prefix shared by several
   drugs is never auto-accepted (e.g. "insulin" lists insulin types instead of guessing "inulin").
+
+## ADR-010 Rule-based, deterministic interaction engine (not ML)
+- **Context:** Output is safety-critical and must be explainable to a pharmacist and auditable
+  for a research paper.
+- **Options:** learned DDI prediction (e.g. embedding/graph models); deterministic lookups plus a
+  declarative rule table.
+- **Decision:** `app/core/engine` is pure and deterministic. Pairwise findings come only from
+  datasets (DDInter, MED-RT, FDA label text); duplicate-therapy and 3+ drug rules come only from
+  `app/core/engine/rules.yaml` (groups by FDA EPC, exact WHO ATC level-4 codes, reviewed label
+  flags, or named ingredients). Every finding carries its evidence records; the rule table
+  itself is cited (`rules.yaml` v1) for rule-based findings.
+- **Consequences:** No predictions of unknown interactions (recall is bounded by the sources),
+  but every warning is reproducible and traceable, and changes are reviewable diffs. ATC prefix
+  matching is deliberately unsupported: ATC lists aspirin under N02AJ ("opioids in combination")
+  and glucosamine under M01AX; exact codes avoid both traps (tested).
+
+## ADR-011 Alert-fatigue controls in the engine
+- **Decision:** (1) A 2-drug rule or duplicate-class finding about a pair that already has a
+  pairwise finding is merged into that card (`related`, `related_rules`), raising its severity if
+  the rule is stricter, instead of a second card. (2) Ingredients inside one combination product
+  are not paired with each other (the combination is intended). (3) DDInter "Unknown" grades and
+  label-text-only mentions are reported with severity `unknown` and are not counted in
+  `attention_count`. (4) Patient-context MED-RT contraindications are findings; label excerpts
+  for the selected context are separate "check the label" notes, never ranked warnings.
+- **Consequences:** Fewer duplicate cards while nothing is dropped. The results screen (Stage 7)
+  still needs a headline policy; proposed: headline = contraindicated + major; moderate shown as
+  "worth checking"; unknown collapsed. Thresholds are revisited with evaluation data in Stage 10.

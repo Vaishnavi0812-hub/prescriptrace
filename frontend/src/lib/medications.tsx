@@ -9,6 +9,8 @@ import {
 } from "react";
 
 import { normaliseLines, type Candidate, type PatientContext, type SearchHit } from "./api";
+import { offlineNormalise } from "./offline/search";
+import { isNetworkError, loadKnowledge } from "./offline/store";
 
 /**
  * The medicine list and patient context. Privacy by default: kept only in this browser tab's
@@ -105,6 +107,12 @@ export function MedicationsProvider({ children }: { children: ReactNode }) {
     (id: string, text: string) => {
       update(id, { status: "pending" });
       normaliseLines([text])
+        .catch(async (e: unknown) => {
+          // No connection: exact-name lookup in the offline pack, if saved (never a guess).
+          const kb = isNetworkError(e) ? await loadKnowledge() : null;
+          if (!kb) throw e;
+          return { results: [offlineNormalise(text, kb)] };
+        })
         .then(({ results }) => {
           const r = results[0];
           if (!r) return update(id, { status: "error" });

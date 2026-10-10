@@ -1,0 +1,3091 @@
+{
+ "cases": [
+  {
+   "expected": {
+    "checked_pairs": 1,
+    "counts": {
+     "major": 1
+    },
+    "findings": [
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber before these are dispensed together.",
+      "drug_labels": [
+       "Warfarin 5",
+       "Brufen 400"
+      ],
+      "evidence": [
+       {
+        "dataset": "ddinter",
+        "dataset_name": "DDInter 2.0",
+        "dataset_version": "2.0",
+        "quote": null,
+        "record_id": "ddinter:W-IB",
+        "url": "https://x/W"
+       }
+      ],
+      "id": "interaction:IB-W:1:2",
+      "ingredient_ids": [
+       "W",
+       "IB"
+      ],
+      "ingredients": [
+       "warfarin",
+       "ibuprofen"
+      ],
+      "medicines": [
+       "1",
+       "2"
+      ],
+      "professional": "Major interaction (DDInter 2.0).",
+      "provenance": "structured",
+      "related": [],
+      "related_rules": [],
+      "rule_id": null,
+      "severity": "major",
+      "simple": "Taking these two together can cause serious harm.",
+      "title": "Warfarin + Ibuprofen",
+      "type": "interaction"
+     }
+    ],
+    "no_known_issue_pairs": []
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "W"
+     ],
+     "label": "Warfarin 5"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "IB"
+     ],
+     "label": "Brufen 400"
+    }
+   ],
+   "name": "major pair"
+  },
+  {
+   "expected": {
+    "checked_pairs": 1,
+    "counts": {
+     "contraindicated": 1
+    },
+    "findings": [
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber before these are dispensed together.",
+      "drug_labels": [
+       "Amiodarone",
+       "Levofloxacin"
+      ],
+      "evidence": [
+       {
+        "dataset": "ddinter",
+        "dataset_name": "DDInter 2.0",
+        "dataset_version": "2.0",
+        "quote": null,
+        "record_id": "ddinter:AMI-LEV",
+        "url": "https://x/AMI"
+       },
+       {
+        "dataset": "medrt",
+        "dataset_name": "MED-RT",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "medrt:AMI-LEV",
+        "url": "https://x/AMI"
+       }
+      ],
+      "id": "interaction:AMI-LEV:1:2",
+      "ingredient_ids": [
+       "AMI",
+       "LEV"
+      ],
+      "ingredients": [
+       "amiodarone",
+       "levofloxacin"
+      ],
+      "medicines": [
+       "1",
+       "2"
+      ],
+      "professional": "Listed as contraindicated (DDInter 2.0, MED-RT).",
+      "provenance": "structured",
+      "related": [],
+      "related_rules": [],
+      "rule_id": null,
+      "severity": "contraindicated",
+      "simple": "These two medicines are listed as not to be used together.",
+      "title": "Amiodarone + Levofloxacin",
+      "type": "interaction"
+     }
+    ],
+    "no_known_issue_pairs": []
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "AMI"
+     ],
+     "label": "Amiodarone"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "LEV"
+     ],
+     "label": "Levofloxacin"
+    }
+   ],
+   "name": "two sources"
+  },
+  {
+   "expected": {
+    "checked_pairs": 1,
+    "counts": {
+     "moderate": 1
+    },
+    "findings": [
+     {
+      "confidence": "high",
+      "consider": "Consider checking with the prescriber whether monitoring or spacing the doses is needed.",
+      "drug_labels": [
+       "Warfarin",
+       "Crocin"
+      ],
+      "evidence": [
+       {
+        "dataset": "ddinter",
+        "dataset_name": "DDInter 2.0",
+        "dataset_version": "2.0",
+        "quote": null,
+        "record_id": "ddinter:W-PCM",
+        "url": "https://x/W"
+       }
+      ],
+      "id": "interaction:PCM-W:1:2",
+      "ingredient_ids": [
+       "W",
+       "PCM"
+      ],
+      "ingredients": [
+       "warfarin",
+       "acetaminophen"
+      ],
+      "medicines": [
+       "1",
+       "2"
+      ],
+      "professional": "Moderate interaction (DDInter 2.0).",
+      "provenance": "structured",
+      "related": [],
+      "related_rules": [],
+      "rule_id": null,
+      "severity": "moderate",
+      "simple": "Taking these two together may need extra care or monitoring.",
+      "title": "Warfarin + Acetaminophen",
+      "type": "interaction"
+     }
+    ],
+    "no_known_issue_pairs": []
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "W"
+     ],
+     "label": "Warfarin"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "PCM"
+     ],
+     "label": "Crocin"
+    }
+   ],
+   "name": "moderate common"
+  },
+  {
+   "expected": {
+    "checked_pairs": 1,
+    "counts": {},
+    "findings": [],
+    "no_known_issue_pairs": [
+     [
+      "Metformin",
+      "Lasix"
+     ]
+    ]
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "MET"
+     ],
+     "label": "Metformin"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "FUR"
+     ],
+     "label": "Lasix"
+    }
+   ],
+   "name": "moderate uncommon left out"
+  },
+  {
+   "expected": {
+    "checked_pairs": 6,
+    "counts": {
+     "major": 2
+    },
+    "findings": [
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber whether the NSAID is needed, and whether kidney function will be checked.",
+      "drug_labels": [
+       "Zerodol",
+       "Lasix",
+       "Brufen",
+       "Telma"
+      ],
+      "evidence": [
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC M01AB (M01AB): aceclofenac",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N212643 (Loop Diuretic): furosemide",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N521066 (Nonsteroidal Anti-inflammatory Drug): ibuprofen",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC M01AE (M01AE): ibuprofen",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N305610 (Angiotensin 2 Receptor Blocker): telmisartan",
+        "url": null
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "KIDNEY_TRIPLE",
+        "url": null
+       }
+      ],
+      "id": "cumulative:KIDNEY_TRIPLE::ACE-FUR-IB-TEL",
+      "ingredient_ids": [
+       "ACE",
+       "FUR",
+       "IB",
+       "TEL"
+      ],
+      "ingredients": [
+       "aceclofenac",
+       "furosemide",
+       "ibuprofen",
+       "telmisartan"
+      ],
+      "medicines": [
+       "4",
+       "2",
+       "3",
+       "1"
+      ],
+      "professional": "\"Triple whammy\": NSAID with an ACE inhibitor/ARB and a diuretic increases the risk of acute kidney injury.",
+      "provenance": "rule",
+      "related": [],
+      "related_rules": [],
+      "rule_id": "KIDNEY_TRIPLE",
+      "severity": "major",
+      "simple": "Zerodol, Lasix, Brufen and Telma together can strain the kidneys and sometimes cause sudden kidney damage, especially if the person is dehydrated or unwell.",
+      "title": "Pain reliever + blood pressure medicine + water tablet together",
+      "type": "cumulative"
+     },
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber whether both are intended.",
+      "drug_labels": [
+       "Zerodol",
+       "Brufen"
+      ],
+      "evidence": [
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC M01AB (M01AB): aceclofenac",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N521066 (Nonsteroidal Anti-inflammatory Drug): ibuprofen",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC M01AE (M01AE): ibuprofen",
+        "url": null
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "DUP_CLASS",
+        "url": null
+       }
+      ],
+      "id": "duplicate_class:DUP_CLASS:nsaid:ACE-IB",
+      "ingredient_ids": [
+       "ACE",
+       "IB"
+      ],
+      "ingredients": [
+       "aceclofenac",
+       "ibuprofen"
+      ],
+      "medicines": [
+       "4",
+       "3"
+      ],
+      "professional": "Possible therapeutic duplication within NSAID pain relievers (aceclofenac and ibuprofen).",
+      "provenance": "rule",
+      "related": [],
+      "related_rules": [],
+      "rule_id": "DUP_CLASS",
+      "severity": "major",
+      "simple": "Zerodol and Brufen are both NSAID pain relievers. Using two medicines that do the same job usually adds side effects without adding benefit.",
+      "title": "Two NSAID pain relievers in the same list",
+      "type": "duplicate_class"
+     }
+    ],
+    "no_known_issue_pairs": [
+     [
+      "Telma",
+      "Lasix"
+     ],
+     [
+      "Telma",
+      "Brufen"
+     ],
+     [
+      "Telma",
+      "Zerodol"
+     ],
+     [
+      "Lasix",
+      "Brufen"
+     ],
+     [
+      "Lasix",
+      "Zerodol"
+     ],
+     [
+      "Brufen",
+      "Zerodol"
+     ]
+    ]
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "TEL"
+     ],
+     "label": "Telma"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "FUR"
+     ],
+     "label": "Lasix"
+    },
+    {
+     "id": "3",
+     "ingredients": [
+      "IB"
+     ],
+     "label": "Brufen"
+    },
+    {
+     "id": "4",
+     "ingredients": [
+      "ACE"
+     ],
+     "label": "Zerodol"
+    }
+   ],
+   "name": "minor and unknown left out"
+  },
+  {
+   "expected": {
+    "checked_pairs": 1,
+    "counts": {
+     "major": 1
+    },
+    "findings": [
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber whether both products are intended, and check the total daily dose against the label.",
+      "drug_labels": [
+       "Crocin",
+       "Zerodol-P"
+      ],
+      "evidence": [
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "DUP_INGREDIENT",
+        "url": null
+       }
+      ],
+      "id": "duplicate_ingredient:PCM",
+      "ingredient_ids": [
+       "PCM"
+      ],
+      "ingredients": [
+       "acetaminophen"
+      ],
+      "medicines": [
+       "1",
+       "2"
+      ],
+      "professional": "Therapeutic duplication: acetaminophen is present in Crocin and Zerodol-P. Cumulative daily dose may exceed the labelled maximum.",
+      "provenance": "rule",
+      "related": [],
+      "related_rules": [],
+      "rule_id": "DUP_INGREDIENT",
+      "severity": "major",
+      "simple": "Crocin and Zerodol-P all contain acetaminophen. Taking them together adds up the dose, which can lead to taking too much.",
+      "title": "The same medicine appears more than once: acetaminophen",
+      "type": "duplicate_ingredient"
+     }
+    ],
+    "no_known_issue_pairs": [
+     [
+      "Crocin",
+      "Zerodol-P"
+     ]
+    ]
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "PCM"
+     ],
+     "label": "Crocin"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "ACE",
+      "PCM"
+     ],
+     "label": "Zerodol-P"
+    }
+   ],
+   "name": "duplicate ingredient"
+  },
+  {
+   "expected": {
+    "checked_pairs": 3,
+    "counts": {
+     "major": 3
+    },
+    "findings": [
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber before these are dispensed together.",
+      "drug_labels": [
+       "Brufen",
+       "Warfarin"
+      ],
+      "evidence": [
+       {
+        "dataset": "ddinter",
+        "dataset_name": "DDInter 2.0",
+        "dataset_version": "2.0",
+        "quote": null,
+        "record_id": "ddinter:W-IB",
+        "url": "https://x/W"
+       }
+      ],
+      "id": "interaction:IB-W:1:3",
+      "ingredient_ids": [
+       "IB",
+       "W"
+      ],
+      "ingredients": [
+       "ibuprofen",
+       "warfarin"
+      ],
+      "medicines": [
+       "1",
+       "3"
+      ],
+      "professional": "Major interaction (DDInter 2.0).",
+      "provenance": "structured",
+      "related": [],
+      "related_rules": [],
+      "rule_id": null,
+      "severity": "major",
+      "simple": "Taking these two together can cause serious harm.",
+      "title": "Ibuprofen + Warfarin",
+      "type": "interaction"
+     },
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber whether all are needed, and whether stomach protection is appropriate.",
+      "drug_labels": [
+       "Zerodol",
+       "Brufen",
+       "Warfarin"
+      ],
+      "evidence": [
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC M01AB (M01AB): aceclofenac",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N521066 (Nonsteroidal Anti-inflammatory Drug): ibuprofen",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC M01AE (M01AE): ibuprofen",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N334412 (Vitamin K Antagonist): warfarin",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC B01AA (B01AA): warfarin",
+        "url": null
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "BLEEDING_STACK",
+        "url": null
+       }
+      ],
+      "id": "cumulative:BLEEDING_STACK::ACE-IB-W",
+      "ingredient_ids": [
+       "ACE",
+       "IB",
+       "W"
+      ],
+      "ingredients": [
+       "aceclofenac",
+       "ibuprofen",
+       "warfarin"
+      ],
+      "medicines": [
+       "2",
+       "1",
+       "3"
+      ],
+      "professional": "Stacked bleeding risk across NSAID pain relievers, blood thinners (anticoagulants), antiplatelet medicines and steroid tablets or injections. GI bleeding risk is additive; consider gastric protection and bleeding history.",
+      "provenance": "rule",
+      "related": [],
+      "related_rules": [],
+      "rule_id": "BLEEDING_STACK",
+      "severity": "major",
+      "simple": "Zerodol, Brufen and Warfarin each raise the chance of bleeding, especially from the stomach. Three or more together add up the risk.",
+      "title": "3 medicines that raise bleeding risk",
+      "type": "cumulative"
+     },
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber whether both are intended.",
+      "drug_labels": [
+       "Zerodol",
+       "Brufen"
+      ],
+      "evidence": [
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC M01AB (M01AB): aceclofenac",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N521066 (Nonsteroidal Anti-inflammatory Drug): ibuprofen",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC M01AE (M01AE): ibuprofen",
+        "url": null
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "DUP_CLASS",
+        "url": null
+       }
+      ],
+      "id": "duplicate_class:DUP_CLASS:nsaid:ACE-IB",
+      "ingredient_ids": [
+       "ACE",
+       "IB"
+      ],
+      "ingredients": [
+       "aceclofenac",
+       "ibuprofen"
+      ],
+      "medicines": [
+       "2",
+       "1"
+      ],
+      "professional": "Possible therapeutic duplication within NSAID pain relievers (aceclofenac and ibuprofen).",
+      "provenance": "rule",
+      "related": [],
+      "related_rules": [],
+      "rule_id": "DUP_CLASS",
+      "severity": "major",
+      "simple": "Zerodol and Brufen are both NSAID pain relievers. Using two medicines that do the same job usually adds side effects without adding benefit.",
+      "title": "Two NSAID pain relievers in the same list",
+      "type": "duplicate_class"
+     }
+    ],
+    "no_known_issue_pairs": [
+     [
+      "Brufen",
+      "Zerodol"
+     ],
+     [
+      "Zerodol",
+      "Warfarin"
+     ]
+    ]
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "IB"
+     ],
+     "label": "Brufen"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "ACE"
+     ],
+     "label": "Zerodol"
+    },
+    {
+     "id": "3",
+     "ingredients": [
+      "W"
+     ],
+     "label": "Warfarin"
+    }
+   ],
+   "name": "duplicate class + merge"
+  },
+  {
+   "expected": {
+    "checked_pairs": 6,
+    "counts": {
+     "major": 3,
+     "moderate": 1
+    },
+    "findings": [
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber before these are dispensed together.",
+      "drug_labels": [
+       "Warfarin",
+       "Ecosprin"
+      ],
+      "evidence": [
+       {
+        "dataset": "ddinter",
+        "dataset_name": "DDInter 2.0",
+        "dataset_version": "2.0",
+        "quote": null,
+        "record_id": "ddinter:W-AS",
+        "url": "https://x/W"
+       }
+      ],
+      "id": "interaction:AS-W:1:2",
+      "ingredient_ids": [
+       "W",
+       "AS"
+      ],
+      "ingredients": [
+       "warfarin",
+       "aspirin"
+      ],
+      "medicines": [
+       "1",
+       "2"
+      ],
+      "professional": "Major interaction (DDInter 2.0).",
+      "provenance": "structured",
+      "related": [],
+      "related_rules": [],
+      "rule_id": null,
+      "severity": "major",
+      "simple": "Taking these two together can cause serious harm.",
+      "title": "Warfarin + Aspirin",
+      "type": "interaction"
+     },
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber before these are dispensed together.",
+      "drug_labels": [
+       "Warfarin",
+       "Brufen"
+      ],
+      "evidence": [
+       {
+        "dataset": "ddinter",
+        "dataset_name": "DDInter 2.0",
+        "dataset_version": "2.0",
+        "quote": null,
+        "record_id": "ddinter:W-IB",
+        "url": "https://x/W"
+       }
+      ],
+      "id": "interaction:IB-W:1:4",
+      "ingredient_ids": [
+       "W",
+       "IB"
+      ],
+      "ingredients": [
+       "warfarin",
+       "ibuprofen"
+      ],
+      "medicines": [
+       "1",
+       "4"
+      ],
+      "professional": "Major interaction (DDInter 2.0).",
+      "provenance": "structured",
+      "related": [],
+      "related_rules": [],
+      "rule_id": null,
+      "severity": "major",
+      "simple": "Taking these two together can cause serious harm.",
+      "title": "Warfarin + Ibuprofen",
+      "type": "interaction"
+     },
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber whether all are needed, and whether stomach protection is appropriate.",
+      "drug_labels": [
+       "Ecosprin",
+       "Clopilet",
+       "Brufen",
+       "Warfarin"
+      ],
+      "evidence": [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N80318 (Platelet Aggregation Inhibitor): aspirin",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC B01AC (B01AC): aspirin",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N465596 (P2Y12 Platelet Inhibitor): clopidogrel",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC B01AC (B01AC): clopidogrel",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N521066 (Nonsteroidal Anti-inflammatory Drug): ibuprofen",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC M01AE (M01AE): ibuprofen",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N334412 (Vitamin K Antagonist): warfarin",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC B01AA (B01AA): warfarin",
+        "url": null
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "BLEEDING_STACK",
+        "url": null
+       }
+      ],
+      "id": "cumulative:BLEEDING_STACK::AS-CL-IB-W",
+      "ingredient_ids": [
+       "AS",
+       "CL",
+       "IB",
+       "W"
+      ],
+      "ingredients": [
+       "aspirin",
+       "clopidogrel",
+       "ibuprofen",
+       "warfarin"
+      ],
+      "medicines": [
+       "2",
+       "3",
+       "4",
+       "1"
+      ],
+      "professional": "Stacked bleeding risk across NSAID pain relievers, blood thinners (anticoagulants), antiplatelet medicines and steroid tablets or injections. GI bleeding risk is additive; consider gastric protection and bleeding history.",
+      "provenance": "rule",
+      "related": [],
+      "related_rules": [],
+      "rule_id": "BLEEDING_STACK",
+      "severity": "major",
+      "simple": "Ecosprin, Clopilet, Brufen and Warfarin each raise the chance of bleeding, especially from the stomach. Three or more together add up the risk.",
+      "title": "4 medicines that raise bleeding risk",
+      "type": "cumulative"
+     },
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber whether both are intended.",
+      "drug_labels": [
+       "Ecosprin",
+       "Clopilet"
+      ],
+      "evidence": [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N80318 (Platelet Aggregation Inhibitor): aspirin",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC B01AC (B01AC): aspirin",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N465596 (P2Y12 Platelet Inhibitor): clopidogrel",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC B01AC (B01AC): clopidogrel",
+        "url": null
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "DUP_CLASS",
+        "url": null
+       }
+      ],
+      "id": "duplicate_class:DUP_CLASS:antiplatelet:AS-CL",
+      "ingredient_ids": [
+       "AS",
+       "CL"
+      ],
+      "ingredients": [
+       "aspirin",
+       "clopidogrel"
+      ],
+      "medicines": [
+       "2",
+       "3"
+      ],
+      "professional": "Possible therapeutic duplication within antiplatelet medicines (aspirin and clopidogrel).",
+      "provenance": "rule",
+      "related": [],
+      "related_rules": [],
+      "rule_id": "DUP_CLASS",
+      "severity": "moderate",
+      "simple": "Ecosprin and Clopilet are both antiplatelet medicines. Using two medicines that do the same job usually adds side effects without adding benefit.",
+      "title": "Two antiplatelet medicines in the same list",
+      "type": "duplicate_class"
+     }
+    ],
+    "no_known_issue_pairs": [
+     [
+      "Warfarin",
+      "Clopilet"
+     ],
+     [
+      "Ecosprin",
+      "Clopilet"
+     ],
+     [
+      "Ecosprin",
+      "Brufen"
+     ],
+     [
+      "Clopilet",
+      "Brufen"
+     ]
+    ]
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "W"
+     ],
+     "label": "Warfarin"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "AS"
+     ],
+     "label": "Ecosprin"
+    },
+    {
+     "id": "3",
+     "ingredients": [
+      "CL"
+     ],
+     "label": "Clopilet"
+    },
+    {
+     "id": "4",
+     "ingredients": [
+      "IB"
+     ],
+     "label": "Brufen"
+    }
+   ],
+   "name": "bleeding cumulative"
+  },
+  {
+   "expected": {
+    "checked_pairs": 3,
+    "counts": {
+     "major": 3
+    },
+    "findings": [
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber before these are dispensed together.",
+      "drug_labels": [
+       "Sertraline",
+       "Tramadol"
+      ],
+      "evidence": [
+       {
+        "dataset": "ddinter",
+        "dataset_name": "DDInter 2.0",
+        "dataset_version": "2.0",
+        "quote": null,
+        "record_id": "ddinter:SER-TRA",
+        "url": "https://x/SER"
+       }
+      ],
+      "id": "interaction:SER-TRA:1:2",
+      "ingredient_ids": [
+       "SER",
+       "TRA"
+      ],
+      "ingredients": [
+       "sertraline",
+       "tramadol"
+      ],
+      "medicines": [
+       "1",
+       "2"
+      ],
+      "professional": "Major interaction (DDInter 2.0).",
+      "provenance": "structured",
+      "related": [],
+      "related_rules": [],
+      "rule_id": null,
+      "severity": "major",
+      "simple": "Taking these two together can cause serious harm.",
+      "title": "Sertraline + Tramadol",
+      "type": "interaction"
+     },
+     {
+      "confidence": "medium",
+      "consider": "Consider confirming with the prescriber, and tell the patient which warning signs to look for.",
+      "drug_labels": [
+       "Ondansetron",
+       "Sertraline",
+       "Tramadol"
+      ],
+      "evidence": [
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... serotonergic warning text ...",
+        "record_id": "serotonergic: ondansetron",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-serotonergic"
+       },
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... serotonergic warning text ...",
+        "record_id": "serotonergic: sertraline",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-serotonergic"
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N520026 (Serotonin Reuptake Inhibitor): sertraline",
+        "url": null
+       },
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... serotonergic warning text ...",
+        "record_id": "serotonergic: tramadol",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-serotonergic"
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "SEROTONIN_STACK",
+        "url": null
+       }
+      ],
+      "id": "cumulative:SEROTONIN_STACK::OND-SER-TRA",
+      "ingredient_ids": [
+       "OND",
+       "SER",
+       "TRA"
+      ],
+      "ingredients": [
+       "ondansetron",
+       "sertraline",
+       "tramadol"
+      ],
+      "medicines": [
+       "3",
+       "1",
+       "2"
+      ],
+      "professional": "Additive serotonergic effect; serotonin syndrome is named in each agent's label warnings or class (quoted in the evidence).",
+      "provenance": "rule",
+      "related": [],
+      "related_rules": [],
+      "rule_id": "SEROTONIN_STACK",
+      "severity": "major",
+      "simple": "Ondansetron, Sertraline and Tramadol each raise serotonin in the brain. Together they can cause serotonin syndrome (shaking, sweating, fever, confusion), which can be serious.",
+      "title": "3 medicines that raise serotonin",
+      "type": "cumulative"
+     },
+     {
+      "confidence": "medium",
+      "consider": "Consider confirming with the prescriber, especially if the patient has heart disease, low potassium or magnesium, or faints.",
+      "drug_labels": [
+       "Ondansetron",
+       "Sertraline"
+      ],
+      "evidence": [
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... qt_prolonging warning text ...",
+        "record_id": "qt_prolonging: ondansetron",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-qt_prolonging"
+       },
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... qt_prolonging warning text ...",
+        "record_id": "qt_prolonging: sertraline",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-qt_prolonging"
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "QT_STACK",
+        "url": null
+       }
+      ],
+      "id": "cumulative:QT_STACK::OND-SER",
+      "ingredient_ids": [
+       "OND",
+       "SER"
+      ],
+      "ingredients": [
+       "ondansetron",
+       "sertraline"
+      ],
+      "medicines": [
+       "3",
+       "1"
+      ],
+      "professional": "Additive QT-prolongation risk: each agent's FDA label warns of QT prolongation (quoted in the evidence). Risk rises with electrolyte disturbance, bradycardia and structural heart disease.",
+      "provenance": "rule",
+      "related": [],
+      "related_rules": [],
+      "rule_id": "QT_STACK",
+      "severity": "major",
+      "simple": "Ondansetron and Sertraline can each affect the heart's rhythm (the \"QT interval\"). Together the risk of a dangerous irregular heartbeat is higher.",
+      "title": "2 medicines that can affect heart rhythm",
+      "type": "cumulative"
+     }
+    ],
+    "no_known_issue_pairs": [
+     [
+      "Sertraline",
+      "Ondansetron"
+     ],
+     [
+      "Tramadol",
+      "Ondansetron"
+     ]
+    ]
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "SER"
+     ],
+     "label": "Sertraline"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "TRA"
+     ],
+     "label": "Tramadol"
+    },
+    {
+     "id": "3",
+     "ingredients": [
+      "OND"
+     ],
+     "label": "Ondansetron"
+    }
+   ],
+   "name": "serotonergic"
+  },
+  {
+   "expected": {
+    "checked_pairs": 3,
+    "counts": {
+     "major": 1
+    },
+    "findings": [
+     {
+      "confidence": "medium",
+      "consider": "Consider confirming with the prescriber, especially if the patient has heart disease, low potassium or magnesium, or faints.",
+      "drug_labels": [
+       "Azithral",
+       "Ondansetron"
+      ],
+      "evidence": [
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... qt_prolonging warning text ...",
+        "record_id": "qt_prolonging: azithromycin",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-qt_prolonging"
+       },
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... qt_prolonging warning text ...",
+        "record_id": "qt_prolonging: ondansetron",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-qt_prolonging"
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "QT_STACK",
+        "url": null
+       }
+      ],
+      "id": "cumulative:QT_STACK::AZI-OND",
+      "ingredient_ids": [
+       "AZI",
+       "OND"
+      ],
+      "ingredients": [
+       "azithromycin",
+       "ondansetron"
+      ],
+      "medicines": [
+       "1",
+       "2"
+      ],
+      "professional": "Additive QT-prolongation risk: each agent's FDA label warns of QT prolongation (quoted in the evidence). Risk rises with electrolyte disturbance, bradycardia and structural heart disease.",
+      "provenance": "rule",
+      "related": [],
+      "related_rules": [],
+      "rule_id": "QT_STACK",
+      "severity": "major",
+      "simple": "Azithral and Ondansetron can each affect the heart's rhythm (the \"QT interval\"). Together the risk of a dangerous irregular heartbeat is higher.",
+      "title": "2 medicines that can affect heart rhythm",
+      "type": "cumulative"
+     }
+    ],
+    "no_known_issue_pairs": [
+     [
+      "Azithral",
+      "Ondansetron"
+     ],
+     [
+      "Azithral",
+      "Metformin"
+     ],
+     [
+      "Ondansetron",
+      "Metformin"
+     ]
+    ]
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "AZI"
+     ],
+     "label": "Azithral"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "OND"
+     ],
+     "label": "Ondansetron"
+    },
+    {
+     "id": "3",
+     "ingredients": [
+      "MET"
+     ],
+     "label": "Metformin"
+    }
+   ],
+   "name": "qt with rejected flag"
+  },
+  {
+   "expected": {
+    "checked_pairs": 3,
+    "counts": {
+     "major": 2
+    },
+    "findings": [
+     {
+      "confidence": "medium",
+      "consider": "Consider confirming with the prescriber; advise avoiding alcohol and driving.",
+      "drug_labels": [
+       "Valium",
+       "Morphine",
+       "Tramadol"
+      ],
+      "evidence": [
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... cns_depressant warning text ...",
+        "record_id": "cns_depressant: diazepam",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-cns_depressant"
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N33908 (Benzodiazepine): diazepam",
+        "url": null
+       },
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... cns_depressant warning text ...",
+        "record_id": "cns_depressant: morphine",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-cns_depressant"
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N793371 (Opioid Agonist): morphine",
+        "url": null
+       },
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... cns_depressant warning text ...",
+        "record_id": "cns_depressant: tramadol",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-cns_depressant"
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC N02AX (N02AX): tramadol",
+        "url": null
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "SEDATION_STACK",
+        "url": null
+       }
+      ],
+      "id": "cumulative:SEDATION_STACK::DIA-MOR-TRA",
+      "ingredient_ids": [
+       "DIA",
+       "MOR",
+       "TRA"
+      ],
+      "ingredients": [
+       "diazepam",
+       "morphine",
+       "tramadol"
+      ],
+      "medicines": [
+       "1",
+       "2",
+       "3"
+      ],
+      "professional": "Additive CNS and respiratory depression (opioid / benzodiazepine / other CNS depressant labelling, quoted in the evidence).",
+      "provenance": "rule",
+      "related": [],
+      "related_rules": [],
+      "rule_id": "SEDATION_STACK",
+      "severity": "major",
+      "simple": "Valium, Morphine and Tramadol can each make a person sleepy and slow their breathing. Together the effect is stronger and can be dangerous, especially with alcohol.",
+      "title": "3 medicines that cause drowsiness or slow breathing",
+      "type": "cumulative"
+     },
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber whether both are intended.",
+      "drug_labels": [
+       "Morphine",
+       "Tramadol"
+      ],
+      "evidence": [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N793371 (Opioid Agonist): morphine",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC N02AX (N02AX): tramadol",
+        "url": null
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "DUP_CLASS",
+        "url": null
+       }
+      ],
+      "id": "duplicate_class:DUP_CLASS:opioid:MOR-TRA",
+      "ingredient_ids": [
+       "MOR",
+       "TRA"
+      ],
+      "ingredients": [
+       "morphine",
+       "tramadol"
+      ],
+      "medicines": [
+       "2",
+       "3"
+      ],
+      "professional": "Possible therapeutic duplication within opioid pain relievers (morphine and tramadol).",
+      "provenance": "rule",
+      "related": [],
+      "related_rules": [],
+      "rule_id": "DUP_CLASS",
+      "severity": "major",
+      "simple": "Morphine and Tramadol are both opioid pain relievers. Using two medicines that do the same job usually adds side effects without adding benefit.",
+      "title": "Two opioid pain relievers in the same list",
+      "type": "duplicate_class"
+     }
+    ],
+    "no_known_issue_pairs": [
+     [
+      "Valium",
+      "Morphine"
+     ],
+     [
+      "Valium",
+      "Tramadol"
+     ],
+     [
+      "Morphine",
+      "Tramadol"
+     ]
+    ]
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "DIA"
+     ],
+     "label": "Valium"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "MOR"
+     ],
+     "label": "Morphine"
+    },
+    {
+     "id": "3",
+     "ingredients": [
+      "TRA"
+     ],
+     "label": "Tramadol"
+    }
+   ],
+   "name": "sedation"
+  },
+  {
+   "expected": {
+    "checked_pairs": 3,
+    "counts": {
+     "major": 2
+    },
+    "findings": [
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber before these are dispensed together.",
+      "drug_labels": [
+       "Lisinopril",
+       "Aldactone"
+      ],
+      "evidence": [
+       {
+        "dataset": "ddinter",
+        "dataset_name": "DDInter 2.0",
+        "dataset_version": "2.0",
+        "quote": null,
+        "record_id": "ddinter:LIS-SPI",
+        "url": "https://x/LIS"
+       }
+      ],
+      "id": "interaction:LIS-SPI:1:2",
+      "ingredient_ids": [
+       "LIS",
+       "SPI"
+      ],
+      "ingredients": [
+       "lisinopril",
+       "spironolactone"
+      ],
+      "medicines": [
+       "1",
+       "2"
+      ],
+      "professional": "Major interaction (DDInter 2.0).",
+      "provenance": "structured",
+      "related": [],
+      "related_rules": [],
+      "rule_id": null,
+      "severity": "major",
+      "simple": "Taking these two together can cause serious harm.",
+      "title": "Lisinopril + Spironolactone",
+      "type": "interaction"
+     },
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber whether potassium and kidney tests are planned.",
+      "drug_labels": [
+       "Lisinopril",
+       "Aldactone",
+       "Telma"
+      ],
+      "evidence": [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N72319 (Angiotensin Converting Enzyme Inhibitor): lisinopril",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N976723 (Aldosterone Antagonist): spironolactone",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N305610 (Angiotensin 2 Receptor Blocker): telmisartan",
+        "url": null
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "POTASSIUM_STACK",
+        "url": null
+       }
+      ],
+      "id": "cumulative:POTASSIUM_STACK::LIS-SPI-TEL",
+      "ingredient_ids": [
+       "LIS",
+       "SPI",
+       "TEL"
+      ],
+      "ingredients": [
+       "lisinopril",
+       "spironolactone",
+       "telmisartan"
+      ],
+      "medicines": [
+       "1",
+       "2",
+       "3"
+      ],
+      "professional": "Additive hyperkalaemia risk (ACE inhibitors (blood pressure), ARBs (blood pressure), potassium-sparing diuretics and potassium supplements); higher with kidney impairment, diabetes and older age.",
+      "provenance": "rule",
+      "related": [],
+      "related_rules": [],
+      "rule_id": "POTASSIUM_STACK",
+      "severity": "major",
+      "simple": "Lisinopril, Aldactone and Telma can each raise the level of potassium in the blood. Together, potassium can get too high, which affects the heart.",
+      "title": "Medicines that can raise potassium levels",
+      "type": "cumulative"
+     }
+    ],
+    "no_known_issue_pairs": [
+     [
+      "Lisinopril",
+      "Telma"
+     ],
+     [
+      "Aldactone",
+      "Telma"
+     ]
+    ]
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "LIS"
+     ],
+     "label": "Lisinopril"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "SPI"
+     ],
+     "label": "Aldactone"
+    },
+    {
+     "id": "3",
+     "ingredients": [
+      "TEL"
+     ],
+     "label": "Telma"
+    }
+   ],
+   "name": "potassium"
+  },
+  {
+   "expected": {
+    "checked_pairs": 1,
+    "counts": {
+     "major": 1
+    },
+    "findings": [
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber before these are dispensed together.",
+      "drug_labels": [
+       "Lisinopril",
+       "Aldactone"
+      ],
+      "evidence": [
+       {
+        "dataset": "ddinter",
+        "dataset_name": "DDInter 2.0",
+        "dataset_version": "2.0",
+        "quote": null,
+        "record_id": "ddinter:LIS-SPI",
+        "url": "https://x/LIS"
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N72319 (Angiotensin Converting Enzyme Inhibitor): lisinopril",
+        "url": null
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N976723 (Aldosterone Antagonist): spironolactone",
+        "url": null
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "POTASSIUM_STACK",
+        "url": null
+       }
+      ],
+      "id": "interaction:LIS-SPI:1:2",
+      "ingredient_ids": [
+       "LIS",
+       "SPI"
+      ],
+      "ingredients": [
+       "lisinopril",
+       "spironolactone"
+      ],
+      "medicines": [
+       "1",
+       "2"
+      ],
+      "professional": "Major interaction (DDInter 2.0).",
+      "provenance": "structured",
+      "related": [
+       "Medicines that can raise potassium levels. Lisinopril and Aldactone can each raise the level of potassium in the blood. Together, potassium can get too high, which affects the heart."
+      ],
+      "related_rules": [
+       "POTASSIUM_STACK"
+      ],
+      "rule_id": null,
+      "severity": "major",
+      "simple": "Taking these two together can cause serious harm.",
+      "title": "Lisinopril + Spironolactone",
+      "type": "interaction"
+     }
+    ],
+    "no_known_issue_pairs": []
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "LIS"
+     ],
+     "label": "Lisinopril"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "SPI"
+     ],
+     "label": "Aldactone"
+    }
+   ],
+   "name": "merge: potassium pair"
+  },
+  {
+   "expected": {
+    "checked_pairs": 1,
+    "counts": {
+     "major": 1
+    },
+    "findings": [
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber before these are dispensed together.",
+      "drug_labels": [
+       "Warfarin",
+       "Ecosprin"
+      ],
+      "evidence": [
+       {
+        "dataset": "ddinter",
+        "dataset_name": "DDInter 2.0",
+        "dataset_version": "2.0",
+        "quote": null,
+        "record_id": "ddinter:W-AS",
+        "url": "https://x/W"
+       }
+      ],
+      "id": "interaction:AS-W:1:2",
+      "ingredient_ids": [
+       "W",
+       "AS"
+      ],
+      "ingredients": [
+       "warfarin",
+       "aspirin"
+      ],
+      "medicines": [
+       "1",
+       "2"
+      ],
+      "professional": "Major interaction (DDInter 2.0).",
+      "provenance": "structured",
+      "related": [],
+      "related_rules": [],
+      "rule_id": null,
+      "severity": "major",
+      "simple": "Taking these two together can cause serious harm.",
+      "title": "Warfarin + Aspirin",
+      "type": "interaction"
+     }
+    ],
+    "no_known_issue_pairs": []
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "W"
+     ],
+     "label": "Warfarin"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "AS"
+     ],
+     "label": "Ecosprin"
+    }
+   ],
+   "name": "merge: bleeding pair"
+  },
+  {
+   "expected": {
+    "checked_pairs": 1,
+    "counts": {
+     "major": 1
+    },
+    "findings": [
+     {
+      "confidence": "high",
+      "consider": "Consider confirming with the prescriber before these are dispensed together.",
+      "drug_labels": [
+       "Sertraline",
+       "Tramadol"
+      ],
+      "evidence": [
+       {
+        "dataset": "ddinter",
+        "dataset_name": "DDInter 2.0",
+        "dataset_version": "2.0",
+        "quote": null,
+        "record_id": "ddinter:SER-TRA",
+        "url": "https://x/SER"
+       },
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... serotonergic warning text ...",
+        "record_id": "serotonergic: sertraline",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-serotonergic"
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N520026 (Serotonin Reuptake Inhibitor): sertraline",
+        "url": null
+       },
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... serotonergic warning text ...",
+        "record_id": "serotonergic: tramadol",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-serotonergic"
+       },
+       {
+        "dataset": "rules",
+        "dataset_name": "PrescripTrace rule table (rules.yaml)",
+        "dataset_version": "v1",
+        "quote": null,
+        "record_id": "SEROTONIN_STACK",
+        "url": null
+       }
+      ],
+      "id": "interaction:SER-TRA:1:2",
+      "ingredient_ids": [
+       "SER",
+       "TRA"
+      ],
+      "ingredients": [
+       "sertraline",
+       "tramadol"
+      ],
+      "medicines": [
+       "1",
+       "2"
+      ],
+      "professional": "Major interaction (DDInter 2.0).",
+      "provenance": "structured",
+      "related": [
+       "2 medicines that raise serotonin. Sertraline and Tramadol each raise serotonin in the brain. Together they can cause serotonin syndrome (shaking, sweating, fever, confusion), which can be serious."
+      ],
+      "related_rules": [
+       "SEROTONIN_STACK"
+      ],
+      "rule_id": null,
+      "severity": "major",
+      "simple": "Taking these two together can cause serious harm.",
+      "title": "Sertraline + Tramadol",
+      "type": "interaction"
+     }
+    ],
+    "no_known_issue_pairs": []
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "SER"
+     ],
+     "label": "Sertraline"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "TRA"
+     ],
+     "label": "Tramadol"
+    }
+   ],
+   "name": "merge: serotonin pair"
+  },
+  {
+   "expected": {
+    "checked_pairs": 1,
+    "counts": {},
+    "findings": [],
+    "no_known_issue_pairs": [
+     [
+      "Metformin",
+      "Telma"
+     ]
+    ]
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "MET"
+     ],
+     "label": "Metformin"
+    },
+    {
+     "id": "2",
+     "ingredients": [
+      "TEL"
+     ],
+     "label": "Telma"
+    }
+   ],
+   "name": "nothing known"
+  },
+  {
+   "expected": {
+    "checked_pairs": 0,
+    "counts": {},
+    "findings": [],
+    "no_known_issue_pairs": []
+   },
+   "medicines": [
+    {
+     "id": "1",
+     "ingredients": [
+      "W"
+     ],
+     "label": "Warfarin"
+    }
+   ],
+   "name": "single medicine"
+  }
+ ],
+ "pack": {
+  "datasets": [
+   {
+    "code": "ddinter",
+    "licence": "CC BY-NC-SA 4.0",
+    "name": "DDInter 2.0",
+    "version": "2.0"
+   },
+   {
+    "code": "medrt",
+    "licence": "TBC",
+    "name": "MED-RT",
+    "version": null
+   }
+  ],
+  "format": 1,
+  "generated_at": "2026-01-01T00:00:00+00:00",
+  "groups": {
+   "ace_inhibitor": {
+    "label": "ACE inhibitors (blood pressure)",
+    "members": [
+     [
+      9,
+      [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N72319 (Angiotensin Converting Enzyme Inhibitor): lisinopril",
+        "url": null
+       }
+      ]
+     ]
+    ]
+   },
+   "anticoagulant": {
+    "label": "blood thinners (anticoagulants)",
+    "members": [
+     [
+      18,
+      [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N334412 (Vitamin K Antagonist): warfarin",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC B01AA (B01AA): warfarin",
+        "url": null
+       }
+      ]
+     ]
+    ]
+   },
+   "antihistamine": {
+    "label": "antihistamines (allergy tablets)",
+    "members": []
+   },
+   "antiplatelet": {
+    "label": "antiplatelet medicines",
+    "members": [
+     [
+      2,
+      [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N80318 (Platelet Aggregation Inhibitor): aspirin",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC B01AC (B01AC): aspirin",
+        "url": null
+       }
+      ]
+     ],
+     [
+      4,
+      [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N465596 (P2Y12 Platelet Inhibitor): clopidogrel",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC B01AC (B01AC): clopidogrel",
+        "url": null
+       }
+      ]
+     ]
+    ]
+   },
+   "arb": {
+    "label": "ARBs (blood pressure)",
+    "members": [
+     [
+      16,
+      [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N305610 (Angiotensin 2 Receptor Blocker): telmisartan",
+        "url": null
+       }
+      ]
+     ]
+    ]
+   },
+   "benzodiazepine": {
+    "label": "benzodiazepine sedatives",
+    "members": [
+     [
+      5,
+      [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N33908 (Benzodiazepine): diazepam",
+        "url": null
+       }
+      ]
+     ]
+    ]
+   },
+   "beta_blocker": {
+    "label": "beta blockers",
+    "members": []
+   },
+   "dhp_ccb": {
+    "label": "calcium channel blockers (amlodipine type)",
+    "members": []
+   },
+   "diuretic": {
+    "label": "water tablets (thiazide or loop diuretics)",
+    "members": [
+     [
+      6,
+      [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N212643 (Loop Diuretic): furosemide",
+        "url": null
+       }
+      ]
+     ]
+    ]
+   },
+   "fluoroquinolone": {
+    "label": "quinolone antibiotics",
+    "members": []
+   },
+   "h2_blocker": {
+    "label": "acid reducers (H2 blockers)",
+    "members": []
+   },
+   "macrolide": {
+    "label": "macrolide antibiotics",
+    "members": [
+     [
+      3,
+      [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N386792 (Macrolide Antimicrobial): azithromycin",
+        "url": null
+       }
+      ]
+     ]
+    ]
+   },
+   "nsaid": {
+    "label": "NSAID pain relievers",
+    "members": [
+     [
+      0,
+      [
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC M01AB (M01AB): aceclofenac",
+        "url": null
+       }
+      ]
+     ],
+     [
+      7,
+      [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N521066 (Nonsteroidal Anti-inflammatory Drug): ibuprofen",
+        "url": null
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC M01AE (M01AE): ibuprofen",
+        "url": null
+       }
+      ]
+     ]
+    ]
+   },
+   "opioid": {
+    "label": "opioid pain relievers",
+    "members": [
+     [
+      11,
+      [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N793371 (Opioid Agonist): morphine",
+        "url": null
+       }
+      ]
+     ],
+     [
+      17,
+      [
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC N02AX (N02AX): tramadol",
+        "url": null
+       }
+      ]
+     ]
+    ]
+   },
+   "potassium_sparing": {
+    "label": "potassium-sparing diuretics",
+    "members": [
+     [
+      15,
+      [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N976723 (Aldosterone Antagonist): spironolactone",
+        "url": null
+       }
+      ]
+     ]
+    ]
+   },
+   "potassium_supplement": {
+    "label": "potassium supplements",
+    "members": []
+   },
+   "ppi": {
+    "label": "acid reducers (proton pump inhibitors)",
+    "members": []
+   },
+   "qt_prolonging": {
+    "label": "medicines that can affect heart rhythm (QT prolongation)",
+    "members": [
+     [
+      3,
+      [
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... qt_prolonging warning text ...",
+        "record_id": "qt_prolonging: azithromycin",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-qt_prolonging"
+       }
+      ]
+     ],
+     [
+      12,
+      [
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... qt_prolonging warning text ...",
+        "record_id": "qt_prolonging: ondansetron",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-qt_prolonging"
+       }
+      ]
+     ],
+     [
+      14,
+      [
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... qt_prolonging warning text ...",
+        "record_id": "qt_prolonging: sertraline",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-qt_prolonging"
+       }
+      ]
+     ]
+    ]
+   },
+   "sedating": {
+    "label": "sedating medicines (opioids, benzodiazepines, other CNS depressants)",
+    "members": [
+     [
+      5,
+      [
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... cns_depressant warning text ...",
+        "record_id": "cns_depressant: diazepam",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-cns_depressant"
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N33908 (Benzodiazepine): diazepam",
+        "url": null
+       }
+      ]
+     ],
+     [
+      11,
+      [
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... cns_depressant warning text ...",
+        "record_id": "cns_depressant: morphine",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-cns_depressant"
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N793371 (Opioid Agonist): morphine",
+        "url": null
+       }
+      ]
+     ],
+     [
+      17,
+      [
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... cns_depressant warning text ...",
+        "record_id": "cns_depressant: tramadol",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-cns_depressant"
+       },
+       {
+        "dataset": "atc",
+        "dataset_name": "atc",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "ATC N02AX (N02AX): tramadol",
+        "url": null
+       }
+      ]
+     ]
+    ]
+   },
+   "serotonergic": {
+    "label": "medicines that raise serotonin",
+    "members": [
+     [
+      12,
+      [
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... serotonergic warning text ...",
+        "record_id": "serotonergic: ondansetron",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-serotonergic"
+       }
+      ]
+     ],
+     [
+      14,
+      [
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... serotonergic warning text ...",
+        "record_id": "serotonergic: sertraline",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-serotonergic"
+       },
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N520026 (Serotonin Reuptake Inhibitor): sertraline",
+        "url": null
+       }
+      ]
+     ],
+     [
+      17,
+      [
+       {
+        "dataset": "openfda_label",
+        "dataset_name": "openfda_label",
+        "dataset_version": null,
+        "quote": "warnings: ... serotonergic warning text ...",
+        "record_id": "serotonergic: tramadol",
+        "url": "https://dailymed.nlm.nih.gov/dailymed/lookup.cfm?setid=abc-serotonergic"
+       }
+      ]
+     ]
+    ]
+   },
+   "snri": {
+    "label": "SNRI antidepressants",
+    "members": []
+   },
+   "ssri": {
+    "label": "SSRI antidepressants",
+    "members": [
+     [
+      14,
+      [
+       {
+        "dataset": "rxclass_fdaspl",
+        "dataset_name": "rxclass_fdaspl",
+        "dataset_version": null,
+        "quote": null,
+        "record_id": "EPC N520026 (Serotonin Reuptake Inhibitor): sertraline",
+        "url": null
+       }
+      ]
+     ]
+    ]
+   },
+   "statin": {
+    "label": "cholesterol medicines (statins)",
+    "members": []
+   },
+   "sulfonylurea": {
+    "label": "sulfonylurea diabetes medicines",
+    "members": []
+   },
+   "systemic_steroid": {
+    "label": "steroid tablets or injections",
+    "members": []
+   },
+   "tca": {
+    "label": "tricyclic antidepressants",
+    "members": []
+   }
+  },
+  "ingredients": [
+   [
+    "ACE",
+    "aceclofenac"
+   ],
+   [
+    "AMI",
+    "amiodarone"
+   ],
+   [
+    "AS",
+    "aspirin"
+   ],
+   [
+    "AZI",
+    "azithromycin"
+   ],
+   [
+    "CL",
+    "clopidogrel"
+   ],
+   [
+    "DIA",
+    "diazepam"
+   ],
+   [
+    "FUR",
+    "furosemide"
+   ],
+   [
+    "IB",
+    "ibuprofen"
+   ],
+   [
+    "LEV",
+    "levofloxacin"
+   ],
+   [
+    "LIS",
+    "lisinopril"
+   ],
+   [
+    "MET",
+    "metformin"
+   ],
+   [
+    "MOR",
+    "morphine"
+   ],
+   [
+    "OND",
+    "ondansetron"
+   ],
+   [
+    "PCM",
+    "acetaminophen"
+   ],
+   [
+    "SER",
+    "sertraline"
+   ],
+   [
+    "SPI",
+    "spironolactone"
+   ],
+   [
+    "TEL",
+    "telmisartan"
+   ],
+   [
+    "TRA",
+    "tramadol"
+   ],
+   [
+    "W",
+    "warfarin"
+   ]
+  ],
+  "names": [
+   [
+    "Brufen",
+    "india_brand",
+    [
+     7
+    ],
+    "india_brand:1"
+   ],
+   [
+    "Paracetamol",
+    "synonym",
+    [
+     13
+    ],
+    "synonym:PCM"
+   ],
+   [
+    "Warfarin",
+    "ingredient",
+    [
+     18
+    ],
+    "ingredient:W"
+   ],
+   [
+    "Zerodol-P",
+    "india_brand",
+    [
+     0,
+     13
+    ],
+    "india_brand:2"
+   ]
+  ],
+  "pair_datasets": [
+   "ddinter",
+   "medrt"
+  ],
+  "pairs": [
+   [
+    1,
+    8,
+    [
+     [
+      0,
+      1,
+      "ddinter:AMI-LEV",
+      "AMI"
+     ],
+     [
+      1,
+      0,
+      "medrt:AMI-LEV",
+      ""
+     ]
+    ]
+   ],
+   [
+    2,
+    18,
+    [
+     [
+      0,
+      1,
+      "ddinter:W-AS",
+      "W"
+     ]
+    ]
+   ],
+   [
+    7,
+    18,
+    [
+     [
+      0,
+      1,
+      "ddinter:W-IB",
+      "W"
+     ]
+    ]
+   ],
+   [
+    9,
+    15,
+    [
+     [
+      0,
+      1,
+      "ddinter:LIS-SPI",
+      "LIS"
+     ]
+    ]
+   ],
+   [
+    13,
+    18,
+    [
+     [
+      0,
+      2,
+      "ddinter:W-PCM",
+      "W"
+     ]
+    ]
+   ],
+   [
+    14,
+    17,
+    [
+     [
+      0,
+      1,
+      "ddinter:SER-TRA",
+      "SER"
+     ]
+    ]
+   ]
+  ],
+  "rules": {
+   "cumulative": [
+    {
+     "groups": [
+      "qt_prolonging"
+     ],
+     "id": "QT_STACK",
+     "min_drugs": 2,
+     "min_groups": 1,
+     "require_groups": [],
+     "severity": "major",
+     "text": {
+      "consider": "Consider confirming with the prescriber, especially if the patient has heart disease, low potassium or magnesium, or faints.",
+      "professional": "Additive QT-prolongation risk: each agent's FDA label warns of QT prolongation (quoted in the evidence). Risk rises with electrolyte disturbance, bradycardia and structural heart disease.",
+      "simple": "{drugs} can each affect the heart's rhythm (the \"QT interval\"). Together the risk of a dangerous irregular heartbeat is higher.",
+      "title": "{count} medicines that can affect heart rhythm"
+     }
+    },
+    {
+     "groups": [
+      "serotonergic"
+     ],
+     "id": "SEROTONIN_STACK",
+     "min_drugs": 2,
+     "min_groups": 1,
+     "require_groups": [],
+     "severity": "major",
+     "text": {
+      "consider": "Consider confirming with the prescriber, and tell the patient which warning signs to look for.",
+      "professional": "Additive serotonergic effect; serotonin syndrome is named in each agent's label warnings or class (quoted in the evidence).",
+      "simple": "{drugs} each raise serotonin in the brain. Together they can cause serotonin syndrome (shaking, sweating, fever, confusion), which can be serious.",
+      "title": "{count} medicines that raise serotonin"
+     }
+    },
+    {
+     "groups": [
+      "sedating"
+     ],
+     "id": "SEDATION_STACK",
+     "min_drugs": 2,
+     "min_groups": 1,
+     "require_groups": [],
+     "severity": "major",
+     "text": {
+      "consider": "Consider confirming with the prescriber; advise avoiding alcohol and driving.",
+      "professional": "Additive CNS and respiratory depression (opioid / benzodiazepine / other CNS depressant labelling, quoted in the evidence).",
+      "simple": "{drugs} can each make a person sleepy and slow their breathing. Together the effect is stronger and can be dangerous, especially with alcohol.",
+      "title": "{count} medicines that cause drowsiness or slow breathing"
+     }
+    },
+    {
+     "groups": [
+      "nsaid",
+      "anticoagulant",
+      "antiplatelet",
+      "systemic_steroid"
+     ],
+     "id": "BLEEDING_STACK",
+     "min_drugs": 3,
+     "min_groups": 2,
+     "require_groups": [],
+     "severity": "major",
+     "text": {
+      "consider": "Consider confirming with the prescriber whether all are needed, and whether stomach protection is appropriate.",
+      "professional": "Stacked bleeding risk across {groups}. GI bleeding risk is additive; consider gastric protection and bleeding history.",
+      "simple": "{drugs} each raise the chance of bleeding, especially from the stomach. Three or more together add up the risk.",
+      "title": "{count} medicines that raise bleeding risk"
+     }
+    },
+    {
+     "groups": [
+      "ace_inhibitor",
+      "arb",
+      "potassium_sparing",
+      "potassium_supplement"
+     ],
+     "id": "POTASSIUM_STACK",
+     "min_drugs": 2,
+     "min_groups": 2,
+     "require_groups": [],
+     "severity": "major",
+     "text": {
+      "consider": "Consider confirming with the prescriber whether potassium and kidney tests are planned.",
+      "professional": "Additive hyperkalaemia risk ({groups}); higher with kidney impairment, diabetes and older age.",
+      "simple": "{drugs} can each raise the level of potassium in the blood. Together, potassium can get too high, which affects the heart.",
+      "title": "Medicines that can raise potassium levels"
+     }
+    },
+    {
+     "groups": [
+      "nsaid",
+      "ace_inhibitor",
+      "arb",
+      "diuretic"
+     ],
+     "id": "KIDNEY_TRIPLE",
+     "min_drugs": 3,
+     "min_groups": 1,
+     "require_groups": [
+      [
+       "nsaid"
+      ],
+      [
+       "ace_inhibitor",
+       "arb"
+      ],
+      [
+       "diuretic"
+      ]
+     ],
+     "severity": "major",
+     "text": {
+      "consider": "Consider confirming with the prescriber whether the NSAID is needed, and whether kidney function will be checked.",
+      "professional": "\"Triple whammy\": NSAID with an ACE inhibitor/ARB and a diuretic increases the risk of acute kidney injury.",
+      "simple": "{drugs} together can strain the kidneys and sometimes cause sudden kidney damage, especially if the person is dehydrated or unwell.",
+      "title": "Pain reliever + blood pressure medicine + water tablet together"
+     }
+    }
+   ],
+   "dup_class": {
+    "groups": [
+     [
+      "nsaid",
+      "major"
+     ],
+     [
+      "anticoagulant",
+      "major"
+     ],
+     [
+      "antiplatelet",
+      "moderate"
+     ],
+     [
+      "opioid",
+      "major"
+     ],
+     [
+      "benzodiazepine",
+      "major"
+     ],
+     [
+      "ppi",
+      "moderate"
+     ],
+     [
+      "h2_blocker",
+      "moderate"
+     ],
+     [
+      "ssri",
+      "major"
+     ],
+     [
+      "snri",
+      "major"
+     ],
+     [
+      "statin",
+      "moderate"
+     ],
+     [
+      "sulfonylurea",
+      "major"
+     ],
+     [
+      "beta_blocker",
+      "moderate"
+     ],
+     [
+      "dhp_ccb",
+      "moderate"
+     ],
+     [
+      "ace_inhibitor",
+      "moderate"
+     ],
+     [
+      "arb",
+      "moderate"
+     ],
+     [
+      "macrolide",
+      "moderate"
+     ],
+     [
+      "fluoroquinolone",
+      "moderate"
+     ],
+     [
+      "antihistamine",
+      "minor"
+     ]
+    ],
+    "id": "DUP_CLASS",
+    "text": {
+     "consider": "Consider confirming with the prescriber whether both are intended.",
+     "professional": "Possible therapeutic duplication within {group} ({ingredients}).",
+     "simple": "{drugs} are both {group}. Using two medicines that do the same job usually adds side effects without adding benefit.",
+     "title": "Two {group} in the same list"
+    }
+   },
+   "dup_ingredient": {
+    "id": "DUP_INGREDIENT",
+    "severity": "major",
+    "text": {
+     "consider": "Consider confirming with the prescriber whether both products are intended, and check the total daily dose against the label.",
+     "professional": "Therapeutic duplication: {ingredient} is present in {drugs}. Cumulative daily dose may exceed the labelled maximum.",
+     "simple": "{drugs} all contain {ingredient}. Taking them together adds up the dose, which can lead to taking too much.",
+     "title": "The same medicine appears more than once: {ingredient}"
+    }
+   },
+   "evidence": {
+    "BLEEDING_STACK": {
+     "dataset": "rules",
+     "dataset_name": "PrescripTrace rule table (rules.yaml)",
+     "dataset_version": "v1",
+     "quote": null,
+     "record_id": "BLEEDING_STACK",
+     "url": null
+    },
+    "DUP_CLASS": {
+     "dataset": "rules",
+     "dataset_name": "PrescripTrace rule table (rules.yaml)",
+     "dataset_version": "v1",
+     "quote": null,
+     "record_id": "DUP_CLASS",
+     "url": null
+    },
+    "DUP_INGREDIENT": {
+     "dataset": "rules",
+     "dataset_name": "PrescripTrace rule table (rules.yaml)",
+     "dataset_version": "v1",
+     "quote": null,
+     "record_id": "DUP_INGREDIENT",
+     "url": null
+    },
+    "KIDNEY_TRIPLE": {
+     "dataset": "rules",
+     "dataset_name": "PrescripTrace rule table (rules.yaml)",
+     "dataset_version": "v1",
+     "quote": null,
+     "record_id": "KIDNEY_TRIPLE",
+     "url": null
+    },
+    "POTASSIUM_STACK": {
+     "dataset": "rules",
+     "dataset_name": "PrescripTrace rule table (rules.yaml)",
+     "dataset_version": "v1",
+     "quote": null,
+     "record_id": "POTASSIUM_STACK",
+     "url": null
+    },
+    "QT_STACK": {
+     "dataset": "rules",
+     "dataset_name": "PrescripTrace rule table (rules.yaml)",
+     "dataset_version": "v1",
+     "quote": null,
+     "record_id": "QT_STACK",
+     "url": null
+    },
+    "SEDATION_STACK": {
+     "dataset": "rules",
+     "dataset_name": "PrescripTrace rule table (rules.yaml)",
+     "dataset_version": "v1",
+     "quote": null,
+     "record_id": "SEDATION_STACK",
+     "url": null
+    },
+    "SEROTONIN_STACK": {
+     "dataset": "rules",
+     "dataset_name": "PrescripTrace rule table (rules.yaml)",
+     "dataset_version": "v1",
+     "quote": null,
+     "record_id": "SEROTONIN_STACK",
+     "url": null
+    }
+   },
+   "version": 1
+  },
+  "severities": [
+   "contraindicated",
+   "major",
+   "moderate",
+   "minor",
+   "unknown"
+  ],
+  "templates": {
+   "pair_consider": {
+    "contraindicated": "Consider confirming with the prescriber before these are dispensed together.",
+    "major": "Consider confirming with the prescriber before these are dispensed together.",
+    "minor": "Usually no action is needed. Mention it if the patient has concerns.",
+    "moderate": "Consider checking with the prescriber whether monitoring or spacing the doses is needed.",
+    "unknown": "Consider checking the label or asking the prescriber if unsure."
+   },
+   "pair_professional": {
+    "contraindicated": "Listed as contraindicated ({sources}).",
+    "major": "Major interaction ({sources}).",
+    "minor": "Minor interaction ({sources}).",
+    "moderate": "Moderate interaction ({sources}).",
+    "unknown": "Interaction listed without a severity grade ({sources})."
+   },
+   "pair_simple": {
+    "contraindicated": "These two medicines are listed as not to be used together.",
+    "major": "Taking these two together can cause serious harm.",
+    "minor": "A minor interaction is known. It is usually low risk.",
+    "moderate": "Taking these two together may need extra care or monitoring.",
+    "unknown": "An interaction between these two is listed, but how serious it is has not been graded in our data."
+   },
+   "pair_title": "{a} + {b}"
+  },
+  "url_prefixes": [
+   "https://x/",
+   "https://x/AMI"
+  ],
+  "version": "8fa5941d5201f33c"
+ }
+}

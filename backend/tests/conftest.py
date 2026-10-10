@@ -4,6 +4,7 @@ import os
 # app module reads (and caches) the settings.
 os.environ.setdefault("RATE_LIMIT_ENABLED", "false")
 os.environ.setdefault("NORMALISE_EXTERNAL", "false")
+os.environ.setdefault("OFFLINE_PACK_PREBUILD", "false")
 
 import pytest
 from sqlalchemy import text

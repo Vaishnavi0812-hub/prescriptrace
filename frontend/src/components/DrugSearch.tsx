@@ -3,6 +3,8 @@ import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { searchDrugs, type SearchHit } from "../lib/api";
+import { offlineSearch } from "../lib/offline/search";
+import { isNetworkError, loadKnowledge } from "../lib/offline/store";
 
 function useDebounced<T>(value: T, ms: number): T {
   const [debounced, setDebounced] = useState(value);
@@ -37,8 +39,17 @@ export function DrugSearch({
 
   const { data, isFetching, isError } = useQuery({
     queryKey: ["search", query],
-    queryFn: ({ signal }) => searchDrugs(query, signal),
+    queryFn: async ({ signal }) => {
+      try {
+        return await searchDrugs(query, signal);
+      } catch (e) {
+        const kb = isNetworkError(e) ? await loadKnowledge() : null; // offline: saved names
+        if (kb) return { hits: offlineSearch(query, kb) };
+        throw e;
+      }
+    },
     enabled: query.length >= 2,
+    networkMode: "always", // offline: answered from the saved pack
     staleTime: 5 * 60_000,
     placeholderData: (previous) => previous,
   });

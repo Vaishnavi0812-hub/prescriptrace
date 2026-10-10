@@ -152,6 +152,8 @@ export interface CheckResponse {
   disclaimer: string;
   absence_note: string;
   data_versions: { code: string; name: string; version: string | null; licence: string }[];
+  /** Set only on a result computed on this device from the offline pack (a partial check). */
+  offline?: { generated_at: string; context_ignored: boolean };
 }
 
 export interface CheckRequestItem {

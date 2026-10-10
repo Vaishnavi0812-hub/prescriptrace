@@ -6,6 +6,10 @@
   "common": {
     "retry": "Try again"
   },
+  "language": {
+    "label": "Language",
+    "machineTranslated": "This translation was made by machine and has not yet been checked by a native speaker. Medicine warnings and sources are shown in English."
+  },
   "check": {
     "addMedicine": "Add medicine",
     "placeholder": "e.g. Dolo 650 or paracetamol",
@@ -185,6 +189,7 @@
     "records": "Records",
     "licence": "Licence",
     "region": "Region",
+    "inRepo": "Source file in this project: {{path}} (each row cites its own public source)",
     "back": "Back to check"
   },
   "notFound": "Page not found",
@@ -222,5 +227,40 @@
     "otherText_other": "{{count}} other lines from the photo",
     "done": "Done: back to the medicine list",
     "possibleMatches": "Not recognised. Possible matches (check carefully):"
+  },
+  "print": {
+    "button": "Print or save as PDF",
+    "printed": "Printed {{date}}",
+    "medicines": "Medicines checked:"
+  },
+  "offline": {
+    "title": "Use without internet",
+    "what": "Save the interaction data on this phone so you can check medicines without a connection.",
+    "limits": "Offline checks are partial: they cover serious and moderate interactions, duplicates and the combination rules. Recall and quality alerts, label notes, patient details (pregnancy, kidney, liver, age), minor interactions and reading photos need the internet.",
+    "notSetUp": "Not set up on this device.",
+    "ready": "Saved on this device. Data from {{date}}.",
+    "updateAvailable": "Newer data is available",
+    "download": "Save for offline use ({{size}} MB)",
+    "update": "Update offline data ({{size}} MB)",
+    "downloading": "Saving…",
+    "remove": "Remove offline data",
+    "failed": "Could not save the offline data. Check the connection and try again.",
+    "needsConnection": "Connect to the internet to set this up.",
+    "unsupported": "This browser cannot save data for offline use.",
+    "footer": "Offline data saved ({{date}})",
+    "resultTitle": "Offline check: partial",
+    "resultBody": "No connection, so this was checked on this phone with data from {{date}}.",
+    "notChecked": "Not checked offline:",
+    "notCheckedItems": {
+      "recalls": "Recall and quality alerts",
+      "notes": "Label notes",
+      "context": "Patient details (pregnancy, kidney, liver, age)",
+      "minor": "Minor and ungraded interactions"
+    },
+    "contextIgnored": "You entered patient details. They were NOT checked offline.",
+    "recheck": "Check again online when you have a connection.",
+    "recallsNotChecked": "Not checked: alert lists need the internet. You can still use the checklist below.",
+    "setUpHint": "Tip: you can save data for offline checks on the About page.",
+    "setUpLink": "Set up offline use"
   }
 }

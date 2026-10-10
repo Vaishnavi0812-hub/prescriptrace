@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     rate_limit_normalise: str = "60/minute"
     rate_limit_check: str = "30/minute"
     rate_limit_ocr: str = "10/minute"
+    rate_limit_offline_pack: str = "6/minute"
+    offline_pack_prebuild: bool = True  # build the offline pack in the background at startup
     ocr_max_bytes: int = 8 * 1024 * 1024
 
     openfda_api_key: str = ""

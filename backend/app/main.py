@@ -1,5 +1,6 @@
 """FastAPI application entry point."""
 
+import threading
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from typing import Annotated, Any
@@ -19,12 +20,16 @@ from app.config import get_settings
 from app.db import get_session
 from app.models import Dataset
 from app.services.check_service import DISCLAIMER
+from app.services.offline_service import get_pack
 from app.services.state import get_state, load_state
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-    load_state()  # vocabulary for normalisation; a no-op warning if data is not loaded yet
+    state = load_state()  # vocabulary for normalisation; a no-op warning if data is not loaded yet
+    if state.vocabulary is not None and get_settings().offline_pack_prebuild:
+        # The offline pack takes ~10 s to build: do it now, in the background.
+        threading.Thread(target=get_pack, args=(state.vocabulary,), daemon=True).start()
     yield
 
 

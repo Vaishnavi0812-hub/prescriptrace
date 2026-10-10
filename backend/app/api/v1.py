@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import gzip
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, File, HTTPException, Query, Request, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Request, Response, UploadFile
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -18,6 +19,7 @@ from app.models import Dataset, IngestRun
 from app.schemas import api
 from app.services.check_service import ABSENCE_NOTE, DISCLAIMER, SelectionError, run_check
 from app.services.ocr_service import OcrUnavailableError, get_engine
+from app.services.offline_service import get_pack
 from app.services.state import get_state
 
 router = APIRouter(prefix="/api/v1")
@@ -137,6 +139,33 @@ def scan_prescription(
     finally:
         del data  # do not keep the image around longer than needed
     return api.ScanResponse.model_validate(result)
+
+
+@router.get("/offline-pack/meta", response_model=api.OfflinePackMeta, tags=["offline"])
+def offline_pack_meta() -> api.OfflinePackMeta:
+    """Version and size of the offline pack, so the app can tell whether its copy is current."""
+    pack = get_pack(get_normaliser().vocab)
+    return api.OfflinePackMeta(
+        version=pack.version,
+        generated_at=pack.generated_at,
+        download_bytes=len(pack.gzipped),
+        raw_bytes=pack.raw_size,
+    )
+
+
+@router.get("/offline-pack", tags=["offline"], response_class=Response)
+@limiter.limit(lambda: settings.rate_limit_offline_pack)
+def offline_pack(request: Request) -> Response:
+    """Data for offline typed checks: names, serious/moderate pairs with their source records,
+    rule groups and wording. No recalls, label quotes or patient-context data (ADR-018)."""
+    pack = get_pack(get_normaliser().vocab)
+    headers = {"ETag": f'"{pack.version}"', "Cache-Control": "no-cache"}
+    if request.headers.get("if-none-match") == headers["ETag"]:
+        return Response(status_code=304, headers=headers)
+    if "gzip" in request.headers.get("accept-encoding", ""):
+        headers["Content-Encoding"] = "gzip"
+        return Response(pack.gzipped, media_type="application/json", headers=headers)
+    return Response(gzip.decompress(pack.gzipped), media_type="application/json", headers=headers)
 
 
 @router.get("/datasets", response_model=api.DatasetsResponse, tags=["meta"])

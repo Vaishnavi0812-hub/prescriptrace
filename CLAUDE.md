@@ -18,7 +18,8 @@ pregnancy, renal/hepatic) → one prioritised, plain-language safety summary wit
 - [x] Stage 6: API layer (`app/api/v1.py`, `app/services/check_service.py`, ADR-014)
 - [x] Stage 7: frontend core flow (search, confirm, context, results, About; ADR-015/016)
 - [x] Stage 8: OCR flow (`app/core/ocr`, `/api/v1/ocr`, Scan screen; ADR-017)
-- [ ] Stages 9–10 (see "Build stages" below). Stop for review after each stage; commit per stage.
+- [x] Stage 9: offline pack + TS engine, PWA, print/PDF, hi/kn (machine, needs review), a11y audit (ADR-018/019)
+- [ ] Stage 10 (see "Build stages" below). Stop for review after each stage; commit per stage.
 
 ## Approved data sources
 - Interactions: DDInter 2.0 (CC BY-NC-SA 4.0, **non-commercial**; all 14 ATC files incl. unlisted
@@ -79,6 +80,8 @@ Windows PowerShell (`scripts/dev.ps1`; Makefile has the same targets for bash):
   → frontend http://localhost:5173, API docs http://localhost:8000/api/docs
 - `.\scripts\dev.ps1 test` — backend pytest (in Docker, against Postgres) + frontend Vitest
 - `.\scripts\dev.ps1 lint` — ruff check, ruff format --check, mypy --strict; eslint, tsc
+- Offline vectors: `docker compose exec -e UPDATE_VECTORS=1 backend pytest tests/unit/test_offline_pack.py`
+  after changing the engine/pack; a11y: `python scripts/a11y_audit.py` (app running, host Playwright).
 - `.\scripts\dev.ps1 fmt` · `migrate` · `logs` · `down` · `shell-db`
 - New migration: `docker compose run --rm backend alembic revision --autogenerate -m "msg"`,
   then review it and run `fmt` (autogenerate output isn't ruff-clean).
@@ -120,7 +123,7 @@ Ingestion gotchas: Alembic autogenerate misses CHECK-constraint changes (write t
 hand with `op.f(name)`; `tests/db/test_constraints.py` catches drift). RxNorm RRF relation rows read
 "RXCUI2 RELA RXCUI1". Never use approximate RxNorm matching when mapping between datasets.
 
-Gotchas: Docker Desktop sometimes reports "unable to start" — quitting and relaunching it fixed
+Gotchas: Test fixtures that feed committed vectors must be deterministic (no `hash()`). Queries with an offline fallback need React Query `networkMode: "always"`. Docker Desktop sometimes reports "unable to start" — quitting and relaunching it fixed
 it. In PowerShell scripts don't use `$ErrorActionPreference = "Stop"` around docker/npm (PS 5.1
 treats their stderr progress as errors). npm install on this machine is slow (~15 min).
 

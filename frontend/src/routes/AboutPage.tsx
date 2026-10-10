@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
+import { OfflinePanel } from "../components/OfflinePanel";
 import { Skeleton } from "../components/Skeleton";
 import { fetchDatasets } from "../lib/api";
 
@@ -22,6 +23,8 @@ export default function AboutPage() {
       <p>{t("about.privacy")}</p>
       <p className="rounded-xl bg-sev-moderate/15 p-3 text-sm">{t("about.disclaimer")}</p>
 
+      <OfflinePanel />
+
       <h2 className="text-xl font-bold">{t("about.dataTitle")}</h2>
       {isPending && <Skeleton lines={5} />}
       {isError && <p role="alert">{t("about.dataError")}</p>}
@@ -32,10 +35,18 @@ export default function AboutPage() {
             {data.datasets.map((d) => (
               <li key={d.code} className="rounded-xl border border-sand bg-surface p-4 text-sm">
                 <p className="text-base font-semibold">
-                  <a href={d.source_url} target="_blank" rel="noreferrer noopener" className="underline">
-                    {d.name}
-                  </a>
+                  {/^https?:\/\//.test(d.source_url) ? (
+                    <a href={d.source_url} target="_blank" rel="noreferrer noopener"
+                       className="inline-flex min-h-11 items-center underline">
+                      {d.name}
+                    </a>
+                  ) : (
+                    d.name
+                  )}
                 </p>
+                {!/^https?:\/\//.test(d.source_url) && (
+                  <p className="break-words text-muted">{t("about.inRepo", { path: d.source_url })}</p>
+                )}
                 <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
                   <dt className="text-muted">{t("about.version")}</dt>
                   <dd>{d.version ?? "—"}</dd>
@@ -46,7 +57,8 @@ export default function AboutPage() {
                   <dt className="text-muted">{t("about.licence")}</dt>
                   <dd className="break-words">
                     {d.licence_url ? (
-                      <a href={d.licence_url} target="_blank" rel="noreferrer noopener" className="underline">
+                      <a href={d.licence_url} target="_blank" rel="noreferrer noopener"
+                         className="inline-flex min-h-11 items-center underline">
                         {d.licence}
                       </a>
                     ) : (

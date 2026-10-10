@@ -415,9 +415,7 @@ class _Engine:
         )
 
     def _rule_evidence(self, rule_id: str) -> Evidence:
-        return Evidence(
-            "rules", "PrescripTrace rule table (rules.yaml)", f"v{self.rules.version}", rule_id
-        )
+        return rule_evidence(self.rules, rule_id)
 
 
 def _triggers(rule: CumulativeRule, covered: dict[str, set[str]], members: Members) -> bool:
@@ -432,6 +430,28 @@ def _triggers(rule: CumulativeRule, covered: dict[str, set[str]], members: Membe
         if all(covered[d] & set(slot) for d, slot in zip(combo, rule.require_groups, strict=True)):
             return True
     return False
+
+
+def group_memberships(
+    snapshot: KnowledgeSnapshot, rules: RuleSet
+) -> dict[str, dict[str, list[Evidence]]]:
+    """Every ingredient's rule-group membership, with the evidence the engine would cite:
+    {group key: {rxcui: evidence}}. Used by the offline-pack builder so the offline engine
+    uses exactly the same membership and sources as this one."""
+    engine = _Engine([], snapshot, PatientContext(), rules)
+    out: dict[str, dict[str, list[Evidence]]] = {}
+    for key, group in rules.groups.items():
+        members = {}
+        for rx in sorted(snapshot.names):
+            evidence = engine._group_evidence(rx, group)
+            if evidence:
+                members[rx] = evidence
+        out[key] = members
+    return out
+
+
+def rule_evidence(rules: RuleSet, rule_id: str) -> Evidence:
+    return Evidence("rules", "PrescripTrace rule table (rules.yaml)", f"v{rules.version}", rule_id)
 
 
 def _selector_matches(kind: str, value: str, tag: ClassTag) -> bool:

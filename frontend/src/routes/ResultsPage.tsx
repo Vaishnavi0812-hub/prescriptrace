@@ -7,8 +7,10 @@ import { FindingCard, type Detail } from "../components/FindingCard";
 import { RecallSection } from "../components/RecallSection";
 import { Icon } from "../components/Severity";
 import { Skeleton } from "../components/Skeleton";
-import { ApiError, runCheck, type CheckRequestItem, type Finding } from "../lib/api";
+import { ApiError, runCheck, type CheckRequestItem, type CheckResponse, type Finding } from "../lib/api";
 import { useMedications } from "../lib/medications";
+import { runOfflineCheck } from "../lib/offline/check";
+import { isNetworkError, loadKnowledge, useOfflineInfo } from "../lib/offline/store";
 
 const DETAIL_KEY = "prescriptrace.detail"; // a per-device display preference, not patient data
 
@@ -30,12 +32,35 @@ function useDetail(): [Detail, (d: Detail) => void] {
   return [detail, setDetail];
 }
 
+/** A result computed on this phone: say plainly what was not checked. */
+function OfflineBanner({ offline }: { offline: NonNullable<CheckResponse["offline"]> }) {
+  const { t } = useTranslation();
+  return (
+    <section className="space-y-2 rounded-xl border-2 border-sev-moderate bg-sev-moderate/15 p-4" aria-labelledby="offline-result-h">
+      <h2 id="offline-result-h" className="flex items-center gap-2 text-lg font-bold">
+        <Icon name="alert" className="h-5 w-5 text-sev-moderate-ink" />
+        {t("offline.resultTitle")}
+      </h2>
+      <p>{t("offline.resultBody", { date: new Date(offline.generated_at).toLocaleDateString() })}</p>
+      {offline.context_ignored && <p className="font-semibold">{t("offline.contextIgnored")}</p>}
+      <p className="text-sm font-medium">{t("offline.notChecked")}</p>
+      <ul className="list-disc pl-5 text-sm">
+        {(["recalls", "notes", "context", "minor"] as const).map((k) => (
+          <li key={k}>{t(`offline.notCheckedItems.${k}`)}</li>
+        ))}
+      </ul>
+      <p className="text-sm">{t("offline.recheck")}</p>
+    </section>
+  );
+}
+
 const isDuplicate = (f: Finding) => f.type === "duplicate_ingredient" || f.type === "duplicate_class";
 
 export default function ResultsPage() {
   const { t } = useTranslation();
   const { meds, context, ready } = useMedications();
   const [detail, setDetail] = useDetail();
+  const offlineInfo = useOfflineInfo();
 
   const items: CheckRequestItem[] = meds
     .filter((m) => m.picked)
@@ -48,9 +73,20 @@ export default function ResultsPage() {
 
   const { data, error, isPending, refetch, isFetching } = useQuery({
     queryKey: ["check", items, context],
-    queryFn: ({ signal }) => runCheck(items, context, signal),
+    queryFn: async ({ signal }) => {
+      try {
+        return await runCheck(items, context, signal);
+      } catch (e) {
+        // No connection: fall back to the offline pack, if one is saved (a partial check).
+        const kb = isNetworkError(e) ? await loadKnowledge() : null;
+        if (kb) return runOfflineCheck(items, context, kb);
+        throw e;
+      }
+    },
     enabled: ready,
     retry: 1,
+    // Run even when the browser reports no network: the offline pack can answer.
+    networkMode: "always",
   });
 
   if (!ready) {
@@ -82,6 +118,14 @@ export default function ResultsPage() {
       <section className="space-y-4 py-6" role="alert">
         <h1 className="text-xl font-bold">{offline ? t("results.offlineTitle") : t("results.errorTitle")}</h1>
         <p>{offline ? t("results.offlineBody") : (error as ApiError).message}</p>
+        {offline && !offlineInfo && (
+          <p className="text-sm">
+            {t("offline.setUpHint")}{" "}
+            <Link to="/about" className="inline-flex min-h-11 items-center font-medium text-primary underline">
+              {t("offline.setUpLink")}
+            </Link>
+          </p>
+        )}
         <div className="flex flex-wrap gap-3">
           <button
             type="button"
@@ -123,7 +167,19 @@ export default function ResultsPage() {
           {t("results.checked", { count: s.checked_medicines })}
           {s.worth_checking > 0 && <> · {t("results.worthCount", { count: s.worth_checking })}</>}
         </p>
-        <div className="flex items-center gap-2" role="group" aria-label={t("results.detailLabel")}>
+        {/* On paper: when, and which medicines (names only; nothing about the patient). */}
+        <div className="hidden text-sm print:block">
+          <p>{t("print.printed", { date: new Date().toLocaleString() })}</p>
+          <p className="font-semibold">{t("print.medicines")}</p>
+          <ul className="list-disc pl-5">
+            {data.medicines.map((m) => (
+              <li key={m.id}>
+                {m.text} ({m.ingredients.map((i) => i.name).join(", ")})
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 print:hidden" role="group" aria-label={t("results.detailLabel")}>
           {(["simple", "professional"] as const).map((d) => (
             <button
               key={d}
@@ -137,8 +193,17 @@ export default function ResultsPage() {
               {t(`results.detail.${d}`)}
             </button>
           ))}
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="ml-auto min-h-11 rounded-lg border border-border-strong bg-surface px-3 text-sm font-medium"
+          >
+            {t("print.button")}
+          </button>
         </div>
       </header>
+
+      {data.offline && <OfflineBanner offline={data.offline} />}
 
       {/* (2) highest-severity items first */}
       {attention.length > 0 && (
@@ -151,7 +216,7 @@ export default function ResultsPage() {
       )}
 
       {/* (3) recall and alert flags + checklist */}
-      <RecallSection recalls={data.recalls} />
+      <RecallSection recalls={data.recalls} notChecked={Boolean(data.offline)} />
 
       {/* (4) duplicate therapy */}
       {duplicates.length > 0 && (
@@ -251,7 +316,7 @@ export default function ResultsPage() {
       </details>
 
       <p className="text-sm text-muted">{data.disclaimer}</p>
-      <Link to="/" className="inline-flex min-h-12 items-center font-semibold text-primary underline">
+      <Link to="/" className="inline-flex min-h-12 items-center font-semibold text-primary underline print:hidden">
         {t("results.edit")}
       </Link>
     </article>

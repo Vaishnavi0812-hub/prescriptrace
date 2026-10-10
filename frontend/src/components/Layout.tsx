@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Link, Outlet } from "react-router-dom";
 
 import { fetchHealth } from "../lib/api";
+import { LanguageSwitcher, TranslationNotice } from "./LanguageSwitcher";
+import { OfflineStatus } from "./OfflinePanel";
 
 function DataStatus() {
   const { t } = useTranslation();
@@ -11,6 +13,7 @@ function DataStatus() {
     queryFn: ({ signal }) => fetchHealth(signal),
     retry: 1,
     refetchInterval: 60_000,
+    networkMode: "always", // so "offline" is shown instead of "checking…" forever
   });
 
   let label = t("footer.apiChecking");
@@ -38,21 +41,30 @@ export default function Layout() {
   const { t } = useTranslation();
   return (
     <div className="mx-auto flex min-h-dvh max-w-2xl flex-col px-4">
-      <header className="flex items-center justify-between py-4">
-        <Link to="/" className="flex min-h-11 items-center text-xl font-bold text-primary">
-          {t("app.name")}
-        </Link>
-        <span className="text-sm text-muted">{t("app.tagline")}</span>
+      <header className="space-y-2 py-4">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <Link to="/" className="flex min-h-11 items-center text-xl font-bold text-primary">
+              {t("app.name")}
+            </Link>
+            <span className="block text-sm text-muted">{t("app.tagline")}</span>
+          </div>
+          <LanguageSwitcher />
+        </div>
+        <TranslationNotice />
       </header>
       <main className="flex-1">
         <Outlet />
       </main>
       <footer className="space-y-2 border-t border-sand py-4">
-        <DataStatus />
+        <div className="space-y-2 print:hidden">
+          <DataStatus />
+          <OfflineStatus />
+        </div>
         <p className="text-sm text-muted">{t("footer.disclaimer")}</p>
         <Link
           to="/about"
-          className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline"
+          className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline print:hidden"
         >
           {t("footer.about")}
         </Link>

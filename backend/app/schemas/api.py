@@ -274,6 +274,13 @@ class DatasetsResponse(Model):
     non_commercial_notice: str
 
 
+class OfflinePackMeta(Model):
+    version: str
+    generated_at: str
+    download_bytes: int
+    raw_bytes: int
+
+
 # ------------------------------------------------------------------ OCR
 
 

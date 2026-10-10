@@ -50,6 +50,31 @@
     outline-offset: 2px;
   }
 
+  /* Print / save as PDF: plain white page, every section expanded (see lib/print.ts), link
+     targets written out so sources can be followed from paper. */
+  @media print {
+    html,
+    body {
+      background: #fff;
+      font-size: 11pt;
+    }
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+    article a[href^="http"]::after {
+      content: " (" attr(href) ")";
+      font-size: 0.8em;
+      word-break: break-all;
+    }
+    li,
+    section > div {
+      break-inside: avoid;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

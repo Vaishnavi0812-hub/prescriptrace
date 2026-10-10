@@ -37,7 +37,8 @@ VERIFIED = CURATED / "india_brands_verified.csv"
 INFO = DatasetInfo(
     code="india_brands",
     name="Curated Indian brand names (PrescripTrace)",
-    source_url="https://github.com/ (data/curated/india_brands_verified.csv in this repository)",
+    # A file in this repository (each row cites its own public web source).
+    source_url="backend/data/curated/india_brands_verified.csv",
     licence="Facts compiled by the project; each row cites its public source page",
     region="IN",
     limitations="Small seed set of common brands. Sources are manufacturer documents or "

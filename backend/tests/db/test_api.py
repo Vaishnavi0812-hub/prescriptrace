@@ -234,3 +234,28 @@ def test_ocr_rejects_oversized_uploads(ready: TestClient, monkeypatch: pytest.Mo
     monkeypatch.setattr(settings, "ocr_max_bytes", 1000)
     response = ready.post("/api/v1/ocr", files={"file": ("x.png", b"0" * 2000, "image/png")})
     assert response.status_code == 413
+
+
+# ------------------------------------------------------------------ offline pack
+
+
+def test_offline_pack_is_sourced_and_cacheable(ready: TestClient) -> None:
+    meta = ready.get("/api/v1/offline-pack/meta").json()
+    response = ready.get("/api/v1/offline-pack")
+    assert response.status_code == 200
+    assert response.headers["etag"] == f'"{meta["version"]}"'
+    pack = response.json()
+    assert pack["version"] == meta["version"]
+    assert "CC BY-NC-SA" in pack["licence_notice"]
+    rx = {name: i for i, (_, name) in enumerate(pack["ingredients"])}
+    # Warfarin + aspirin is a serious DDInter pair; every fact keeps its record id and URL.
+    pair = next(p for p in pack["pairs"] if {p[0], p[1]} == {rx["warfarin"], rx["aspirin"]})
+    for ds, sev, ref, url, *_ in pair[2]:
+        assert ref and pack["severities"][sev] in ("contraindicated", "major", "moderate", "minor")
+        if pack["pair_datasets"][ds] == "ddinter":
+            assert (pack["url_prefixes"][ds] + url).startswith("https://ddinter2.scbdd.com/")
+    assert any(row[0] == "Dolo 650" for row in pack["names"])
+    not_modified = ready.get(
+        "/api/v1/offline-pack", headers={"If-None-Match": response.headers["etag"]}
+    )
+    assert not_modified.status_code == 304

@@ -1,9 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import App from "./App";
+import { setLanguage } from "./i18n";
 
 function renderAt(path: string) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -61,5 +63,21 @@ describe("App shell", () => {
     mockFetch(new Promise(() => {}));
     renderAt("/about");
     expect(screen.getByText(/does not detect fake medicines/)).toBeInTheDocument();
+  });
+});
+
+describe("language", () => {
+  afterEach(() => setLanguage("en"));
+
+  it("switches language, updates the page language and flags machine translation", async () => {
+    mockFetch(new Promise(() => {}));
+    const user = userEvent.setup();
+    renderAt("/");
+    expect(screen.queryByText(/machine/)).toBeNull();
+    await user.selectOptions(screen.getByRole("combobox", { name: "Language" }), "hi");
+    expect(document.documentElement.lang).toBe("hi");
+    expect(screen.getByRole("combobox", { name: "दवा जोड़ें" })).toBeInTheDocument();
+    expect(screen.getByText(/मशीन से किया गया है/)).toBeInTheDocument();
+    expect(localStorage.getItem("prescriptrace.lang")).toBe("hi");
   });
 });

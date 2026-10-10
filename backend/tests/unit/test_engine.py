@@ -1,5 +1,6 @@
 """Interaction engine on a hand-built knowledge snapshot (no database)."""
 
+import zlib
 from dataclasses import replace
 
 import pytest
@@ -43,7 +44,7 @@ N = {
 
 
 def epc(name: str) -> ClassTag:
-    return ClassTag("EPC", f"N{abs(hash(name)) % 10**6}", name, "rxclass_fdaspl")
+    return ClassTag("EPC", f"N{zlib.crc32(name.encode()) % 10**6}", name, "rxclass_fdaspl")
 
 
 def atc(code: str) -> ClassTag:

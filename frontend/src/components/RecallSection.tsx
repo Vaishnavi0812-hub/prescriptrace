@@ -62,7 +62,13 @@ function groupByMedicine(flags: RecallFlag[]): [RecallFlag, ...RecallFlag[]][] {
   return [...groups.values()];
 }
 
-export function RecallSection({ recalls }: { recalls: CheckResponse["recalls"] }) {
+export function RecallSection({
+  recalls,
+  notChecked = false,
+}: {
+  recalls: CheckResponse["recalls"];
+  notChecked?: boolean; // offline: alert lists were not consulted, so never say "none found"
+}) {
   const { t } = useTranslation();
   const { flags, ingredient_summaries: summaries, checklist, coverage_notes: coverage } = recalls;
   return (
@@ -94,7 +100,9 @@ export function RecallSection({ recalls }: { recalls: CheckResponse["recalls"] }
           ))}
         </ul>
       ) : (
-        <p className="rounded-xl border border-sand bg-surface p-4">{t("recalls.none")}</p>
+        <p className="rounded-xl border border-sand bg-surface p-4">
+          {notChecked ? t("offline.recallsNotChecked") : t("recalls.none")}
+        </p>
       )}
 
       {summaries.length > 0 && (

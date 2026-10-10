@@ -54,6 +54,7 @@ EXTERNAL_CAP = 0.75  # RxNav approximate matches: suggestions only
 SHORT_QUERY = 4  # fuzzy matching on <=4 characters is unreliable
 MEDIUM_QUERY = 6  # 5-6 characters: needs higher similarity and never auto-accepts
 MIN_PREFIX = 4
+CONFIRM_SIMILARITY = 87.0  # fuzzy similarity needed before a single guess is offered to confirm
 PREFIX_SINGLE = 0.85  # every name starting with the query is the same drug: confirm
 PREFIX_MANY = 0.55  # several drugs share the prefix: list them, pick none
 TIE_MARGIN = 4.0  # similarity points; closer than this to a different drug = ambiguous
@@ -258,6 +259,10 @@ def _fuzzy_confidence(query: str, similarity: float) -> float:
         conf = min(conf, 0.55)
     elif length <= MEDIUM_QUERY:
         conf = min(conf, 0.75) if similarity >= 80 else min(conf, 0.55)
+    if similarity < CONFIRM_SIMILARITY:
+        # Weak look-alikes ("itopride" vs iopromide) are listed for the user to pick from but
+        # never suggested as "is this what you meant?".
+        conf = min(conf, 0.55)
     return conf
 
 

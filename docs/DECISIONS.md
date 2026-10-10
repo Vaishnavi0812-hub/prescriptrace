@@ -118,3 +118,33 @@ implemented and finalised in Stage 10.
 - **Consequences:** Fewer duplicate cards while nothing is dropped. The results screen (Stage 7)
   still needs a headline policy; proposed: headline = contraindicated + major; moderate shown as
   "worth checking"; unknown collapsed. Thresholds are revisited with evaluation data in Stage 10.
+
+## ADR-012 Recall and alert flagging in three tiers
+- **Context:** Most recalls concern other products. Flagging every same-ingredient recall as a
+  warning would alarm staff about medicines that are fine (alert fatigue), while a listed batch
+  in the pharmacist's hand needs immediate attention.
+- **Decision:** `app/core/recalls` matches each medicine against recall/alert records in tiers:
+  **batch** (the batch number the user enters is listed; always "serious"), **product** (same
+  brand or RxNorm product; level from the alert: CDSCO spurious / US Class I = serious, CDSCO
+  NSQ / US Class II = warning, Class III = info), and **ingredient** (different product, same
+  ingredient; information only, summarised per medicine and region, 3 most recent shown).
+  Brand matching is exact or prefix-with-space on strength-free names ("telma" matches
+  "Telma 40" and "Telma H", not "Telmax"). Batches shorter than 5 characters are ignored.
+  A physical-verification checklist accompanies every result; each item names its source (CDSCO
+  QR-code guidance and FAQ, US FDA counterfeit-medicine page) or says "general good practice".
+- **Consequences:** The app never claims to detect fakes; it points to official alerts and an
+  inspection checklist. Batch matching only works if staff type the batch number.
+
+## ADR-013 CDSCO alerts: partial coverage, strict validation
+- **Context:** CDSCO's NSQ/spurious lists are monthly PDF tables. The listing page stops in
+  mid-2025; an Aug-2025 scanned notice (OCR'd with our Tesseract) points to a "new searchable
+  link" at the same URL, but no newer machine-readable alerts could be found (the alternative
+  `cdsco.mohfw.gov.in` host has a certificate mismatch; its consumer page is a 2018 archive).
+- **Decision:** Load the alert PDFs published since 2023-07 that pass validation (serial numbers
+  1..N with section restarts allowed, product + batch on every record, column counts match the
+  header); reject whole files otherwise; keep only unexpired batches; link ingredients only when
+  the Stage 3 normaliser resolves the generic name; keep brand names from parentheses.
+- **Consequences:** India alerts are incomplete and end in mid-2025; this is stated in the
+  dataset limitations and must be shown in the UI. WHO Medical Product Alerts were assessed and
+  deferred: the list exposes only ~10 alerts without JavaScript, and affected batches are in
+  narrative text or images, so extraction would be unreliable (future work).

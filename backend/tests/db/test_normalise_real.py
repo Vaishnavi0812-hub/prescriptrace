@@ -38,6 +38,11 @@ def normaliser() -> Normaliser:
         ("salbutamol", {"albuterol"}),
         ("Warfarin 5mg", {"warfarin"}),
         ("Atorvastatin 10", {"atorvastatin"}),
+        # Ingredients gap-filled from RxNav must be findable by their own names (Stage 5 fix).
+        ("aceclofenac", {"aceclofenac"}),
+        ("Domperidone 10 mg", {"domperidone"}),
+        ("Nimesulide 100", {"nimesulide"}),
+        ("Pantoprazole Tablets IP 40 mg", {"pantoprazole"}),
     ],
 )
 def test_brief_examples_resolve(normaliser: Normaliser, raw: str, ingredients: set[str]) -> None:

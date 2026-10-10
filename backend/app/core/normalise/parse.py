@@ -29,7 +29,7 @@ DOSE_FORMS = {
 # Release/variant suffixes. Removed only in the "core" variant: they also appear inside brand
 # names (Ondem-MD, Meftal-Spas DS), which are matched first on the full text.
 # "od" is handled as a dosing instruction (once daily), its usual meaning on Indian prescriptions.
-RELEASE_WORDS = {"sr", "er", "xr", "cr", "xl", "la", "mr", "ds", "dt", "md", "forte"}
+RELEASE_WORDS = {"sr", "er", "xr", "cr", "xl", "la", "mr", "ds", "dt", "md", "ec", "dr", "forte"}
 
 # Dosing instructions are not part of the medicine name.
 _INSTRUCTIONS = [
@@ -98,11 +98,27 @@ def parse(raw: str) -> ParsedLine:
     return ParsedLine(raw, full, core, strengths, dose_form, components)
 
 
+# Words that never belong to an ingredient name: pharmacopoeia markers ("Pantoprazole Tablets
+# IP 40 mg"), units left over after strength parsing ("15 mg/ml" leaves "ml"), and tablet
+# descriptors. Removed only in the "core" variant.
+NOISE_WORDS = {
+    "ip", "i", "p", "bp", "usp", "ph", "eur", "nf", "inn",
+    "mg", "mcg", "g", "gm", "ml", "iu", "unit", "units", "w", "v", "wv", "ww",
+    "dispersible", "chewable", "coated", "film", "uncoated", "gastro", "resistant",
+    "prolonged", "sustained", "extended", "modified", "controlled", "release", "oral",
+    "for", "of", "the", "plain", "sterile", "dry", "powder", "vial", "bottle",
+    "lyophilized", "lyophilised",
+}  # fmt: skip
+
+
 def _core(text: str) -> str:
     words = [
         w
         for w in norm(text).split()
-        if w not in DOSE_FORMS and w not in RELEASE_WORDS and not w.isdigit()
+        if w not in DOSE_FORMS
+        and w not in RELEASE_WORDS
+        and w not in NOISE_WORDS
+        and not w.isdigit()
     ]
     return " ".join(words)
 

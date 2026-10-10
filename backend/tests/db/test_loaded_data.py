@@ -92,7 +92,7 @@ def test_recall_links_have_a_basis(conn: Connection) -> None:
     bad = conn.scalar(
         text(
             "SELECT count(*) FROM recall_link "
-            "WHERE ingredient_rxcui IS NULL AND product_rxcui IS NULL"
+            "WHERE ingredient_rxcui IS NULL AND product_rxcui IS NULL AND brand_text IS NULL"
         )
     )
     assert bad == 0

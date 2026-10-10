@@ -24,6 +24,7 @@ ING = {
     "10829": "trimethoprim",
     "2418": "cholecalciferol",
     "17767": "amlodipine",
+    "40827": "iopromide",
 }
 
 
@@ -170,3 +171,15 @@ def test_abbreviations_including_combinations(
     r = n.normalise(raw)
     assert r.best is not None and r.best.method == "abbreviation"
     assert names(r.best) == expected
+
+
+def test_weak_lookalike_is_listed_but_not_offered_for_confirmation(n: Normaliser) -> None:
+    # itopride is not in RxNorm; iopromide (a contrast agent) only looks similar.
+    r = n.normalise("itopride 50")
+    assert r.status == "unknown" and r.best is None
+    assert ("iopromide",) in [c.ingredient_names for c in r.candidates]
+
+
+def test_pharmacopoeia_and_unit_noise_is_ignored(n: Normaliser) -> None:
+    assert names(n.normalise("Tab. Amlodipine IP 5 mg").best) == ("amlodipine",)
+    assert names(n.normalise("Pantoprazole Inj. BP 40 mg").best) == ("pantoprazole",)

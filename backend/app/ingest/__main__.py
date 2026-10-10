@@ -15,6 +15,7 @@ from pathlib import Path
 
 from app.db import _session_factory
 from app.ingest import (
+    cdsco,
     ddinter,
     india_brands,
     openfda_labels,
@@ -36,6 +37,7 @@ SOURCES: dict[str, Callable[..., None]] = {
     "india_brands": india_brands.run,
     "ddinter": lambda s, refresh: ddinter.run(s, refresh, report_dir=REPORT_DIR),
     "recalls": openfda_recalls.run,
+    "cdsco": cdsco.run,
     "labels": openfda_labels.run,
     "classes": rxclass.run,
 }

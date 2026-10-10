@@ -14,7 +14,8 @@ pregnancy, renal/hepatic) → one prioritised, plain-language safety summary wit
 - [x] Stage 2: ingestion with real data (user will run everything together later)
 - [x] Stage 3: normalisation module + tests (`app/core/normalise`, ADR-009)
 - [x] Stage 4: interaction engine + tests (`app/core/engine`, rules in `rules.yaml`, ADR-010/011)
-- [ ] Stages 5–10 (see "Build stages" below). Stop for review after each stage; commit per stage.
+- [x] Stage 5: recall/alert flagging (`app/core/recalls`, CDSCO alerts, checklist; ADR-012/013)
+- [ ] Stages 6–10 (see "Build stages" below). Stop for review after each stage; commit per stage.
 
 ## Approved data sources
 - Interactions: DDInter 2.0 (CC BY-NC-SA 4.0, **non-commercial**; all 14 ATC files incl. unlisted
@@ -81,7 +82,7 @@ Windows PowerShell (`scripts/dev.ps1`; Makefile has the same targets for bash):
 
 Data ingestion (run in the backend container; order matters, `all` runs them in order):
 - `docker compose run --rm backend python -m app.ingest all` (or one of: rxnorm, ddinter,
-  recalls, labels, classes, india_brands, synonyms). Idempotent; `--refresh` re-downloads.
+  recalls, cdsco, labels, classes, india_brands, synonyms). Idempotent; `--refresh` re-downloads.
 - Raw files → `data/raw/` with `<file>.complete` markers; API responses cached in `data/cache/`
   (delete a cache folder to refresh it). First full run ≈ 1–2 h (RxClass/RxNav API calls).
 - India brands: edit `backend/data/curated/india_brands.csv`, then

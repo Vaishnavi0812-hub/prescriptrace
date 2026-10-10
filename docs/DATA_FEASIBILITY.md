@@ -195,3 +195,16 @@ users must be told): itopride, teneligliptin, voglibose, cilnidipine, doxofyllin
 acid is rejected because RxNorm has a separate "ursodeoxycholate" concept besides "ursodiol"
 (merging could split its interactions). Common Indian combination names (amoxyclav,
 co-trimoxazole) and vitamin shorthand (vit D3, vit B12) are handled as curated abbreviations.
+
+## Stage 5 results: recall and alert sources (2026-10-10)
+| Source | Result |
+|---|---|
+| CDSCO NSQ + spurious alerts | 60 alert PDFs listed since 2023-07; **42 parsed and validated**, 18 rejected whole (11 numbering problems, 7 layout problems; see `backend/data/reports/cdsco_files.csv`); 1,974 records, **439 unexpired batches kept**; 230 linked to ingredients by the normaliser, 100 with brand only. Includes spurious Telma 40 batches 05240226 and K18230707. **Coverage ends mid-2025** (newer portal not accessible). |
+| WHO Medical Product Alerts | Assessed, **not loaded**: only ~10 alerts visible without JavaScript; batch details are narrative/images. Future work. |
+| Checklist sources | CDSCO "Guidance for Identification and Verification of Spurious Drugs" and FAQ on G.S.R. 823(E) (Schedule H2 QR codes on top-300 brands since 2023-08-01); US FDA counterfeit-medicine page. |
+
+Also fixed in Stage 5: 2,304 ingredients gap-filled from RxNav (domperidone, nimesulide,
+aceclofenac, etoricoxib, ornidazole…) were not findable by their own names in the normaliser;
+pharmacopoeia markers (IP/BP/USP), stray units and tablet descriptors are now ignored when
+matching; weak fuzzy look-alikes (similarity < 87, e.g. itopride → iopromide) are listed but never
+offered as a single "confirm" suggestion.

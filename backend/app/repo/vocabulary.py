@@ -55,6 +55,18 @@ def load_vocabulary(session: Session) -> Vocabulary:
         entries.append(
             Entry(text, text_norm, kind, tuple(sorted(ingredients)), ref, datasets.get(ds, "?"))
         )
+    # Every ingredient must be findable by its own name. drug_name only holds RxNorm's own
+    # name list, so ingredients gap-filled from RxNav (domperidone, nimesulide, aceclofenac…)
+    # would otherwise be reachable only through brands or synonyms.
+    have = {(e.text_norm, e.ingredients) for e in entries if e.kind == "ingredient"}
+    for rxcui, name, name_norm, ds in session.execute(
+        select(Ingredient.rxcui, Ingredient.name, Ingredient.name_norm, Ingredient.dataset_id)
+    ):
+        if (name_norm, (rxcui,)) not in have:
+            source = datasets.get(ds, "?")
+            entries.append(
+                Entry(name, name_norm, "ingredient", (rxcui,), f"ingredient:{rxcui}", source)
+            )
     return Vocabulary(names, entries)
 
 

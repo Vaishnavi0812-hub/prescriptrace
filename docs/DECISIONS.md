@@ -73,3 +73,21 @@ implemented and finalised in Stage 10.
   all map to RxNorm are loaded; a partially mapped combination is rejected.
 - **Consequences:** Small coverage (25 brands at first), but every brand shown can be traced to
   a page anyone can open. Rows still need a pharmacist's review (recorded in `verified_by`).
+
+## ADR-009 Name normalisation: in-memory, layered, confidence-gated
+- **Context:** Input is messy ("Crocin 650", "paracetmol", "amox/clav", OCR "Metf0rmin").
+  A wrong match silently changes which warnings a pharmacist sees.
+- **Options:** Postgres pg_trgm queries; in-memory rapidfuzz; an ML/embedding matcher.
+- **Decision:** A pure, deterministic in-memory matcher (`app/core/normalise`) over ~73k names
+  (~14.5k short names for fuzzy search), loaded once from the database (<1 s; ~1.6 ms per line).
+  Layers, strongest first: exact full line (1.00) → exact without strength/form (0.98) →
+  curated abbreviation incl. combinations (0.95) → OCR digit fixes (0.92) → typed combinations
+  (min of parts × 0.98) → whole-word prefix (0.85 if one drug, 0.55 if several) → fuzzy
+  (similarity-based; ≤4 chars capped at 0.55, 5–6 chars at 0.75) → optional RxNav approximate
+  suggestions (capped at 0.75). Thresholds: ≥0.90 resolved, 0.60–0.90 confirm, <0.60 the user
+  picks from candidates. India brands rank first on exact ties (Crocin = paracetamol).
+  pg_trgm stays indexed for future server-side search, but isn't used by the matcher.
+- **Consequences:** Same input → same output, testable without a database, and the same logic
+  can be ported to the offline PWA. Thresholds are provisional; Stage 10 calibrates them on the
+  ≥200-case evaluation set. A near-tie between different drugs or a prefix shared by several
+  drugs is never auto-accepted (e.g. "insulin" lists insulin types instead of guessing "inulin").

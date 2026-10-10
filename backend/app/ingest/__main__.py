@@ -21,6 +21,7 @@ from app.ingest import (
     openfda_recalls,
     rxclass,
     rxnorm,
+    synonyms,
 )
 from app.ingest.common import IngestError
 
@@ -33,6 +34,7 @@ SOURCES: dict[str, Callable[..., None]] = {
     "labels": openfda_labels.run,
     "classes": rxclass.run,
     "india_brands": india_brands.run,
+    "synonyms": synonyms.run,
 }
 
 

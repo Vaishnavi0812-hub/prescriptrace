@@ -186,3 +186,12 @@ All counts are from `ingest_run` logs of the loaded database; rerun with
 Operational notes: the DDInter server and this connection are unreliable. Downloads resume and
 write `.complete` markers; API calls are cached and retried for up to 10 minutes. A failed source
 rolls back completely and a re-run reuses the cache (classes: 42 s fully cached).
+
+### Stage 3 note: international names and coverage gaps
+`backend/data/curated/inn_synonyms.csv` adds British/international names used in India
+(paracetamol, salbutamol, frusemide, …). Each loads only if RxNav finds the exact name AND it maps
+to the expected ingredient: 31 loaded, 7 rejected. **Not in RxNorm at all** (so not recognisable,
+users must be told): itopride, teneligliptin, voglibose, cilnidipine, doxofylline. Ursodeoxycholic
+acid is rejected because RxNorm has a separate "ursodeoxycholate" concept besides "ursodiol"
+(merging could split its interactions). Common Indian combination names (amoxyclav,
+co-trimoxazole) and vitamin shorthand (vit D3, vit B12) are handled as curated abbreviations.

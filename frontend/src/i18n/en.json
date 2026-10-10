@@ -187,5 +187,40 @@
     "region": "Region",
     "back": "Back to check"
   },
-  "notFound": "Page not found"
+  "notFound": "Page not found",
+  "scan": {
+    "title": "Scan a prescription",
+    "take": "Take or choose a photo",
+    "again": "Scan another photo",
+    "tips": {
+      "flat": "Lay the prescription flat.",
+      "light": "Use good light and avoid shadows.",
+      "frame": "Fit the whole page in the photo."
+    },
+    "privacy": "The photo is read on the server and is not stored. No names are kept.",
+    "offDevice": "This server uses an external AI service to read photos, so your photo is sent outside this system.",
+    "reading": "Reading the prescription…",
+    "failed": "Could not read this photo",
+    "offline": "No connection. Reading photos needs the internet; you can still type medicines.",
+    "warnings": {
+      "no_text": "No text was found. Try a clearer, closer photo.",
+      "low_contrast": "The photo is faint or dark. Try better light.",
+      "handwriting_or_blur": "This looks handwritten or blurry. Handwriting is often misread, so check every line carefully.",
+      "no_medicines_found": "No medicine names were recognised. You can add lines below or type them."
+    },
+    "checkEach": "Compare each line with the photo. Nothing is added until you tap Add.",
+    "found": "Lines that look like medicines",
+    "cropAlt": "Part of the photo: {{text}}",
+    "readAs": "Read as (you can edit)",
+    "addMatch": "Add {{name}}",
+    "addTyped": "Add as typed (we will check the name)",
+    "notAMedicine": "Not a medicine, ignore",
+    "added": "Added {{name}}",
+    "addedShort": "Added",
+    "addAnyway": "Add",
+    "otherText_one": "{{count}} other line from the photo",
+    "otherText_other": "{{count}} other lines from the photo",
+    "done": "Done: back to the medicine list",
+    "possibleMatches": "Not recognised. Possible matches (check carefully):"
+  }
 }

@@ -6,6 +6,7 @@ import { MedicationsProvider } from "./lib/medications";
 import AboutPage from "./routes/AboutPage";
 import CheckPage from "./routes/CheckPage";
 import ResultsPage from "./routes/ResultsPage";
+import ScanPage from "./routes/ScanPage";
 
 function NotFound() {
   const { t } = useTranslation();
@@ -19,6 +20,7 @@ export default function App() {
         <Route element={<Layout />}>
           <Route index element={<CheckPage />} />
           <Route path="results" element={<ResultsPage />} />
+          <Route path="scan" element={<ScanPage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>

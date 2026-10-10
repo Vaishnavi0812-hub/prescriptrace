@@ -60,8 +60,13 @@ def test_normalise_reports_status_and_candidates(ready: TestClient) -> None:
 
 
 def test_check_full_response(ready: TestClient) -> None:
-    out = check(ready, {"text": "Warfarin 5mg"}, {"text": "Ecosprin 75"}, {"text": "Combiflam"},
-                age_group="older")  # fmt: skip
+    out = check(
+        ready,
+        {"text": "Warfarin 5mg"},
+        {"text": "Ecosprin 75"},
+        {"text": "Combiflam"},
+        age_group="older",
+    )
     summary = out["summary"]
     assert summary["checked_medicines"] == 3 and summary["unresolved"] == 0
     assert summary["needs_attention"] >= 2
@@ -87,8 +92,14 @@ def test_unresolved_items_are_never_guessed(ready: TestClient) -> None:
 def test_user_selection_is_used(ready: TestClient) -> None:
     pick = ready.post("/api/v1/normalise", json={"lines": ["amlodipin"]}).json()["results"][0]
     best = pick["best"]
-    item = {"text": "amlodipin", "selection": {"ref": best["ref"], "label": best["label"],
-                                               "ingredients": best["ingredients"]}}  # fmt: skip
+    item = {
+        "text": "amlodipin",
+        "selection": {
+            "ref": best["ref"],
+            "label": best["label"],
+            "ingredients": best["ingredients"],
+        },
+    }
     out = check(ready, item, {"text": "Simvastatin 40"})
     assert out["medicines"][0]["how"] == "selected"
     assert out["summary"]["unresolved"] == 0
@@ -131,8 +142,11 @@ def test_invalid_requests_are_rejected(client: TestClient, body: dict[str, Any])
 
 
 def test_unknown_selected_ingredient_is_rejected(ready: TestClient) -> None:
-    body = {"items": [{"id": "a", "text": "x",
-                       "selection": {"label": "x", "ingredients": ["999999999"]}}]}  # fmt: skip
+    body = {
+        "items": [
+            {"id": "a", "text": "x", "selection": {"label": "x", "ingredients": ["999999999"]}}
+        ]
+    }
     assert ready.post("/api/v1/check", json=body).status_code == 422
 
 
@@ -140,8 +154,7 @@ def test_rate_limit_returns_429(ready: TestClient, monkeypatch: pytest.MonkeyPat
     monkeypatch.setattr(settings, "rate_limit_search", "2/minute")
     monkeypatch.setattr(limiter, "enabled", True)
     limiter.reset()
-    codes = [ready.get("/api/v1/drugs/search", params={"q": "dolo"}).status_code
-             for _ in range(3)]  # fmt: skip
+    codes = [ready.get("/api/v1/drugs/search", params={"q": "dolo"}).status_code for _ in range(3)]
     limiter.reset()
     assert codes == [200, 200, 429]
 
@@ -166,10 +179,58 @@ def test_health_reports_search_readiness(client: TestClient) -> None:
 
 def test_openapi_documents_all_endpoints(client: TestClient) -> None:
     paths = set(client.get("/api/openapi.json").json()["paths"])
-    assert {"/api/v1/check", "/api/v1/normalise", "/api/v1/drugs/search", "/api/v1/datasets",
-            "/api/v1/health"} <= paths  # fmt: skip
+    assert {
+        "/api/v1/check",
+        "/api/v1/normalise",
+        "/api/v1/drugs/search",
+        "/api/v1/datasets",
+        "/api/v1/health",
+    } <= paths
 
 
 def test_generic_names_are_not_brand_matched_to_recalls(ready: TestClient) -> None:
     out = check(ready, {"text": "Warfarin 5mg"}, {"text": "Sertraline 50"})
     assert out["recalls"]["flags"] == []  # only same-ingredient summaries, never "related"
+
+
+# ------------------------------------------------------------------ OCR
+
+
+def test_ocr_reads_a_printed_prescription(ready: TestClient) -> None:
+    import shutil
+
+    if shutil.which("tesseract") is None:
+        pytest.skip("tesseract not installed")
+    from app.core.ocr.synthetic import render
+
+    image = render(["Tab. Dolo 650 1-0-1", "Cap. Omez 20 mg OD"])
+    response = ready.post("/api/v1/ocr", files={"file": ("rx.png", image, "image/png")})
+    assert response.status_code == 200, response.text
+    body = response.json()
+    assert body["engine"] == "tesseract" and body["sends_image_off_device"] is False
+    meds = [line for line in body["lines"] if line["likely_medicine"]]
+    names = [
+        set(line["normalised"]["best"]["ingredient_names"])
+        for line in meds
+        if line["normalised"] and line["normalised"]["best"]
+    ]
+    assert names == [{"acetaminophen"}, {"omeprazole"}]
+    assert all(line["crop_png_b64"] for line in meds)
+    assert all(
+        line["crop_png_b64"] is None for line in body["lines"] if not line["likely_medicine"]
+    )
+
+
+@pytest.mark.parametrize(
+    ("content", "ctype", "status"),
+    [(b"%PDF-1.7", "application/pdf", 415), (b"not really a png", "image/png", 422)],
+)
+def test_ocr_rejects_non_images(ready: TestClient, content: bytes, ctype: str, status: int) -> None:
+    response = ready.post("/api/v1/ocr", files={"file": ("x", content, ctype)})
+    assert response.status_code == status
+
+
+def test_ocr_rejects_oversized_uploads(ready: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(settings, "ocr_max_bytes", 1000)
+    response = ready.post("/api/v1/ocr", files={"file": ("x.png", b"0" * 2000, "image/png")})
+    assert response.status_code == 413

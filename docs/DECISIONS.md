@@ -184,3 +184,22 @@ implemented and finalised in Stage 10.
   medicine collapsed; label quotes collapsed to one line each; Simple/Professional toggle (a
   per-device preference in localStorage, not patient data); medicine list in sessionStorage only.
   Verified in a real browser at 360 px: no horizontal overflow, interactive targets ≥44 px.
+
+## ADR-017 Prescription OCR: Tesseract by default, vision-LLM optional
+- **Context:** Staff photograph prescriptions on cheap phones; many are handwritten. Misread
+  names would produce wrong safety results.
+- **Options:** Tesseract (free, runs on our server, private, weak on handwriting); a vision-LLM
+  (better on handwriting, costs money per image, sends the image to a third party).
+- **Decision:** `app/core/ocr` with a pluggable `OcrEngine`. Default `TesseractEngine` (psm 4)
+  after pre-processing: 3x3 median (speckle, before upscaling), upscale to ~1800 px, non-local-means
+  denoise, CLAHE, deskew (median angle of line blobs, ±15°), adaptive threshold. Optional
+  `VisionLLMEngine` (Claude, `claude-opus-5-5`, low effort, strict JSON schema, server-side refusal
+  fallback) only with `OCR_ENGINE=vision_llm` + key + `pip install -e ".[llm]"`; the API reports
+  `sends_image_off_device`. Safety: a line is "resolved" only if the name resolves AND Tesseract's
+  confidence is ≥75 and the name has ≥4 letters; vision-LLM lines are never auto-resolved; a line
+  is a medicine candidate only if it looks like an order ("Tab…", "1.") or fully resolves; header
+  lines (patient, doctor, clinic, phone) are never cropped; nothing is added without a tap. Images
+  are processed in memory (8 MB cap, type checked by decoding) and never stored.
+- **Consequences:** Printed prescriptions work well in tests (clean, rotated ±7°, speckled, serif,
+  small photos). Handwriting will often fail: the UI says so and shows each crop beside its
+  reading. Accuracy by printed/handwritten is measured in Stage 10.

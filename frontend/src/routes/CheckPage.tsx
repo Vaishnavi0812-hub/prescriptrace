@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { DrugSearch } from "../components/DrugSearch";
 import { MedicineCard } from "../components/MedicineCard";
@@ -17,14 +17,12 @@ export default function CheckPage() {
     <section className="space-y-5 py-4">
       <DrugSearch onPick={addPicked} onType={addTyped} />
 
-      <button
-        type="button"
-        disabled
-        title={t("check.comingSoon")}
-        className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border-2 border-primary px-4 font-semibold text-primary disabled:opacity-60"
+      <Link
+        to="/scan"
+        className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border-2 border-primary px-4 font-semibold text-primary hover:bg-primary/5"
       >
-        {t("check.scan")} <span className="text-sm font-normal">({t("check.comingSoon")})</span>
-      </button>
+        {t("check.scan")}
+      </Link>
 
       {meds.length === 0 ? (
         <p className="rounded-xl border border-dashed border-border-strong p-6 text-center text-muted">

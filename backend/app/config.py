@@ -25,10 +25,14 @@ class Settings(BaseSettings):
     rate_limit_search: str = "120/minute"
     rate_limit_normalise: str = "60/minute"
     rate_limit_check: str = "30/minute"
+    rate_limit_ocr: str = "10/minute"
+    ocr_max_bytes: int = 8 * 1024 * 1024
 
     openfda_api_key: str = ""
     ocr_engine: str = "tesseract"
     llm_provider: str = "none"
+    llm_api_key: str = ""
+    llm_model: str = ""
 
     @property
     def cors_origin_list(self) -> list[str]:

@@ -17,7 +17,8 @@ pregnancy, renal/hepatic) → one prioritised, plain-language safety summary wit
 - [x] Stage 5: recall/alert flagging (`app/core/recalls`, CDSCO alerts, checklist; ADR-012/013)
 - [x] Stage 6: API layer (`app/api/v1.py`, `app/services/check_service.py`, ADR-014)
 - [x] Stage 7: frontend core flow (search, confirm, context, results, About; ADR-015/016)
-- [ ] Stages 8–10 (see "Build stages" below). Stop for review after each stage; commit per stage.
+- [x] Stage 8: OCR flow (`app/core/ocr`, `/api/v1/ocr`, Scan screen; ADR-017)
+- [ ] Stages 9–10 (see "Build stages" below). Stop for review after each stage; commit per stage.
 
 ## Approved data sources
 - Interactions: DDInter 2.0 (CC BY-NC-SA 4.0, **non-commercial**; all 14 ATC files incl. unlisted
@@ -108,9 +109,12 @@ Editing gotcha: do not use sed or Python heredocs to write backslash escapes (ne
 boundary) into source files (Git Bash/Python turned them into real newlines/backspaces three times). Use the
 Edit tool for such changes, and never `# fmt: skip` inside an expression (ruff RUF028).
 
-API: `/api/v1/drugs/search`, `/normalise`, `/check`, `/datasets`, `/health`; docs at `/api/docs`.
+API: `/api/v1/drugs/search`, `/normalise`, `/check`, `/ocr`, `/datasets`, `/health`; docs at `/api/docs`.
 The vocabulary loads at startup (`app/services/state.py`); after re-ingesting data, restart the
 backend. Tests disable rate limits and RxNav calls via env in `tests/conftest.py`.
+
+OCR: synthetic test prescriptions via `app/core/ocr/synthetic.py` (DejaVu fonts in the image).
+Vision-LLM OCR is optional and off by default (`OCR_ENGINE=vision_llm`, see ADR-017).
 
 Ingestion gotchas: Alembic autogenerate misses CHECK-constraint changes (write those migrations by
 hand with `op.f(name)`; `tests/db/test_constraints.py` catches drift). RxNorm RRF relation rows read

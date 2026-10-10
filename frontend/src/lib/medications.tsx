@@ -81,6 +81,7 @@ export const fromCandidate = (c: Candidate | SearchHit): Picked => ({
 interface MedicationsApi extends Store {
   addPicked: (hit: SearchHit) => void;
   addTyped: (text: string) => void;
+  addCandidate: (text: string, candidate: Candidate) => void;
   choose: (id: string, candidate: Candidate) => void;
   retry: (id: string) => void;
   remove: (id: string) => void;
@@ -150,6 +151,22 @@ export function MedicationsProvider({ children }: { children: ReactNode }) {
         }));
         recognise(id, text);
       },
+      addCandidate: (text, candidate) =>
+        setStore((s) => ({
+          ...s,
+          meds: [
+            ...s.meds,
+            {
+              id: newId(),
+              text,
+              status: "resolved",
+              picked: fromCandidate(candidate),
+              candidates: [],
+              strength: "",
+              batch: "",
+            },
+          ],
+        })),
       choose: (id, candidate) =>
         update(id, { status: "resolved", picked: fromCandidate(candidate) }),
       retry: (id) => {

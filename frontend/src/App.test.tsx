@@ -29,7 +29,7 @@ describe("App shell", () => {
     mockFetch(new Promise(() => {}));
     renderAt("/");
     expect(screen.getByRole("combobox", { name: "Add medicine" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Scan prescription/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Scan prescription/ })).toBeInTheDocument();
   });
 
   it("always shows the decision-support disclaimer", () => {

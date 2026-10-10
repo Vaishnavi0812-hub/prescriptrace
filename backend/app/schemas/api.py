@@ -272,3 +272,25 @@ class DatasetInfo(Model):
 class DatasetsResponse(Model):
     datasets: list[DatasetInfo]
     non_commercial_notice: str
+
+
+# ------------------------------------------------------------------ OCR
+
+
+class ScannedLine(Model):
+    text: str
+    ocr_confidence: float
+    box: list[int]
+    likely_medicine: bool
+    status: Literal["resolved", "confirm", "unknown"]
+    normalised: NormalisedLine | None
+    crop_png_b64: str | None
+
+
+class ScanResponse(Model):
+    engine: str
+    sends_image_off_device: bool
+    lines: list[ScannedLine]
+    warnings: list[str]
+    skew_degrees: float
+    millis: int

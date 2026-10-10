@@ -60,6 +60,35 @@ type Handler = (url: string, init?: RequestInit) => unknown;
 
 let checkHandler: Handler = () => checkResponse();
 let normaliseHandler: Handler = () => ({ results: [] });
+let ocrHandler: Handler = () => scanResponse();
+
+const PIXEL = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGNgAAAAAgABSK+kcQAAAABJRU5ErkJggg==";
+
+function cand(label: string, rx: string, name: string, confidence = 1) {
+  return { label, kind: "india_brand", ingredients: [rx], ingredient_names: [name], confidence,
+           method: "exact", ref: `india_brand:${rx}`, source: "t" };
+}
+
+function scanResponse(over: Record<string, unknown> = {}) {
+  const line = (text: string, status: string, best: ReturnType<typeof cand> | null,
+                candidates: ReturnType<typeof cand>[], likely = true) => ({
+    text, ocr_confidence: 90, box: [0, 0, 10, 10], likely_medicine: likely, status,
+    normalised: likely ? { raw: text, query: text, status, confidence: 0.9, best, candidates,
+                           strengths: [], dose_form: null } : null,
+    crop_png_b64: likely ? PIXEL : null,
+  });
+  return {
+    engine: "tesseract", sends_image_off_device: false, skew_degrees: 0, millis: 900,
+    warnings: [],
+    lines: [
+      line("Patient: Test Person", "unknown", null, [], false),
+      line("1. Tab. Dolo 650 1-0-1", "resolved", cand("Dolo 650", "161", "acetaminophen"), []),
+      line("2. Tab Amlodipin 5", "confirm", null, [cand("amlodipine", "17767", "amlodipine", 0.85)]),
+      line("3. Tab Xyzq", "unknown", null, []),
+    ],
+    ...over,
+  };
+}
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
@@ -69,6 +98,7 @@ beforeEach(() => {
   sessionStorage.clear();
   localStorage.clear();
   checkHandler = () => checkResponse();
+  ocrHandler = () => scanResponse();
   vi.stubGlobal(
     "fetch",
     vi.fn(async (url: string, init?: RequestInit) => {
@@ -78,6 +108,10 @@ beforeEach(() => {
         return json({ query: q, hits: [DOLO, WARFARIN].filter((h) => h.label.toLowerCase().startsWith(q.toLowerCase())) });
       }
       if (url.includes("/normalise")) return json(normaliseHandler(url, init));
+      if (url.includes("/ocr")) {
+        const out = ocrHandler(url, init);
+        return out instanceof Response ? out : json(out);
+      }
       if (url.includes("/check")) {
         const out = checkHandler(url, init);
         return out instanceof Response ? out : json(out);
@@ -237,5 +271,66 @@ describe("glossary", () => {
     await user.click(screen.getByRole("button", { name: "Check safety" }));
     await user.click(await screen.findByRole("button", { name: "serotonin syndrome" }));
     expect(screen.getByRole("note")).toHaveTextContent(/too much serotonin/);
+  });
+});
+
+
+describe("scan prescription", () => {
+  async function upload(user: ReturnType<typeof userEvent.setup>) {
+    renderApp("/scan");
+    const file = new File([new Uint8Array([137, 80, 78, 71])], "rx.png", { type: "image/png" });
+    await user.upload(screen.getByLabelText("Take or choose a photo"), file);
+    await screen.findByText(/Compare each line with the photo/);
+  }
+
+  it("shows each medicine line with its photo crop and never adds anything by itself", async () => {
+    const user = userEvent.setup();
+    await upload(user);
+    expect(screen.getAllByRole("img", { name: /Part of the photo/ })).toHaveLength(3);
+    expect(screen.queryByDisplayValue("Patient: Test Person")).not.toBeInTheDocument();
+    expect(JSON.parse(sessionStorage.getItem("prescriptrace.session.v1") ?? '{"meds":[]}').meds).toHaveLength(0);
+  });
+
+  it("adds a recognised line with one tap and a confirmed choice for an unclear line", async () => {
+    const user = userEvent.setup();
+    await upload(user);
+    await user.click(screen.getByRole("button", { name: /Add Dolo 650/ }));
+    expect(screen.getByText("Added Dolo 650")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /amlodipine/ }));
+    await user.click(screen.getByRole("button", { name: /Done/ }));
+    const card = await screen.findByText("1. Tab. Dolo 650 1-0-1", { selector: "p" });
+    expect(card).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Check safety" })).toBeEnabled();
+  });
+
+  it("lets the user correct the text, which then goes through normal recognition", async () => {
+    normaliseHandler = () => ({ results: [{ raw: "x", query: "x", status: "unknown", confidence: 0,
+      best: null, candidates: [], strengths: [], dose_form: null }] });
+    const user = userEvent.setup();
+    await upload(user);
+    const input = screen.getByDisplayValue("3. Tab Xyzq");
+    await user.clear(input);
+    await user.type(input, "Tab Ondem 4");
+    await user.click(screen.getByRole("button", { name: /Add as typed/ }));
+    expect(screen.getByText("Added Tab Ondem 4")).toBeInTheDocument();
+  });
+
+  it("warns about handwriting and keeps other text collapsed", async () => {
+    ocrHandler = () => scanResponse({ warnings: ["handwriting_or_blur"] });
+    const user = userEvent.setup();
+    await upload(user);
+    expect(screen.getByText(/Handwriting is often misread/)).toBeInTheDocument();
+    expect(screen.getByText("1 other line from the photo")).toBeInTheDocument();
+  });
+
+  it("explains that reading photos needs a connection", async () => {
+    ocrHandler = () => {
+      throw new TypeError("Failed to fetch");
+    };
+    const user = userEvent.setup();
+    renderApp("/scan");
+    const file = new File([new Uint8Array([1])], "rx.png", { type: "image/png" });
+    await user.upload(screen.getByLabelText("Take or choose a photo"), file);
+    expect(await screen.findByText(/Reading photos needs the internet/)).toBeInTheDocument();
   });
 });

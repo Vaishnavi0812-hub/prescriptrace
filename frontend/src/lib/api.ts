@@ -197,7 +197,8 @@ export class ApiError extends Error {
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
     ...init,
-    headers: init?.body ? { "Content-Type": "application/json" } : undefined,
+    // FormData (photo upload) sets its own multipart Content-Type with the boundary.
+    headers: typeof init?.body === "string" ? { "Content-Type": "application/json" } : undefined,
   });
   if (!response.ok) {
     let detail = `${response.status}`;
@@ -236,3 +237,30 @@ export const fetchDatasets = (
   signal?: AbortSignal,
 ): Promise<{ datasets: DatasetInfo[]; non_commercial_notice: string }> =>
   request("/api/v1/datasets", { signal });
+
+// ---------------------------------------------------------------- OCR
+
+export interface ScannedLine {
+  text: string;
+  ocr_confidence: number;
+  box: number[];
+  likely_medicine: boolean;
+  status: MatchStatus;
+  normalised: NormalisedLine | null;
+  crop_png_b64: string | null;
+}
+
+export interface ScanResponse {
+  engine: string;
+  sends_image_off_device: boolean;
+  lines: ScannedLine[];
+  warnings: string[];
+  skew_degrees: number;
+  millis: number;
+}
+
+export const scanPrescription = (image: Blob, signal?: AbortSignal): Promise<ScanResponse> => {
+  const form = new FormData();
+  form.append("file", image, image instanceof File ? image.name : "prescription.jpg");
+  return request("/api/v1/ocr", { method: "POST", body: form, signal });
+};

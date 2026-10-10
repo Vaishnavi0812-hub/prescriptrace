@@ -4,17 +4,20 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Request, UploadFile
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.api.limiter import limiter
 from app.config import get_settings
 from app.core.normalise import Normaliser
+from app.core.ocr import ImageError, scan
+from app.core.ocr.vision_llm import VisionUnavailableError
 from app.db import get_session
 from app.models import Dataset, IngestRun
 from app.schemas import api
 from app.services.check_service import ABSENCE_NOTE, DISCLAIMER, SelectionError, run_check
+from app.services.ocr_service import OcrUnavailableError, get_engine
 from app.services.state import get_state
 
 router = APIRouter(prefix="/api/v1")
@@ -104,6 +107,36 @@ def check_medicines(
         absence_note=ABSENCE_NOTE,
         data_versions=versions,
     )
+
+
+ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
+
+
+@router.post("/ocr", response_model=api.ScanResponse, tags=["ocr"])
+@limiter.limit(lambda: settings.rate_limit_ocr)
+def scan_prescription(
+    request: Request, file: Annotated[UploadFile, File(description="Photo of a prescription")]
+) -> api.ScanResponse:
+    """Read a prescription photo. Lines are suggestions only: nothing is added automatically.
+
+    The image is processed in memory and never stored or logged.
+    """
+    if file.content_type not in ALLOWED_IMAGE_TYPES:
+        raise HTTPException(415, "Please upload a JPEG, PNG or WebP photo.")
+    data = file.file.read(settings.ocr_max_bytes + 1)
+    if len(data) > settings.ocr_max_bytes:
+        raise HTTPException(413, "The photo is too large (maximum 8 MB).")
+    normaliser = get_normaliser()
+    try:
+        engine = get_engine()
+        result = scan(data, engine, normaliser)
+    except ImageError as exc:
+        raise HTTPException(422, "This file could not be read as an image.") from exc
+    except (OcrUnavailableError, VisionUnavailableError) as exc:
+        raise HTTPException(503, f"Prescription reading is unavailable: {exc}") from exc
+    finally:
+        del data  # do not keep the image around longer than needed
+    return api.ScanResponse.model_validate(result)
 
 
 @router.get("/datasets", response_model=api.DatasetsResponse, tags=["meta"])

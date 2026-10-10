@@ -24,6 +24,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+# Optional vision-LLM OCR (off by default; sends images to Anthropic). See app/core/ocr/vision_llm.py
+llm = ["anthropic>=1.0"]
 dev = [
     "pytest>=8.3",
     "pytest-cov>=5",
@@ -61,7 +63,7 @@ plugins = ["pydantic.mypy"]
 exclude = ["alembic/"]
 
 [[tool.mypy.overrides]]
-module = ["pytesseract.*", "cv2.*", "slowapi.*", "pdfplumber.*"]
+module = ["pytesseract.*", "cv2.*", "slowapi.*", "pdfplumber.*", "anthropic.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

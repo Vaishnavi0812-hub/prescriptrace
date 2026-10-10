@@ -4,8 +4,9 @@ Loads three datasets so each keeps its own licence and provenance:
   * rxclass_fdaspl: FDA Established Pharmacologic Class (EPC) and mechanism (MOA), from labels.
   * medrt:          VA MED-RT contraindications: with diseases (→ pregnancy/renal/hepatic notes)
                     and with drug classes (→ 'contraindicated' interaction pairs).
-  * atc:            WHO ATC level 1-4 groups, used internally for duplicate-therapy grouping only
-                    (WHOCC reuse terms unverified, so ATC codes are never shown or exported).
+  * atc:            WHO ATC level 1-4 groups, used for duplicate-therapy and rule grouping. A
+                    finding cites the individual ATC code it relied on (as evidence); the ATC
+                    index itself is never exported (WHOCC reuse terms not yet verified).
 """
 
 from __future__ import annotations
@@ -49,8 +50,10 @@ ATC = DatasetInfo(
     code="atc",
     name="WHO ATC groups, levels 1-4 (via NLM RxClass)",
     source_url="https://www.whocc.no/atc_ddd_index/",
-    licence="© WHO Collaborating Centre; used internally for grouping only, not redistributed",
-    limitations="Not shown in the UI or exported in offline data until reuse terms are checked.",
+    licence="© WHO Collaborating Centre; used for grouping, not redistributed",
+    limitations="Used to group medicines into classes (e.g. NSAIDs) where FDA classes do not "
+    "cover a drug, such as India-only medicines. Findings cite the single ATC code they rely on; "
+    "the ATC index itself is not exported. WHOCC reuse terms are still to be verified.",
 )
 
 CONTEXT_WORDS = {

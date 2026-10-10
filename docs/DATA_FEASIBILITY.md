@@ -179,7 +179,7 @@ All counts are from `ingest_run` logs of the loaded database; rerun with
 | Label class flags | — | QT-prolonging 141 · serotonergic 56 · CNS depressant 80 | 1 sent to human review (metoclopramide, differential-diagnosis mention); candidates in `backend/data/reports/label_flag_candidates.csv` |
 | RxClass (FDA EPC/MOA) | fetched 2026-10-10 | 3,935 memberships | |
 | MED-RT | fetched 2026-10-10 | 1,981 contraindicated pairs · 796 context contraindications | licence still to be confirmed |
-| ATC (internal only) | fetched 2026-10-10 | 3,109 memberships | not shown or exported |
+| ATC (grouping) | fetched 2026-10-10 | 3,109 memberships | used for class grouping where FDA classes miss a drug; findings cite the single ATC code used; the index is not exported |
 | India brands (curated) | verified 2026-10-10 | 25 brands | 25/26 sources verified; Storvas CV page now 404 (not loaded) |
 | RxNav gap-fill | — | 2296 ingredients · 2815 synonyms | non-US ingredients (e.g. nimesulide, aceclofenac) and INN names (acetylsalicylic acid) |
 
@@ -208,3 +208,8 @@ aceclofenac, etoricoxib, ornidazole…) were not findable by their own names in 
 pharmacopoeia markers (IP/BP/USP), stray units and tablet descriptors are now ignored when
 matching; weak fuzzy look-alikes (similarity < 87, e.g. itopride → iopromide) are listed but never
 offered as a single "confirm" suggestion.
+
+Correction (Stage 7): earlier text said ATC codes are "not shown". In practice the engine cites
+the individual ATC code a finding relies on (e.g. "ATC M01AB: aceclofenac" for a duplicate-NSAID
+finding), which is needed for traceability. Only the ATC index as a whole is not redistributed.
+WHOCC reuse terms remain to be verified before any public deployment.

@@ -36,3 +36,40 @@ implemented and finalised in Stage 10.
   engine. The Python engine is the reference; shared JSON test vectors must pass in both.
 - **Consequences:** Two implementations to maintain; offline results on uncached pairs are
   labelled "partial check".
+
+## ADR-005 Route-specific DDInter entries are excluded
+- **Context:** DDInter lists route-specific entries separately, e.g. "Timolol (ophthalmic)" next to
+  "Timolol". 168 of 1,971 DDInter drugs are route-specific. Our model works at ingredient level
+  and cannot tell whether a user's timolol is eye drops or tablets.
+- **Options:** merge them into the base ingredient; exclude them; model route per medicine.
+- **Decision:** Exclude (the systemic entry is still loaded). Non-route qualifiers such as
+  "Insulin human (zinc)" or "Salicylic acid (sodium)" do map to the base ingredient.
+- **Consequences:** No eye-drop/skin-cream warnings are attributed to tablets (fewer false alarms),
+  but interactions specific to topical/ophthalmic forms are missed. Listed in
+  `backend/data/reports/ddinter_unmapped.csv`; revisit when dose form is captured per medicine.
+
+## ADR-006 Conservative name mapping between datasets
+- **Context:** DDInter, openFDA and the India brand table name drugs differently from RxNorm
+  ("Acetylsalicylic acid", "METFORMIN HYDROCHLORIDE").
+- **Decision:** Map only by exact normalised name: locally (ingredients, salt forms), then the
+  RxNav API restricted to *exact* matches in any source vocabulary (cached on disk). Never
+  approximate matching. Names learned this way are saved as synonyms (dataset `rxnorm_api`).
+- **Consequences:** Some drugs stay unmapped (reported, not guessed); no warning is ever
+  attached to the wrong ingredient by a fuzzy guess.
+
+## ADR-007 Contraindicated pairs from MED-RT
+- **Context:** DDInter has no "contraindicated" level. MED-RT lists drug-class contraindications
+  (e.g. amiodarone with fluoroquinolones).
+- **Decision:** Load MED-RT `CI_ChemClass` as `contraindicated` pairs; a class is expanded to
+  ingredients via FDA chemical-structure membership in RxClass. Each pair cites the MED-RT class.
+- **Consequences:** Contraindicated warnings are sourced, not invented. MED-RT's licence is not
+  yet confirmed (NLM page needs JavaScript); flagged as an open item before public deployment.
+
+## ADR-008 Indian brand sources and verification
+- **Context:** No open Indian brand registry exists; most composition pages are pharmacy listings.
+- **Decision:** Hand-curated rows (`india_brands.csv`) cite a source page and its type
+  (`manufacturer` / `regulator` / `pharmacy_listing`). A script fetches every page and records the
+  composition quote and date (`india_brands_verified.csv`). Only verified rows whose ingredients
+  all map to RxNorm are loaded; a partially mapped combination is rejected.
+- **Consequences:** Small coverage (25 brands at first), but every brand shown can be traced to
+  a page anyone can open. Rows still need a pharmacist's review (recorded in `verified_by`).

@@ -164,3 +164,25 @@ No official, open, machine-readable Indian brand→composition registry was foun
 5. Also adopted: RxNorm Prescribable Content (local) + RxNorm API fallback; openFDA enforcement
    (recalls) and label (supplementary interactions, class flags, patient-context notes);
    RxClass EPC + MED-RT; CRESCENDDI for evaluation; DrugBank skipped.
+
+## Stage 2 load results (2026-10-10)
+
+All counts are from `ingest_run` logs of the loaded database; rerun with
+`docker compose run --rm backend python -m app.ingest all`.
+
+| Dataset | Version | Loaded | Notes |
+|---|---|---|---|
+| RxNorm Prescribable | 2026-09-29 | 5,874 ingredients · 21,514 products · 4,140 brands · 29,373 product–ingredient links (with strength) · 70,323 searchable names | Augmentin → amoxicillin + clavulanate verified |
+| DDInter 2.0 | 2.0 | 215,168 ingredient pairs | 1,761/1,971 drugs mapped; 168 route-specific entries excluded by design (ADR-005); 42 other unmapped (`backend/data/reports/ddinter_unmapped.csv`) |
+| openFDA recalls | export 2026-10-06 | 18,001 recalls · 30,775 links | ingredient links: 3,100 via structured substance names, 10,681 via product-description text (20/20 random sample correct), 4,220 unlinked (mostly homeopathic products, kits, abbreviations like "HCG") |
+| openFDA labels | export 2026-10-09 | 6,473 representative labels (2,686 single-ingredient) · 5,634 context notes | 178,036 of 262,893 labels have no harmonised `openfda` block (ingredients unidentifiable; mostly repackager duplicates); 431 of 6,143 substance names unmapped |
+| Label class flags | — | QT-prolonging 141 · serotonergic 56 · CNS depressant 80 | 1 sent to human review (metoclopramide, differential-diagnosis mention); candidates in `backend/data/reports/label_flag_candidates.csv` |
+| RxClass (FDA EPC/MOA) | fetched 2026-10-10 | 3,935 memberships | |
+| MED-RT | fetched 2026-10-10 | 1,981 contraindicated pairs · 796 context contraindications | licence still to be confirmed |
+| ATC (internal only) | fetched 2026-10-10 | 3,109 memberships | not shown or exported |
+| India brands (curated) | verified 2026-10-10 | 25 brands | 25/26 sources verified; Storvas CV page now 404 (not loaded) |
+| RxNav gap-fill | — | 2296 ingredients · 2815 synonyms | non-US ingredients (e.g. nimesulide, aceclofenac) and INN names (acetylsalicylic acid) |
+
+Operational notes: the DDInter server and this connection are unreliable. Downloads resume and
+write `.complete` markers; API calls are cached and retried for up to 10 minutes. A failed source
+rolls back completely and a re-run reuses the cache (classes: 42 s fully cached).

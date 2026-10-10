@@ -3,6 +3,8 @@
 from app.models import SEVERITIES, Base
 
 EXPECTED_TABLES = {
+    "brand",
+    "brand_ingredient",
     "dataset",
     "ingest_run",
     "ingredient",
@@ -34,6 +36,7 @@ def test_no_table_has_patient_identifier_columns() -> None:
 def test_every_derived_table_points_to_a_dataset() -> None:
     """Traceability rule: data loaded from a source must reference its dataset row."""
     derived = EXPECTED_TABLES - {
+        "brand_ingredient",
         "dataset",
         "product_ingredient",
         "india_brand_ingredient",

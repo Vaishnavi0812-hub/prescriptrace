@@ -12,6 +12,8 @@ from app.models.knowledge import (
 from app.models.provenance import Dataset, IngestRun
 from app.models.recalls import Recall, RecallLink
 from app.models.vocab import (
+    Brand,
+    BrandIngredient,
     DrugName,
     IndiaBrand,
     IndiaBrandIngredient,
@@ -23,6 +25,8 @@ from app.models.vocab import (
 __all__ = [
     "SEVERITIES",
     "Base",
+    "Brand",
+    "BrandIngredient",
     "ContextNote",
     "Dataset",
     "DrugClass",

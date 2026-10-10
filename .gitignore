@@ -5,6 +5,7 @@
 # datasets (downloaded, large, licensed separately)
 data/raw/
 data/cache/
+data/*.log
 
 # python
 __pycache__/

@@ -39,8 +39,27 @@ class ProductIngredient(Base):
         ForeignKey("product.rxcui", ondelete="CASCADE"), primary_key=True
     )
     ingredient_rxcui: Mapped[str] = mapped_column(ForeignKey("ingredient.rxcui"), primary_key=True)
-    strength_value: Mapped[float | None] = mapped_column(Numeric(14, 4))
+    strength_value: Mapped[float | None] = mapped_column(Numeric(24, 6))
     strength_unit: Mapped[str | None] = mapped_column(String(32))
+
+
+class Brand(Base):
+    """RxNorm brand name (TTY=BN). One brand can contain several ingredients (Augmentin)."""
+
+    __tablename__ = "brand"
+
+    rxcui: Mapped[str] = mapped_column(String(16), primary_key=True)
+    name: Mapped[str] = mapped_column(String(300))
+    dataset_id: Mapped[int] = mapped_column(ForeignKey("dataset.id"))
+
+
+class BrandIngredient(Base):
+    __tablename__ = "brand_ingredient"
+
+    brand_rxcui: Mapped[str] = mapped_column(
+        ForeignKey("brand.rxcui", ondelete="CASCADE"), primary_key=True
+    )
+    ingredient_rxcui: Mapped[str] = mapped_column(ForeignKey("ingredient.rxcui"), primary_key=True)
 
 
 class DrugName(Base):
@@ -59,10 +78,11 @@ class DrugName(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     text: Mapped[str] = mapped_column(String(300))
     text_norm: Mapped[str] = mapped_column(String(300))
-    # ingredient | brand | synonym | ddinter | india_brand
+    # ingredient | synonym (salt / INN / other-vocabulary name) | brand | product | india_brand
     kind: Mapped[str] = mapped_column(String(16), index=True)
     ingredient_rxcui: Mapped[str | None] = mapped_column(ForeignKey("ingredient.rxcui"))
     product_rxcui: Mapped[str | None] = mapped_column(ForeignKey("product.rxcui"))
+    brand_rxcui: Mapped[str | None] = mapped_column(ForeignKey("brand.rxcui"))
     india_brand_id: Mapped[int | None] = mapped_column(ForeignKey("india_brand.id"))
     country: Mapped[str | None] = mapped_column(String(2))
     dataset_id: Mapped[int] = mapped_column(ForeignKey("dataset.id"))
@@ -94,5 +114,5 @@ class IndiaBrandIngredient(Base):
         ForeignKey("india_brand.id", ondelete="CASCADE"), primary_key=True
     )
     ingredient_rxcui: Mapped[str] = mapped_column(ForeignKey("ingredient.rxcui"), primary_key=True)
-    strength_value: Mapped[float | None] = mapped_column(Numeric(14, 4))
+    strength_value: Mapped[float | None] = mapped_column(Numeric(24, 6))
     strength_unit: Mapped[str | None] = mapped_column(String(32))

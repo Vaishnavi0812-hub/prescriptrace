@@ -32,7 +32,11 @@ class Recall(Base):
 class RecallLink(Base):
     __tablename__ = "recall_link"
     __table_args__ = (
-        CheckConstraint("match_basis IN ('rxcui', 'ndc', 'name')", name="match_basis_valid"),
+        # rxcui/ndc: product identifiers in the record · substance: structured ingredient field
+        # · text: ingredient name found in the free-text product description (lowest confidence)
+        CheckConstraint(
+            "match_basis IN ('rxcui', 'ndc', 'substance', 'text')", name="match_basis_valid"
+        ),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -40,4 +44,4 @@ class RecallLink(Base):
     ingredient_rxcui: Mapped[str | None] = mapped_column(ForeignKey("ingredient.rxcui"), index=True)
     product_rxcui: Mapped[str | None] = mapped_column(String(16), index=True)
     brand_text: Mapped[str | None] = mapped_column(String(300))
-    match_basis: Mapped[str] = mapped_column(String(8))
+    match_basis: Mapped[str] = mapped_column(String(12))

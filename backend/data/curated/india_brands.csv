@@ -1,0 +1,27 @@
+brand,dose_form,manufacturer,ingredients,page_terms,source_type,source_url
+Crocin,tablet,Haleon (GSK Consumer Healthcare),acetaminophen,paracetamol,manufacturer,https://www.crocin.com/
+Combiflam,tablet,Sanofi India,ibuprofen; acetaminophen,ibuprofen|paracetamol,manufacturer,https://www.sanofi.com/assets/countries/india/docs/consumer-healthcare/for-healthcare-professionals/products-information/Combiflam-Tablets-API---Jan-2026.pdf
+Dolo 650,tablet,Micro Labs,acetaminophen,paracetamol|micro labs,pharmacy_listing,https://www.apollopharmacy.in/otc/dolo-650mg-tablet-15-s
+Calpol 500,tablet,GlaxoSmithKline Pharmaceuticals,acetaminophen,paracetamol,pharmacy_listing,https://www.apollopharmacy.in/otc/calpol-500mg-tablet
+Glycomet 500,tablet,USV,metformin,metformin,pharmacy_listing,https://pharmeasy.in/online-medicine-order/glycomet-500mg-strip-of-10-tablets-49207
+Telma 40,tablet,Glenmark,telmisartan,telmisartan|glenmark,pharmacy_listing,https://www.apollopharmacy.in/otc/telma-40mg-tablet
+Ecosprin 75,tablet,USV,aspirin,aspirin,pharmacy_listing,https://www.apollopharmacy.in/medicine/ecosprin-75mg-tablet
+Ecosprin AV 75/40,capsule,USV,aspirin; atorvastatin,aspirin|atorvastatin,pharmacy_listing,https://www.apollopharmacy.in/medicine/ecosprin-av-75-40mg-cap-10-s
+Augmentin 625 Duo,tablet,GlaxoSmithKline Pharmaceuticals,amoxicillin; clavulanate,amox|clavulan,pharmacy_listing,https://www.apollopharmacy.in/medicine/augmentin-duo-625mg-tablet
+Azithral 500,tablet,Alembic,azithromycin,azithromycin,pharmacy_listing,https://www.apollopharmacy.in/medicine/azithral-500mg-tablet
+Thyronorm 50,tablet,Abbott India,levothyroxine,thyroxine,pharmacy_listing,https://www.apollopharmacy.in/medicine/thyronorm-50mcg-tablet
+Montair-LC,tablet,Cipla,montelukast; levocetirizine,montelukast|levocetirizine,pharmacy_listing,https://www.apollopharmacy.in/medicine/montair-lc-tablet-15s
+Meftal-Spas,tablet,Blue Cross Laboratories,dicyclomine; mefenamic acid,dicyclomine|mefenamic,pharmacy_listing,https://www.apollopharmacy.in/medicine/meftal-spas-tablet
+Zerodol-P,tablet,Ipca Laboratories,aceclofenac; acetaminophen,aceclofenac|paracetamol,pharmacy_listing,https://www.apollopharmacy.in/medicine/zerodol-p-tablet
+Ciplox 500,tablet,Cipla,ciprofloxacin,ciprofloxacin,pharmacy_listing,https://www.apollopharmacy.in/medicine/ciplox-500mg-tablet
+Storvas 10,tablet,Sun Pharmaceutical,atorvastatin,atorvastatin,pharmacy_listing,https://www.apollopharmacy.in/medicine/storvas-10mg-tablet
+Storvas CV 10,capsule,Sun Pharmaceutical,atorvastatin; clopidogrel,atorvastatin|clopidogrel,pharmacy_listing,https://www.apollopharmacy.in/medicine/storvas-cv-10mg-capsule
+Allegra 120,tablet,Sanofi India,fexofenadine,fexofenadine,pharmacy_listing,https://www.apollopharmacy.in/medicine/allegra-120mg-tablet
+Omez 20,capsule,Dr Reddy's Laboratories,omeprazole,omeprazole,pharmacy_listing,https://www.apollopharmacy.in/medicine/omez-20mg-capsule
+Shelcal 500,tablet,Torrent Pharmaceuticals,calcium; cholecalciferol,calcium|vitamin d3,pharmacy_listing,https://www.apollopharmacy.in/otc/shelcal-500mg-tablet
+Nise 100,tablet,Dr Reddy's Laboratories,nimesulide,nimesulide,pharmacy_listing,https://www.apollopharmacy.in/medicine/nise-100mg-tablet
+Clopilet 75,tablet,Sun Pharmaceutical,clopidogrel,clopidogrel,pharmacy_listing,https://www.apollopharmacy.in/medicine/clopilet-75mg-tablet
+Clopilet A 75,capsule,Sun Pharmaceutical,aspirin; clopidogrel,aspirin|clopidogrel,pharmacy_listing,https://www.apollopharmacy.in/medicine/clopilet-a-75-capsule-15-s
+Taxim-O 200,tablet,Alkem Laboratories,cefixime,cefixime,pharmacy_listing,https://www.apollopharmacy.in/medicine/taxim-o-200mg-tablet
+Ativan 2,tablet,Pfizer,lorazepam,lorazepam,pharmacy_listing,https://www.apollopharmacy.in/medicine/ativan-2mg-tablet
+Ondem-MD 4,tablet (mouth dissolving),Alkem Laboratories,ondansetron,ondansetron,pharmacy_listing,https://www.apollopharmacy.in/medicine/ondem-md-4mg-tablet

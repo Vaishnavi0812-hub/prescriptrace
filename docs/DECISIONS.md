@@ -264,3 +264,21 @@ implemented and finalised in Stage 10.
 - **Consequences:** The numbers are reproducible (seeded) but not blinded (the same team wrote
   the cases). Usability with real staff and real handwritten prescriptions remain unmeasured
   and are listed as such.
+
+## ADR-021 CDSCO alerts from the official alert database (supersedes ADR-013's coverage)
+- **Context:** ADR-013 concluded that alerts after mid-2025 were not machine-readable. Re-checked
+  2026-10-11: the NSQ page embeds an iframe from `https://cdscoonline.gov.in/CDSCO/viewPublicNSQDrug`,
+  CDSCO's official searchable alert database, whose page calls public JSON endpoints
+  (`reportingYears`, `publicReportingMonths`, `filteredNsqDrugTable`, `filteredSpuriousDrugTable`).
+  It holds NSQ records from Jan 2019 and spurious records from Jun 2025, to Aug 2026 (6,674 rows).
+  Our earlier scraper only read the page's own PDF list, so it missed the iframe.
+- **Decision:** The database is the primary CDSCO source (same publisher, structured fields; one
+  cached JSON file per month, the last 3 months re-fetched on every run for late State reports).
+  PDFs are still parsed only for spurious lists covering months before the database's spurious
+  coverage (a list is published the month after the one it reports on). Placeholder values
+  ("Not applicable", "-", firm "Spurious") are dropped; records without a batch stay as
+  product-level alerts; spurious manufacturers are labelled "as claimed on the label". Record ids
+  are hashes of month, product, batch and lab (the database exposes none for NSQ rows). Evidence
+  links point to the public database page.
+- **Consequences:** 2,496 current alerts instead of 439, up to Aug 2026. Matching is still by
+  product-name text and batch; State lab submissions can arrive late, so recent months grow.

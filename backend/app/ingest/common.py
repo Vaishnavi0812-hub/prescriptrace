@@ -138,7 +138,12 @@ def cached_json(url: str, cache_key: str, *, min_interval: float = 0.06) -> Any:
         try:
             time.sleep(min_interval)
             with _http(url) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
+                raw = resp.read()
+            try:
+                body = raw.decode("utf-8")
+            except UnicodeDecodeError:  # some government APIs answer in Windows-1252
+                body = raw.decode("cp1252", errors="replace")
+            data = json.loads(body)
             path.write_text(json.dumps(data), encoding="utf-8")
             return data
         except urllib.error.HTTPError as exc:

@@ -20,8 +20,9 @@ pregnancy, renal/hepatic) → one prioritised, plain-language safety summary wit
 - [x] Stage 8: OCR flow (`app/core/ocr`, `/api/v1/ocr`, Scan screen; ADR-017)
 - [x] Stage 9: offline pack + TS engine, PWA, print/PDF, hi/kn (machine, needs review), a11y audit (ADR-018/019)
 - [x] Stage 10: evaluation harness (`evaluation/`, ADR-020), final README, screenshots
-- Open items for the user: metoclopramide flag review, pharmacist review of the 25 brands,
-  MED-RT and WHOCC ATC licence terms, newest CDSCO alert as seen from India.
+- Done 2026-10-11 by the assistant (not a pharmacist): metoclopramide flag rejected, brand table
+  cross-checked (+ brand-family guard), MED-RT/ATC terms checked, CDSCO database found (ADR-021).
+  Still worth a pharmacist's look: the brand table and the flag decision.
 
 ## Approved data sources
 - Interactions: DDInter 2.0 (CC BY-NC-SA 4.0, **non-commercial**; all 14 ATC files incl. unlisted
@@ -31,8 +32,9 @@ pregnancy, renal/hepatic) → one prioritised, plain-language safety summary wit
 - Indian brands: curated table, every row cites a source. No Kaggle scrape.
 - Classes: RxClass EPC + MED-RT; QT/serotonergic/CNS-depressant flags from label text with a
   committed human-review file.
-- Recalls: openFDA enforcement bulk + CDSCO NSQ/spurious PDFs (validated; coverage ends mid-2025,
-  newer CDSCO portal not accessible). WHO alerts deferred (not reliably extractable).
+- Recalls: openFDA enforcement bulk + CDSCO alert database (cdscoonline.gov.in JSON behind the
+  nsq-drugs page iframe; NSQ from 2019, spurious from Jun 2025) + older spurious PDFs (ADR-021).
+  WHO alerts deferred (not reliably extractable).
 - Excluded: RxNav interaction API (404), TWOSIDES, DrugBank. Eval: CRESCENDDI (CC0).
 
 ## Honesty rules (non-negotiable)

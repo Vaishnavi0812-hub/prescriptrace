@@ -144,10 +144,15 @@ Full numbers: [evaluation/results/REPORT.md](evaluation/results/REPORT.md). Meth
 | [DDInter 2.0](https://ddinter2.scbdd.com/download/) | Drug-drug interactions (215,168 records) | **CC BY-NC-SA 4.0: non-commercial use only**; derived data (incl. the offline pack) shared alike |
 | [openFDA drug labels](https://open.fda.gov/apis/drug/label/) | Label interaction text, patient-context notes, class flags | CC0 / public domain |
 | [openFDA drug enforcement](https://open.fda.gov/apis/drug/enforcement/) | US recalls | CC0 / public domain |
-| [CDSCO NSQ / spurious drug alerts](https://cdsco.gov.in/opencms/opencms/en/Notifications/nsq-drugs/) | Indian quality alerts (to Aug 2025) | Government of India public notices; no licence stated |
-| [NLM RxClass](https://lhncbc.nlm.nih.gov/RxNav/applications/RxClassIntro.html): FDA EPC classes, MED-RT, WHO ATC | Drug classes, contraindications | FDA: public domain; MED-RT: **terms to be confirmed**; ATC: © WHOCC, codes cited as evidence only |
+| [CDSCO NSQ / spurious drug alerts](https://cdsco.gov.in/opencms/opencms/en/Notifications/nsq-drugs/) | Indian quality alerts (NSQ since 2019, spurious; to Aug 2026) | Government of India public notices; no licence stated |
+| [NLM RxClass](https://lhncbc.nlm.nih.gov/RxNav/applications/RxClassIntro.html): FDA EPC classes, MED-RT, WHO ATC | Drug classes, contraindications | FDA: public domain; MED-RT: no licence needed per [RxNav terms](https://lhncbc.nlm.nih.gov/RxNav/TermsofService.html) (NLM attribution); ATC: © [WHOCC](https://atcddd.fhi.no/copyright_disclaimer/), non-commercial use with attribution, codes cited unchanged |
 | Curated Indian brands (`backend/data/curated/`) | 25 common brands | Facts compiled by the project; every row cites its public source |
 | [CRESCENDDI](https://doi.org/10.6084/m9.figshare.c.5481408) | Evaluation only | CC0 |
+
+This product uses publicly available data from the U.S. National Library of Medicine (NLM),
+National Institutes of Health, Department of Health and Human Services; NLM is not responsible
+for the product and does not endorse or recommend this or any other product. ATC codes:
+WHO Collaborating Centre for Drug Statistics Methodology.
 
 Details, alternatives considered and exclusions (DrugBank, TWOSIDES, RxNav interaction API) are
 in [docs/DATA_FEASIBILITY.md](docs/DATA_FEASIBILITY.md). Because of DDInter's licence, **this
@@ -160,15 +165,16 @@ project as a whole is for non-commercial use**.
   evaluation). "No known issues" is always worded as "found in our data".
 - **Indian brands**: only 25 curated brands are recognised by brand name. Others must be entered
   by generic name; the app asks rather than guesses. A pharmacist should review the brand table.
-- **Indian alerts** stop at CDSCO notices published up to August 2025 (the newer portal was not
-  accessible). WHO alerts are not included.
+- **Indian alerts** come from CDSCO's public alert database (monthly; State lab reports can lag)
+  and are matched by product name and batch text. WHO alerts are not included.
 - **Handwriting** is not reliably read and was not tested on real prescriptions.
 - **Offline checks are partial**: no recalls, label notes, patient context or minor
   interactions. The screen says so.
 - **Hindi and Kannada** cover the interface only and are unreviewed machine translations. The
   warnings themselves stay in English.
-- **Open review items**: one label-derived class flag (metoclopramide) awaits review; MED-RT
-  licence terms and WHOCC ATC terms need confirmation before any wider deployment.
+- **Reviews done by the AI assistant, not a pharmacist**: the metoclopramide class flag
+  (rejected) and the curated brand table (cross-checked against cited sources). A pharmacist
+  should confirm both before real use.
 
 ## Project layout
 

@@ -1,2 +1,2 @@
 flag,ingredient_rxcui,ingredient,decision,reviewer,reviewed_on,note
-serotonergic,6915,metoclopramide,,,,"PENDING: label lists serotonin syndrome only in an NMS differential diagnosis. Set decision to accepted or rejected (blank = stays needs_review, not used by rules)."
+serotonergic,6915,metoclopramide,rejected,Claude (AI assistant; not a pharmacist),2026-10-11,"Only label mention of serotonin syndrome is in the differential diagnosis of neuroleptic malignant syndrome; the label does not state that metoclopramide causes or contributes to it. Pairwise DDInter records already warn on metoclopramide with sertraline, fluoxetine, escitalopram, venlafaxine, linezolid (moderate) and tramadol (major). Pharmacist may revisit."

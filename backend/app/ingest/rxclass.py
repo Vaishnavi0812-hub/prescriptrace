@@ -40,7 +40,11 @@ MEDRT = DatasetInfo(
     code="medrt",
     name="MED-RT contraindications (VA, via NLM RxClass)",
     source_url="https://lhncbc.nlm.nih.gov/RxNav/applications/RxClassIntro.html",
-    licence="U.S. Government (VA) work; licence terms TO BE CONFIRMED (see DATA_FEASIBILITY.md)",
+    # Checked 2026-10-11: RxNav terms of service need no licence for these APIs except SNOMED CT
+    # content, which we do not use (MED-RT CI_ChemClass links drugs to MeSH chemical classes).
+    licence="U.S. Government (VA) work via NLM RxClass; no licence needed per RxNav terms "
+    "(attribution to NLM required)",
+    licence_url="https://lhncbc.nlm.nih.gov/RxNav/TermsofService.html",
     region="US",
     limitations="Drug-class contraindications are expanded to ingredients using FDA "
     "chemical-structure class membership; a pair is shown as 'contraindicated' only where "
@@ -50,10 +54,14 @@ ATC = DatasetInfo(
     code="atc",
     name="WHO ATC groups, levels 1-4 (via NLM RxClass)",
     source_url="https://www.whocc.no/atc_ddd_index/",
-    licence="© WHO Collaborating Centre; used for grouping, not redistributed",
+    # WHOCC terms (checked 2026-10-11): use requires reference to the WHOCC; no commercial copying
+    # or distribution; no changing the material. We cite codes unchanged, non-commercially.
+    licence="© WHO Collaborating Centre for Drug Statistics Methodology; non-commercial use "
+    "with attribution, unmodified",
+    licence_url="https://atcddd.fhi.no/copyright_disclaimer/",
     limitations="Used to group medicines into classes (e.g. NSAIDs) where FDA classes do not "
     "cover a drug, such as India-only medicines. Findings cite the single ATC code they rely on; "
-    "the ATC index itself is not exported. WHOCC reuse terms are still to be verified.",
+    "the ATC index itself is not exported. Commercial use would need WHOCC permission.",
 )
 
 CONTEXT_WORDS = {

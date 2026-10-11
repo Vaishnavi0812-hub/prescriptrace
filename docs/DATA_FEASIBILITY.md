@@ -176,10 +176,10 @@ All counts are from `ingest_run` logs of the loaded database; rerun with
 | DDInter 2.0 | 2.0 | 215,168 ingredient pairs | 1,761/1,971 drugs mapped; 168 route-specific entries excluded by design (ADR-005); 42 other unmapped (`backend/data/reports/ddinter_unmapped.csv`) |
 | openFDA recalls | export 2026-10-06 | 18,001 recalls · 30,775 links | ingredient links: 3,100 via structured substance names, 10,681 via product-description text (20/20 random sample correct), 4,220 unlinked (mostly homeopathic products, kits, abbreviations like "HCG") |
 | openFDA labels | export 2026-10-09 | 6,473 representative labels (2,686 single-ingredient) · 5,634 context notes | 178,036 of 262,893 labels have no harmonised `openfda` block (ingredients unidentifiable; mostly repackager duplicates); 431 of 6,143 substance names unmapped |
-| Label class flags | — | QT-prolonging 141 · serotonergic 56 · CNS depressant 80 | 1 sent to human review (metoclopramide, differential-diagnosis mention); candidates in `backend/data/reports/label_flag_candidates.csv` |
+| Label class flags | — | QT-prolonging 141 · serotonergic 56 · CNS depressant 80 | 1 sent to review (metoclopramide, differential-diagnosis mention): rejected 2026-10-11 by the AI assistant (pairwise DDInter warnings already cover it; a pharmacist may revisit); candidates in `backend/data/reports/label_flag_candidates.csv` |
 | RxClass (FDA EPC/MOA) | fetched 2026-10-10 | 3,935 memberships | |
-| MED-RT | fetched 2026-10-10 | 1,981 contraindicated pairs · 796 context contraindications | licence still to be confirmed |
-| ATC (grouping) | fetched 2026-10-10 | 3,109 memberships | used for class grouping where FDA classes miss a drug; findings cite the single ATC code used; the index is not exported |
+| MED-RT | fetched 2026-10-10 | 1,981 contraindicated pairs · 796 context contraindications | licence checked 2026-10-11: RxNav terms need no licence (SNOMED CT excepted, not used); NLM attribution shown in the app |
+| ATC (grouping) | fetched 2026-10-10 | 3,109 memberships | used for class grouping where FDA classes miss a drug; findings cite the single ATC code used; the index is not exported. WHOCC terms (checked 2026-10-11): attribution required, no commercial copying/distribution, no modification; met for this non-commercial project |
 | India brands (curated) | verified 2026-10-10 | 25 brands | 25/26 sources verified; Storvas CV page now 404 (not loaded) |
 | RxNav gap-fill | — | 2296 ingredients · 2815 synonyms | non-US ingredients (e.g. nimesulide, aceclofenac) and INN names (acetylsalicylic acid) |
 
@@ -199,7 +199,7 @@ co-trimoxazole) and vitamin shorthand (vit D3, vit B12) are handled as curated a
 ## Stage 5 results: recall and alert sources (2026-10-10)
 | Source | Result |
 |---|---|
-| CDSCO NSQ + spurious alerts | 60 alert PDFs listed since 2023-07; **42 parsed and validated**, 18 rejected whole (11 numbering problems, 7 layout problems; see `backend/data/reports/cdsco_files.csv`); 1,974 records, **439 unexpired batches kept**; 230 linked to ingredients by the normaliser, 100 with brand only. Includes spurious Telma 40 batches 05240226 and K18230707. **Coverage ends mid-2025** (newer portal not accessible). |
+| CDSCO NSQ + spurious alerts | 60 alert PDFs listed since 2023-07; **42 parsed and validated**, 18 rejected whole (11 numbering problems, 7 layout problems; see `backend/data/reports/cdsco_files.csv`); 1,974 records, **439 unexpired batches kept**; 230 linked to ingredients by the normaliser, 100 with brand only. Includes spurious Telma 40 batches 05240226 and K18230707. *Superseded 2026-10-11 (ADR-021):* the "new link" is a searchable database embedded as an iframe from `cdscoonline.gov.in`; its JSON gives 6,674 records (NSQ Jan 2019 – Aug 2026, spurious Jun 2025 – Aug 2026); 2,496 unexpired alerts are now loaded (1,408 linked to an ingredient). |
 | WHO Medical Product Alerts | Assessed, **not loaded**: only ~10 alerts visible without JavaScript; batch details are narrative/images. Future work. |
 | Checklist sources | CDSCO "Guidance for Identification and Verification of Spurious Drugs" and FAQ on G.S.R. 823(E) (Schedule H2 QR codes on top-300 brands since 2023-08-01); US FDA counterfeit-medicine page. |
 

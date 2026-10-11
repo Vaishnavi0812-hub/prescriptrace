@@ -183,3 +183,19 @@ def test_weak_lookalike_is_listed_but_not_offered_for_confirmation(n: Normaliser
 def test_pharmacopoeia_and_unit_noise_is_ignored(n: Normaliser) -> None:
     assert names(n.normalise("Tab. Amlodipine IP 5 mg").best) == ("amlodipine",)
     assert names(n.normalise("Pantoprazole Inj. BP 40 mg").best) == ("pantoprazole",)
+
+
+def test_other_member_of_a_brand_family_is_never_near_auto_accept() -> None:
+    # Zerodol-SP adds serratiopeptidase to Zerodol-P: a close spelling, a different medicine.
+    vocab = Vocabulary(
+        {"161": "acetaminophen", "1": "aceclofenac"},
+        [e("Zerodol-P", "india_brand", "161", "1"), e("Zerodol", "india_brand", "1")],
+    )
+    normaliser = Normaliser(vocab)
+    for text in ("Zerodol-SP", "Zerodol SP 100", "Zerodol-TH"):
+        result = normaliser.normalise(text)
+        assert result.status != "resolved", text
+        assert result.confidence <= 0.75, text
+    # A release-form suffix is the same medicine, so it still resolves.
+    mr = normaliser.normalise("Zerodol MR")
+    assert mr.status == "resolved" and names(mr.best) == ("aceclofenac",)

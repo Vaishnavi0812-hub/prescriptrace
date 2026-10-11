@@ -1,12 +1,16 @@
 """CDSCO (India) drug alerts: Not of Standard Quality (NSQ) and spurious drug lists.
 
-Source: monthly PDF tables listed at https://cdsco.gov.in/opencms/opencms/en/Notifications/nsq-drugs/.
-As of 2026-10 that page lists alerts only up to mid-2025; CDSCO announced (Aug 2025, scanned
-notice, OCR'd) a "new searchable link" that could not be found in machine-readable form. Newer
-alerts are therefore MISSING, and the dataset's limitations say so.
+Sources (both official CDSCO):
+  * Since Aug 2025 CDSCO publishes alerts as a searchable database, embedded in
+    https://cdsco.gov.in/opencms/opencms/en/Notifications/nsq-drugs/ from
+    https://cdscoonline.gov.in/CDSCO/viewPublicNSQDrug. Its JSON endpoints give one record per
+    sample (product, batch, dates, manufacturer, failed test, lab, reporting month). NSQ records
+    go back to Jan 2019, spurious records to Jun 2025. This is the primary source.
+  * Older monthly PDF lists on the same page are used only for spurious-drug lists published
+    before the database's spurious coverage starts.
 
-Extraction is validated per file: serial numbers must run 1..N without gaps (a restart at 1 is
-allowed for a new section), every record needs a product name and batch number, and data rows
+PDF extraction is validated per file: serial numbers must run 1..N without gaps (a restart at 1
+is allowed for a new section), every record needs a product name and batch number, and data rows
 must match the header's column count. A file that fails is skipped entirely and reported, never
 partly loaded. Only batches that have not expired are kept.
 """
@@ -15,6 +19,7 @@ from __future__ import annotations
 
 import base64
 import csv
+import hashlib
 import logging
 import re
 import urllib.parse
@@ -28,7 +33,16 @@ from sqlalchemy import delete, insert
 from sqlalchemy.orm import Session
 
 from app.core.normalise import Normaliser, parse
-from app.ingest.common import RAW_DIR, DatasetInfo, chunks, download, ingest_run, upsert_dataset
+from app.ingest.common import (
+    CACHE_DIR,
+    RAW_DIR,
+    DatasetInfo,
+    cached_json,
+    chunks,
+    download,
+    ingest_run,
+    upsert_dataset,
+)
 from app.models import Recall, RecallLink
 from app.repo.vocabulary import load_vocabulary
 
@@ -48,10 +62,18 @@ INFO = DatasetInfo(
     source_url=LIST_URL,
     licence="Government of India public notices (CDSCO); no explicit licence stated",
     region="IN",
-    limitations="Covers alerts published up to mid-2025 only: CDSCO's newer alert portal could "
-    "not be accessed. Parsed from PDF tables with strict validation; files that failed are "
-    "skipped (see backend/data/reports/cdsco_files.csv). Only unexpired batches are kept.",
+    limitations="From CDSCO's public NSQ/spurious alert database (cdscoonline.gov.in; NSQ from "
+    "Jan 2019, spurious from Jun 2025) plus older spurious-drug PDF lists (strictly validated; "
+    "failed files skipped, see backend/data/reports/cdsco_files.csv). Only unexpired batches are "
+    "kept. Products are matched by name text; State lab reports may lag.",
 )
+ONLINE = "https://cdscoonline.gov.in/CDSCO"
+ONLINE_VIEW = f"{ONLINE}/viewPublicNSQDrug"
+ONLINE_TABS = {
+    "nsq": ("filteredNsqDrugTable", "NSQ"),
+    "spurious": ("filteredSpuriousDrugTable", "Spurious"),
+}
+REFRESH_MONTHS = 3  # recent months are re-fetched on every run (late State lab submissions)
 
 _ITEM = re.compile(
     r'(?is)num_id=([A-Za-z0-9=]+)[^>]*>\s*<span class="font_black">(.*?)</span>.*?'
@@ -240,10 +262,95 @@ def parse_pdf(path: Path) -> tuple[list[dict[str, str]], str | None]:
     return records, None
 
 
+@dataclass(frozen=True)
+class OnlineMonth:
+    tab: str  # nsq | spurious
+    month: date
+    records: list[dict[str, Any]]
+
+
+def online_months(refresh: bool) -> list[OnlineMonth]:
+    """Every published month of the CDSCO alert database, cached per month on disk."""
+    today = datetime.now(UTC).date().replace(day=1)
+    out = []
+    for tab, (endpoint, _) in ONLINE_TABS.items():
+        for year in _get_json(f"{ONLINE}/reportingYears?tab={tab}", f"years-{tab}", True):
+            names = _get_json(
+                f"{ONLINE}/publicReportingMonths?year={year}&tab={tab}",
+                f"months-{tab}-{year}",
+                refresh or int(year) >= today.year - 1,
+            )
+            for name in names:
+                month = date(int(year), MONTHS[name[:3].lower()], 1)
+                recent = (today.year - month.year) * 12 + today.month - month.month < REFRESH_MONTHS
+                data = _get_json(
+                    f"{ONLINE}/{endpoint}?month={name}-{year}&source=All&tab={tab}",
+                    f"{tab}-{year}-{month.month:02d}",
+                    refresh or recent,
+                )
+                out.append(OnlineMonth(tab, month, list(data.get("aaData") or [])))
+    return out
+
+
+def _get_json(url: str, key: str, refresh: bool) -> Any:
+    if refresh:
+        (CACHE_DIR / "cdsco_online" / f"{key}.json").unlink(missing_ok=True)
+    return cached_json(url, f"cdsco_online/{key}", min_interval=0.5)
+
+
+def online_record(tab: str, row: dict[str, Any]) -> dict[str, str]:
+    """Database row → the same fields the PDF parser produces."""
+    product = row.get("str_product_name") or row.get("product_name_from_dtl") or ""
+    reason = row.get("str_nsq_result") or row.get("str_nsq_remarks") or ""
+    lab = row.get("str_reported_by_lab_or_state") or ""
+
+    def value(text: Any) -> str:
+        cleaned = " ".join(str(text or "").split())
+        return "" if _PLACEHOLDER.match(cleaned) else cleaned
+
+    maker = value(row.get("str_manufactured_by")) or value(row.get("str_manufacturer_name"))
+    if tab == "spurious" and maker:
+        maker += " (as claimed on the label)"
+    return {
+        "product": value(product),
+        "batch": value(row.get("str_batch_no")),
+        "manufacture_date": value(row.get("dt_manufacturing_date")),
+        "expiry": value(row.get("dt_expiry_date")),
+        "manufacturer": maker,
+        "reason": value(reason),
+        "reported_by": " ".join(f"{row.get('str_reporting_source') or ''} {lab}".split()),
+    }
+
+
+# Values the database uses for "no information".
+_PLACEHOLDER = re.compile(
+    r"(?i)^(-+|\.+|n/?a|nil|none|na|not (?:applicable|given|mentioned|available|known)|"
+    r"spurious|unknown|null)$"
+)
+
+
+def online_record_id(tab: str, month: date, rec: dict[str, str], seen: dict[str, int]) -> str:
+    """Stable id: the database exposes none for NSQ rows, so hash the identifying fields."""
+    key = "|".join([tab, f"{month:%Y-%m}", rec["product"], rec["batch"], rec["reported_by"]])
+    digest = hashlib.sha1(key.encode()).hexdigest()[:12]  # noqa: S324 - identifier, not security
+    seen[digest] = seen.get(digest, 0) + 1
+    suffix = f"-{seen[digest]}" if seen[digest] > 1 else ""
+    return f"online:{tab}:{month:%Y-%m}:{digest}{suffix}"
+
+
 def run(session: Session, refresh: bool = False) -> None:
     listing = RAW_DIR / "cdsco" / "nsq_listing.html"
     download(LIST_URL, listing, refresh=True)  # small; always refresh the index
-    files = list_files(listing.read_text(encoding="utf-8", errors="ignore"))
+    months = online_months(refresh)
+    spurious_from = min((m.month for m in months if m.tab == "spurious"), default=date.max)
+    # PDFs: only spurious lists for months before the database covers them (NSQ: database from
+    # 2019). A monthly list is published in the following month (the May list in June), so
+    # compare the month it reports on, not its publication date.
+    files = [
+        f
+        for f in list_files(listing.read_text(encoding="utf-8", errors="ignore"))
+        if f.kind == "Spurious" and _previous_month(f.released) < spurious_from
+    ]
     dataset = upsert_dataset(session, INFO, downloaded_at=datetime.now(UTC))
     normaliser = Normaliser(load_vocabulary(session))
     this_month = datetime.now(UTC).date().replace(day=1)
@@ -253,6 +360,28 @@ def run(session: Session, refresh: bool = False) -> None:
         report: list[list[Any]] = []
         recalls: list[dict[str, Any]] = []
         links: list[tuple[str, dict[str, Any]]] = []
+        seen: dict[str, int] = {}
+        online_kept = 0
+        for m in months:
+            kind = ONLINE_TABS[m.tab][1]
+            for row in m.records:
+                stats.rows_in += 1
+                rec = online_record(m.tab, row)
+                expiry = parse_expiry(rec["expiry"])
+                # A missing batch (e.g. an unlabelled spurious product) still gives a
+                # product-level alert; it just cannot be matched by batch number.
+                if (
+                    not rec["product"]
+                    or (expiry is not None and expiry < this_month)
+                    or re.search(r"(?i)\(vet\.?\)|veterinary", rec["product"])
+                ):
+                    stats.rows_rejected += 1
+                    continue
+                rid = online_record_id(m.tab, m.month, rec, seen)
+                generic, brand = split_product(rec["product"], normaliser)
+                recalls.append(_online_row(dataset.id, kind, m.month, rec, rid))
+                links.extend((rid, link) for link in _links(normaliser, generic, brand))
+                online_kept += 1
         for f in files:
             pdf_url = _pdf_url(f, refresh)
             if pdf_url is None:
@@ -288,14 +417,17 @@ def run(session: Session, refresh: bool = False) -> None:
         stats.rows_out = len(recalls)
         loaded = sum(1 for r in report if r[4] == "loaded")
         linked = len({rid for rid, link in links if link["ingredient_rxcui"]})
+        online_rows = sum(len(m.records) for m in months)
         stats.note(
-            f"files: {len(files)} listed since {SINCE}, {loaded} loaded, "
-            f"{len(files) - loaded} rejected; unexpired records: {len(recalls)}; "
-            f"records linked to an ingredient: {linked}; brand-only links: "
+            f"online database: {len(months)} months, {online_rows} records, "
+            f"{online_kept} unexpired kept; spurious PDFs for months before {spurious_from}: "
+            f"{len(files)} "
+            f"listed, {loaded} loaded, {len(files) - loaded} rejected; unexpired records total: "
+            f"{len(recalls)}; records linked to an ingredient: {linked}; brand-only links: "
             f"{sum(1 for _, link in links if not link['ingredient_rxcui'])}"
         )
-        newest = max((f.released for f in files), default=None)
-        dataset.version = f"alerts published to {newest}" if newest else None
+        newest = max((m.month for m in months), default=None)
+        dataset.version = f"alerts to {newest:%b %Y}" if newest else None
         _write_report(report)
 
 
@@ -329,6 +461,41 @@ def _recall_row(ds: int, f: AlertFile, rec: dict[str, str], rid: str, url: str) 
     }
 
 
+def _online_row(ds: int, kind: str, month: date, rec: dict[str, str], rid: str) -> dict[str, Any]:
+    parts = [f"Batch {rec['batch']}" if rec["batch"] else "Batch not stated"]
+    if rec["manufacture_date"]:
+        parts.append(f"Mfg {rec['manufacture_date']}")
+    if rec["expiry"]:
+        parts.append(f"Exp {rec['expiry']}")
+    return {
+        "region": "IN",
+        "source_record_id": rid,
+        "classification": kind,
+        "reason": rec["reason"] or None,
+        "firm": _fit(rec["manufacturer"], FIRM_MAX) or None,
+        "status": None,
+        "report_date": month,  # reporting month (the database gives month precision)
+        "product_description": rec["product"],
+        "lot_info": "; ".join(parts),
+        "dataset_id": ds,
+        "source_url": ONLINE_VIEW,
+    }
+
+
+def _previous_month(day: date) -> date:
+    first = day.replace(day=1)
+    return (first - timedelta(days=1)).replace(day=1)
+
+
+FIRM_MAX = 300  # column sizes (firm, brand_text); long addresses are shortened for display
+
+
+def _fit(text: str | None, limit: int) -> str | None:
+    if text is None or len(text) <= limit:
+        return text
+    return text[: limit - 1].rstrip() + "…"
+
+
 def _links(normaliser: Normaliser, generic: str, brand: str | None) -> list[dict[str, Any]]:
     """Ingredient links (only if confidently resolved) and the brand text, if any."""
     out: list[dict[str, Any]] = []
@@ -341,8 +508,8 @@ def _links(normaliser: Normaliser, generic: str, brand: str | None) -> list[dict
 
 
 def _link(rxcui: str | None, brand: str | None) -> dict[str, Any]:
-    return {"ingredient_rxcui": rxcui, "product_rxcui": None, "brand_text": brand,
-            "match_basis": "text"}  # fmt: skip
+    return {"ingredient_rxcui": rxcui, "product_rxcui": None,
+            "brand_text": _fit(brand, FIRM_MAX), "match_basis": "text"}  # fmt: skip
 
 
 def _write_report(rows: list[list[Any]]) -> None:

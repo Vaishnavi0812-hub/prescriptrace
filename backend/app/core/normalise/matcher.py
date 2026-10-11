@@ -59,6 +59,8 @@ CONFIRM_SIMILARITY = 87.0  # fuzzy similarity needed before a single guess is of
 PREFIX_SINGLE = 0.85  # every name starting with the query is the same drug: confirm
 PREFIX_MANY = 0.55  # several drugs share the prefix: list them, pick none
 TIE_MARGIN = 4.0  # similarity points; closer than this to a different drug = ambiguous
+BRAND_KINDS = {"india_brand", "brand"}
+FAMILY_CAP = 0.75  # another member of the same brand family: offer, never near auto-accept
 
 
 @dataclass(frozen=True)
@@ -262,6 +264,8 @@ class Normaliser:
         for key, score in ranked:
             for entry in self.vocab.exact[key]:
                 conf = _fuzzy_confidence(query, score)
+                if entry.kind in BRAND_KINDS and _other_family_member(query, key):
+                    conf = min(conf, FAMILY_CAP)
                 if top_drug is None:
                     top_drug = entry.ingredients
                 elif entry.ingredients != top_drug and top_score - score < TIE_MARGIN:
@@ -296,6 +300,20 @@ def _fuzzy_confidence(query: str, similarity: float) -> float:
         # never suggested as "is this what you meant?".
         conf = min(conf, 0.55)
     return conf
+
+
+def _other_family_member(query: str, key: str) -> bool:
+    """Same brand stem, different letter suffix: "zerodol sp" vs "zerodol p", "allegra m" vs
+    "allegra". Indian brand families use such suffixes for different compositions (SP adds
+    serratiopeptidase, M adds montelukast), so a close spelling is not the same medicine."""
+    q_words, k_words = query.split(), key.split()
+    if not q_words or not k_words or q_words[0] != k_words[0]:
+        return False
+
+    def letters(words: list[str]) -> set[str]:
+        return {w for w in words[1:] if w.isalpha()}
+
+    return letters(q_words) != letters(k_words)
 
 
 def _dedupe(candidates: list[Candidate]) -> list[Candidate]:

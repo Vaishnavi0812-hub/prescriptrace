@@ -1,14 +1,14 @@
 {
  "evaluation": "ocr",
- "run_at": "2026-10-11T05:43:01+00:00",
+ "run_at": "2026-10-11T05:58:42+00:00",
  "dataset_versions": {
   "rxnorm_prescribe": "2026-09-29",
   "rxnorm_api": null,
+  "openfda_label": "openFDA export 2026-10-09",
   "openfda_enforcement": "2026-10-06",
   "rxclass_fdaspl": "RxClass API, fetched 2026-10-10",
   "inn_synonyms": null,
   "ddinter": "2.0",
-  "openfda_label": "openFDA export 2026-10-09",
   "cdsco_alerts": "alerts published to 2025-08-28",
   "medrt": "RxClass API, fetched 2026-10-10",
   "atc": "RxClass API, fetched 2026-10-10",
@@ -41,10 +41,10 @@
    "false_medicine_lines": 0,
    "page_time": {
     "n": 6,
-    "p50_ms": 729.4,
-    "p95_ms": 820.5,
-    "mean_ms": 748.3,
-    "max_ms": 827.7
+    "p50_ms": 1593.6,
+    "p95_ms": 1874.2,
+    "mean_ms": 1641.5,
+    "max_ms": 1944.4
    }
   },
   "printed_serif": {
@@ -57,10 +57,10 @@
    "false_medicine_lines": 0,
    "page_time": {
     "n": 6,
-    "p50_ms": 769.4,
-    "p95_ms": 820.1,
-    "mean_ms": 770.1,
-    "max_ms": 820.1
+    "p50_ms": 1656.6,
+    "p95_ms": 1757.3,
+    "mean_ms": 1658.6,
+    "max_ms": 1775.4
    }
   },
   "printed_rotated_5deg": {
@@ -73,10 +73,10 @@
    "false_medicine_lines": 0,
    "page_time": {
     "n": 6,
-    "p50_ms": 782.2,
-    "p95_ms": 828.9,
-    "mean_ms": 793.2,
-    "max_ms": 829.8
+    "p50_ms": 1828.5,
+    "p95_ms": 2010.2,
+    "mean_ms": 1847.9,
+    "max_ms": 2015.0
    }
   },
   "printed_blur": {
@@ -89,10 +89,10 @@
    "false_medicine_lines": 0,
    "page_time": {
     "n": 6,
-    "p50_ms": 781.6,
-    "p95_ms": 811.7,
-    "mean_ms": 783.3,
-    "max_ms": 814.5
+    "p50_ms": 1640.1,
+    "p95_ms": 1711.0,
+    "mean_ms": 1640.0,
+    "max_ms": 1727.0
    }
   },
   "printed_speckle": {
@@ -105,10 +105,10 @@
    "false_medicine_lines": 0,
    "page_time": {
     "n": 6,
-    "p50_ms": 753.9,
-    "p95_ms": 810.8,
-    "mean_ms": 760.1,
-    "max_ms": 820.7
+    "p50_ms": 1817.5,
+    "p95_ms": 2274.6,
+    "mean_ms": 1900.3,
+    "max_ms": 2324.4
    }
   },
   "printed_small": {
@@ -121,10 +121,10 @@
    "false_medicine_lines": 0,
    "page_time": {
     "n": 6,
-    "p50_ms": 823.9,
-    "p95_ms": 900.7,
-    "mean_ms": 833.9,
-    "max_ms": 912.3
+    "p50_ms": 2361.8,
+    "p95_ms": 2583.8,
+    "mean_ms": 2246.7,
+    "max_ms": 2616.2
    }
   },
   "handwriting_style_kalam": {
@@ -137,10 +137,10 @@
    "false_medicine_lines": 0,
    "page_time": {
     "n": 6,
-    "p50_ms": 777.8,
-    "p95_ms": 800.7,
-    "mean_ms": 766.6,
-    "max_ms": 804.3
+    "p50_ms": 2015.4,
+    "p95_ms": 2263.8,
+    "mean_ms": 2026.7,
+    "max_ms": 2343.0
    }
   },
   "handwriting_style_caveat": {
@@ -153,10 +153,10 @@
    "false_medicine_lines": 0,
    "page_time": {
     "n": 6,
-    "p50_ms": 814.3,
-    "p95_ms": 857.7,
-    "mean_ms": 812.9,
-    "max_ms": 867.9
+    "p50_ms": 2300.2,
+    "p95_ms": 2411.4,
+    "mean_ms": 2267.6,
+    "max_ms": 2415.4
    }
   },
   "handwriting_style_kalam_rotated_blur": {
@@ -169,10 +169,10 @@
    "false_medicine_lines": 0,
    "page_time": {
     "n": 6,
-    "p50_ms": 757.6,
-    "p95_ms": 825.4,
-    "mean_ms": 764.2,
-    "max_ms": 833.5
+    "p50_ms": 2264.5,
+    "p95_ms": 2554.2,
+    "mean_ms": 2334.0,
+    "max_ms": 2561.0
    }
   }
  },

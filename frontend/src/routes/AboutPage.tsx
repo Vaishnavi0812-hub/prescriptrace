@@ -6,6 +6,12 @@ import { OfflinePanel } from "../components/OfflinePanel";
 import { Skeleton } from "../components/Skeleton";
 import { fetchDatasets } from "../lib/api";
 
+const ATTRIBUTION =
+  "This product uses publicly available data from the U.S. National Library of Medicine (NLM), " +
+  "National Institutes of Health, Department of Health and Human Services; NLM is not responsible " +
+  "for the product and does not endorse or recommend this or any other product. ATC codes: WHO " +
+  "Collaborating Centre for Drug Statistics Methodology.";
+
 /** What the app does and does not do, and every dataset with version, date, licence, limits. */
 export default function AboutPage() {
   const { t } = useTranslation();
@@ -31,6 +37,8 @@ export default function AboutPage() {
       {data && (
         <>
           <p className="rounded-xl border border-sand bg-surface p-3 text-sm">{data.non_commercial_notice}</p>
+          {/* Attribution required by the NLM RxNav terms and the WHOCC (legal wording, kept in English). */}
+          <p lang="en" className="text-sm text-muted">{ATTRIBUTION}</p>
           <ul className="space-y-3">
             {data.datasets.map((d) => (
               <li key={d.code} className="rounded-xl border border-sand bg-surface p-4 text-sm">

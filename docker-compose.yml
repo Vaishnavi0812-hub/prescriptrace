@@ -28,7 +28,8 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://prescriptrace:change-me-locally@db:5432/prescriptrace}
     ports:
-      - "${BACKEND_PORT:-8000}:8000"
+      # Direct API access from this computer only; users go through the website (frontend).
+      - "127.0.0.1:${BACKEND_PORT:-8000}:8000"
     volumes:
       - ./backend:/app
       - ./data:/data
@@ -36,13 +37,16 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    # Apply migrations, then serve with auto-reload for development.
-    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    # Apply migrations, then serve with auto-reload for development. --proxy-headers: the website
+    # forwards /api with X-Forwarded-For, so per-IP rate limits see the real client address.
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --proxy-headers --forwarded-allow-ips='*'"
 
+  # The website: http://localhost:5173 serves the app and forwards /api to the backend,
+  # so the whole app (and the API docs at /api/docs) lives at one address.
   frontend:
     build: ./frontend
     environment:
-      VITE_API_BASE: ${VITE_API_BASE:-http://localhost:8000}
+      API_PROXY_TARGET: http://backend:8000
     ports:
       - "${FRONTEND_PORT:-5173}:5173"
     volumes:
@@ -50,7 +54,12 @@ services:
       - /app/node_modules
     depends_on:
       - backend
-    command: npm run dev -- --host 0.0.0.0 --port 5173
+    command: npm run serve
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5173/ >/dev/null || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 60
 
 volumes:
   pgdata:

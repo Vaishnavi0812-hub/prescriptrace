@@ -104,7 +104,7 @@ beforeEach(() => {
     vi.fn(async (url: string, init?: RequestInit) => {
       if (url.includes("/health")) return json({ status: "ok", database: true, datasets_loaded: 9 });
       if (url.includes("/drugs/search")) {
-        const q = new URL(url).searchParams.get("q") ?? "";
+        const q = new URL(url, "http://localhost").searchParams.get("q") ?? "";
         return json({ query: q, hits: [DOLO, WARFARIN].filter((h) => h.label.toLowerCase().startsWith(q.toLowerCase())) });
       }
       if (url.includes("/normalise")) return json(normaliseHandler(url, init));

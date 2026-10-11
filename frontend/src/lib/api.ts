@@ -1,5 +1,6 @@
-export const API_BASE: string =
-  (import.meta.env.VITE_API_BASE as string | undefined) ?? "http://localhost:8000";
+// Same origin by default: the web server forwards /api to the backend, so the whole app is one
+// website. Set VITE_API_BASE only to call an API hosted elsewhere.
+export const API_BASE: string = (import.meta.env.VITE_API_BASE as string | undefined) ?? "";
 
 // ---------------------------------------------------------------- types (mirror app/schemas/api.py)
 

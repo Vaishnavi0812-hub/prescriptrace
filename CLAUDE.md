@@ -80,8 +80,10 @@ pregnancy, renal/hepatic) → one prioritised, plain-language safety summary wit
 
 ## Commands
 Windows PowerShell (`scripts/dev.ps1`; Makefile has the same targets for bash):
-- `.\scripts\dev.ps1 up` — build + start db/backend/frontend (creates `.env` from `.env.example`)
-  → frontend http://localhost:5173, API docs http://localhost:8000/api/docs
+- `.\scripts\dev.ps1 up` — build + start everything, wait for health, open the browser. One address:
+  http://localhost:5173 (Docker serves the production build via `npm run serve`; vite proxies /api to
+  the backend with X-Forwarded-For; uvicorn --proxy-headers). API docs http://localhost:5173/api/docs.
+  Backend port 8000 is bound to 127.0.0.1 only. `dev.ps1 dev` = hot-reload frontend on the host.
 - `.\scripts\dev.ps1 test` — backend pytest (in Docker, against Postgres) + frontend Vitest
 - `.\scripts\dev.ps1 lint` — ruff check, ruff format --check, mypy --strict; eslint, tsc
 - Evaluation: `docker compose run --rm backend python /evaluation/run.py [part]` (needs

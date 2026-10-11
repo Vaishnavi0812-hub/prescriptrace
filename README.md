@@ -87,11 +87,13 @@ frontend tests and tools outside Docker. Tesseract is installed inside the backe
 
 ```powershell
 git clone <repo-url> prescriptrace; cd prescriptrace
-.\scripts\dev.ps1 up        # builds and starts db + backend + frontend; creates .env from .env.example
+.\scripts\dev.ps1 up        # builds and starts everything, waits until ready, opens the browser
 ```
 
-- App: http://localhost:5173
-- API docs: http://localhost:8000/api/docs
+The whole app is one website: **http://localhost:5173** (the web server forwards `/api` to the
+backend; API docs at http://localhost:5173/api/docs). On first run `.env` is created from
+`.env.example`. If PowerShell says scripts are disabled, run
+`Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once (or use `docker compose up -d --build`).
 
 **Load the data** (first run 1–2 hours, mostly public API calls; re-runs reuse the cache and are
 idempotent):
@@ -101,7 +103,8 @@ docker compose run --rm backend python -m app.ingest all
 docker compose restart backend      # reloads the name vocabulary
 ```
 
-**Other tasks:** `.\scripts\dev.ps1 test | lint | fmt | migrate | logs | down | shell-db`
+**Other tasks:** `.\scripts\dev.ps1 test | lint | fmt | migrate | logs | down | shell-db`;
+`.\scripts\dev.ps1 dev` runs the frontend with hot reload on your machine (after `cd frontend; npm ci`)
 (`make <target>` from bash).
 
 **Configuration:** every setting is documented in [.env.example](.env.example) (thresholds,

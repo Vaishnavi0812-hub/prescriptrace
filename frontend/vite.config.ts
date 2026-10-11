@@ -4,6 +4,13 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
+// Where /api requests are forwarded: the backend container in Docker, or a local backend.
+const env = (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env;
+// xfwd adds X-Forwarded-For, so the backend's per-IP rate limits see each real client.
+const apiProxy = {
+  "/api": { target: env?.API_PROXY_TARGET ?? "http://localhost:8000", changeOrigin: true, xfwd: true },
+};
+
 export default defineConfig({
   plugins: [
     react(),
@@ -42,7 +49,10 @@ export default defineConfig({
   server: {
     // Polling makes hot reload work for files bind-mounted from Windows into Docker.
     watch: { usePolling: true },
+    proxy: apiProxy,
   },
+  // `npm run serve` (what Docker runs): the optimised build, including the offline service worker.
+  preview: { proxy: apiProxy },
   test: {
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],

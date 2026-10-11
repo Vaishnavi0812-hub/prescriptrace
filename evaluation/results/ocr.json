@@ -1,0 +1,200 @@
+{
+ "evaluation": "ocr",
+ "run_at": "2026-10-11T05:43:01+00:00",
+ "dataset_versions": {
+  "rxnorm_prescribe": "2026-09-29",
+  "rxnorm_api": null,
+  "openfda_enforcement": "2026-10-06",
+  "rxclass_fdaspl": "RxClass API, fetched 2026-10-10",
+  "inn_synonyms": null,
+  "ddinter": "2.0",
+  "openfda_label": "openFDA export 2026-10-09",
+  "cdsco_alerts": "alerts published to 2025-08-28",
+  "medrt": "RxClass API, fetched 2026-10-10",
+  "atc": "RxClass API, fetched 2026-10-10",
+  "india_brands": null
+ },
+ "engine": "tesseract",
+ "pages_per_variant": 6,
+ "printed": {
+  "medicine_lines": 129,
+  "auto_correct_pct": 96.9,
+  "found_correct_pct": 100.0,
+  "wrong_auto_accept": 0,
+  "missed_pct": 0.0
+ },
+ "handwriting_style": {
+  "medicine_lines": 62,
+  "auto_correct_pct": 53.2,
+  "found_correct_pct": 80.6,
+  "wrong_auto_accept": 0,
+  "missed_pct": 19.4
+ },
+ "by_variant": {
+  "printed_clean": {
+   "medicine_lines": 20,
+   "auto_correct_pct": 95.0,
+   "found_correct_pct": 100.0,
+   "wrong_auto_accept": 0,
+   "missed_pct": 0.0,
+   "median_cer": 0.0,
+   "false_medicine_lines": 0,
+   "page_time": {
+    "n": 6,
+    "p50_ms": 729.4,
+    "p95_ms": 820.5,
+    "mean_ms": 748.3,
+    "max_ms": 827.7
+   }
+  },
+  "printed_serif": {
+   "medicine_lines": 21,
+   "auto_correct_pct": 95.2,
+   "found_correct_pct": 100.0,
+   "wrong_auto_accept": 0,
+   "missed_pct": 0.0,
+   "median_cer": 0.0,
+   "false_medicine_lines": 0,
+   "page_time": {
+    "n": 6,
+    "p50_ms": 769.4,
+    "p95_ms": 820.1,
+    "mean_ms": 770.1,
+    "max_ms": 820.1
+   }
+  },
+  "printed_rotated_5deg": {
+   "medicine_lines": 22,
+   "auto_correct_pct": 100.0,
+   "found_correct_pct": 100.0,
+   "wrong_auto_accept": 0,
+   "missed_pct": 0.0,
+   "median_cer": 0.0,
+   "false_medicine_lines": 0,
+   "page_time": {
+    "n": 6,
+    "p50_ms": 782.2,
+    "p95_ms": 828.9,
+    "mean_ms": 793.2,
+    "max_ms": 829.8
+   }
+  },
+  "printed_blur": {
+   "medicine_lines": 22,
+   "auto_correct_pct": 95.5,
+   "found_correct_pct": 100.0,
+   "wrong_auto_accept": 0,
+   "missed_pct": 0.0,
+   "median_cer": 0.0,
+   "false_medicine_lines": 0,
+   "page_time": {
+    "n": 6,
+    "p50_ms": 781.6,
+    "p95_ms": 811.7,
+    "mean_ms": 783.3,
+    "max_ms": 814.5
+   }
+  },
+  "printed_speckle": {
+   "medicine_lines": 21,
+   "auto_correct_pct": 95.2,
+   "found_correct_pct": 100.0,
+   "wrong_auto_accept": 0,
+   "missed_pct": 0.0,
+   "median_cer": 0.0,
+   "false_medicine_lines": 0,
+   "page_time": {
+    "n": 6,
+    "p50_ms": 753.9,
+    "p95_ms": 810.8,
+    "mean_ms": 760.1,
+    "max_ms": 820.7
+   }
+  },
+  "printed_small": {
+   "medicine_lines": 23,
+   "auto_correct_pct": 100.0,
+   "found_correct_pct": 100.0,
+   "wrong_auto_accept": 0,
+   "missed_pct": 0.0,
+   "median_cer": 0.0,
+   "false_medicine_lines": 0,
+   "page_time": {
+    "n": 6,
+    "p50_ms": 823.9,
+    "p95_ms": 900.7,
+    "mean_ms": 833.9,
+    "max_ms": 912.3
+   }
+  },
+  "handwriting_style_kalam": {
+   "medicine_lines": 20,
+   "auto_correct_pct": 50.0,
+   "found_correct_pct": 75.0,
+   "wrong_auto_accept": 0,
+   "missed_pct": 25.0,
+   "median_cer": 0.033,
+   "false_medicine_lines": 0,
+   "page_time": {
+    "n": 6,
+    "p50_ms": 777.8,
+    "p95_ms": 800.7,
+    "mean_ms": 766.6,
+    "max_ms": 804.3
+   }
+  },
+  "handwriting_style_caveat": {
+   "medicine_lines": 21,
+   "auto_correct_pct": 71.4,
+   "found_correct_pct": 95.2,
+   "wrong_auto_accept": 0,
+   "missed_pct": 4.8,
+   "median_cer": 0.03,
+   "false_medicine_lines": 0,
+   "page_time": {
+    "n": 6,
+    "p50_ms": 814.3,
+    "p95_ms": 857.7,
+    "mean_ms": 812.9,
+    "max_ms": 867.9
+   }
+  },
+  "handwriting_style_kalam_rotated_blur": {
+   "medicine_lines": 21,
+   "auto_correct_pct": 38.1,
+   "found_correct_pct": 71.4,
+   "wrong_auto_accept": 0,
+   "missed_pct": 28.6,
+   "median_cer": 0.037,
+   "false_medicine_lines": 0,
+   "page_time": {
+    "n": 6,
+    "p50_ms": 757.6,
+    "p95_ms": 825.4,
+    "mean_ms": 764.2,
+    "max_ms": 833.5
+   }
+  }
+ },
+ "not_found_examples": {
+  "handwriting_style_kalam": [
+   "1. Tab Dolo 650 1-0-1 x 5 days (missed, CER 0.1)",
+   "1. Tab Amlodipine 5 1-0-0 (missed, CER 0.08)",
+   "3. Tab Dolo 650 1-0-1 x 5 days (missed, CER 0.033)",
+   "1. Tab Warfarin 5 0-0-1 (missed, CER 0.087)",
+   "1. Tab Glycomet 500 1-0-1 (missed, CER 0.08)"
+  ],
+  "handwriting_style_caveat": [
+   "3. Tab Montelukast 10 0-0-1 (missed, CER 0.074)"
+  ],
+  "handwriting_style_kalam_rotated_blur": [
+   "1. Cap Amoxicillin 500 1-1-1 x 5 days (missed, CER 0.162)",
+   "1. Tab Losartan 50 1-0-0 (missed, CER 0.125)",
+   "1. Tab Dolo 650 1-0-1 x 5 days (missed, CER 0.067)",
+   "1. Cap Amoxicillin 500 1-1-1 x 5 days (missed, CER 0.135)",
+   "1. Tab Azithral 500 1-0-0 x 3 days (missed, CER 0.059)",
+   "3. Tab Dolo 650 1-0-1 x 5 days (missed, CER 0.033)"
+  ]
+ },
+ "note": "handwriting_style uses handwriting fonts, not real handwriting: an upper bound."
+}

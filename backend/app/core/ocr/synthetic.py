@@ -33,10 +33,12 @@ def render(
     font_size: int = 34,
     seed: int = 0,
     serif: bool = False,
+    font_path: Path | None = None,
 ) -> bytes:
-    """Render a prescription page and return PNG bytes."""
+    """Render a prescription page and return PNG bytes. `font_path` overrides the font (the
+    evaluation uses handwriting-style fonts as a stand-in for handwriting)."""
     font_file = "DejaVuSerif.ttf" if serif else "DejaVuSans.ttf"
-    font = ImageFont.truetype(str(FONT_DIR / font_file), font_size)
+    font = ImageFont.truetype(str(font_path or FONT_DIR / font_file), font_size)
     lines = HEADER + [f"{i}. {m}" for i, m in enumerate(medicines, 1)] + [""] + FOOTER
     line_h = int(font_size * 1.8)
     height = 120 + line_h * len(lines)

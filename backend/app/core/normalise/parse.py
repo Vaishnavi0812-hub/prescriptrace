@@ -37,7 +37,9 @@ _INSTRUCTIONS = [
     re.compile(r"\b(?:x|for)\s*\d+\s*(?:days?|d|weeks?|wks?|months?)\b", re.IGNORECASE),
     re.compile(
         r"\b(?:od|bd|bid|tds|tid|qid|qds|hs|sos|stat|prn|qd|qhs|once daily|twice daily|"
-        r"after food|before food|after meals?|before meals?|at night|morning|evening)\b",
+        r"after food|before food|after meals?|before meals?|at night|morning|evening|"
+        r"(?:on )?(?:an )?empty stomach|(?:before|after) (?:breakfast|lunch|dinner)|"
+        r"at bed ?time|bed ?time|with (?:food|meals?|milk|water)|alternate days?|daily|weekly)\b",
         re.IGNORECASE,
     ),
 ]

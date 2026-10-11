@@ -1,0 +1,73 @@
+{
+ "evaluation": "latency",
+ "run_at": "2026-10-11T05:43:22+00:00",
+ "dataset_versions": {
+  "rxnorm_prescribe": "2026-09-29",
+  "rxnorm_api": null,
+  "openfda_enforcement": "2026-10-06",
+  "rxclass_fdaspl": "RxClass API, fetched 2026-10-10",
+  "inn_synonyms": null,
+  "ddinter": "2.0",
+  "openfda_label": "openFDA export 2026-10-09",
+  "cdsco_alerts": "alerts published to 2025-08-28",
+  "medrt": "RxClass API, fetched 2026-10-10",
+  "atc": "RxClass API, fetched 2026-10-10",
+  "india_brands": null
+ },
+ "method": "in-process TestClient, sequential, after warm-up; network time not included",
+ "runs": 50,
+ "latency": {
+  "search": {
+   "n": 50,
+   "p50_ms": 6.7,
+   "p95_ms": 14.2,
+   "mean_ms": 7.6,
+   "max_ms": 16.0
+  },
+  "normalise_5_lines": {
+   "n": 50,
+   "p50_ms": 10.3,
+   "p95_ms": 13.5,
+   "mean_ms": 10.8,
+   "max_ms": 23.8
+  },
+  "check_2_medicines": {
+   "n": 50,
+   "p50_ms": 17.3,
+   "p95_ms": 21.6,
+   "mean_ms": 18.5,
+   "max_ms": 81.5
+  },
+  "check_5_medicines": {
+   "n": 50,
+   "p50_ms": 29.6,
+   "p95_ms": 72.3,
+   "mean_ms": 34.8,
+   "max_ms": 106.6
+  },
+  "check_10_medicines": {
+   "n": 50,
+   "p50_ms": 52.5,
+   "p95_ms": 123.0,
+   "mean_ms": 61.5,
+   "max_ms": 137.0
+  },
+  "ocr_printed_page": {
+   "n": 10,
+   "p50_ms": 728.8,
+   "p95_ms": 794.1,
+   "mean_ms": 733.5,
+   "max_ms": 812.6
+  },
+  "offline_pack_first_build_ms": 5621.3
+ },
+ "response_bytes_gzipped": {
+  "search": 135,
+  "normalise_5_lines": 668,
+  "check_2_medicines": 4811,
+  "check_5_medicines": 7728,
+  "check_10_medicines": 17113,
+  "ocr_printed_page": 35387,
+  "offline_pack": 1433777
+ }
+}

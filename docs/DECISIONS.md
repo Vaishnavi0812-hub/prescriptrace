@@ -248,3 +248,19 @@ implemented and finalised in Stage 10.
   360 px on 13 screens/states (incl. offline result, print, OCR results, Hindi, Kannada) and
   checks overflow and 44 px targets: 0 problems after fixes (small About-page links; a malformed
   dataset source URL now shown as a repository path).
+
+## ADR-020 Evaluation harness
+- **Decision:** `/evaluation` (mounted into the backend container) measures the real modules
+  against the loaded data: name recognition (222 cases, hand-written + seeded typos, references
+  resolved by exact name only), interactions against CRESCENDDI (independent BNF/ANSM/Micromedex
+  reference set, CC0), OCR on synthetic printed pages and handwriting-style fonts (explicitly an
+  upper bound; no real handwriting was available), and server latency. Results are JSON;
+  `REPORT.md` is generated from them, never typed by hand. Safety metrics come first: wrong
+  auto-accepts (names and OCR) and "needs attention" false alarms.
+- **Rules for ourselves:** no tuning of the matcher on the evaluation cases; reference errors and
+  bugs found by the evaluation are fixed only with a regression test and disclosed in
+  METHODOLOGY.md with before/after numbers (one parser fix: instruction phrases such as "empty
+  stomach").
+- **Consequences:** The numbers are reproducible (seeded) but not blinded (the same team wrote
+  the cases). Usability with real staff and real handwritten prescriptions remain unmeasured
+  and are listed as such.

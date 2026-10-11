@@ -19,7 +19,9 @@ pregnancy, renal/hepatic) → one prioritised, plain-language safety summary wit
 - [x] Stage 7: frontend core flow (search, confirm, context, results, About; ADR-015/016)
 - [x] Stage 8: OCR flow (`app/core/ocr`, `/api/v1/ocr`, Scan screen; ADR-017)
 - [x] Stage 9: offline pack + TS engine, PWA, print/PDF, hi/kn (machine, needs review), a11y audit (ADR-018/019)
-- [ ] Stage 10 (see "Build stages" below). Stop for review after each stage; commit per stage.
+- [x] Stage 10: evaluation harness (`evaluation/`, ADR-020), final README, screenshots
+- Open items for the user: metoclopramide flag review, pharmacist review of the 25 brands,
+  MED-RT and WHOCC ATC licence terms, newest CDSCO alert as seen from India.
 
 ## Approved data sources
 - Interactions: DDInter 2.0 (CC BY-NC-SA 4.0, **non-commercial**; all 14 ATC files incl. unlisted
@@ -80,6 +82,8 @@ Windows PowerShell (`scripts/dev.ps1`; Makefile has the same targets for bash):
   → frontend http://localhost:5173, API docs http://localhost:8000/api/docs
 - `.\scripts\dev.ps1 test` — backend pytest (in Docker, against Postgres) + frontend Vitest
 - `.\scripts\dev.ps1 lint` — ruff check, ruff format --check, mypy --strict; eslint, tsc
+- Evaluation: `docker compose run --rm backend python /evaluation/run.py [part]` (needs
+  data/raw/crescenddi + data/raw/fonts, see evaluation/METHODOLOGY.md); never tune on its cases.
 - Offline vectors: `docker compose exec -e UPDATE_VECTORS=1 backend pytest tests/unit/test_offline_pack.py`
   after changing the engine/pack; a11y: `python scripts/a11y_audit.py` (app running, host Playwright).
 - `.\scripts\dev.ps1 fmt` · `migrate` · `logs` · `down` · `shell-db`

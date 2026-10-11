@@ -1,47 +1,191 @@
 # PrescripTrace
 
-Medication safety and counterfeit-risk **checker** for small pharmacies and clinics.
-Enter or photograph a list of medicines and get one prioritised, plain-language safety summary:
-known interactions, duplicated ingredients, and official recall/quality alerts. Every warning
-cites its source.
+A medication **safety and counterfeit-risk checker** for small pharmacies and rural clinics in
+India. Staff type or photograph a list of medicines, confirm what was recognised, optionally add
+patient context (age group, pregnancy, kidney or liver problems), and get **one prioritised,
+plain-language safety summary in under a minute**. Every warning shows the dataset record it
+came from.
 
-> **Decision support only.** PrescripTrace is not a diagnostic or prescribing tool. The absence
-> of a warning is not proof of safety. Consider confirming with the prescriber.
+> **Decision support only.** PrescripTrace is not a diagnostic or prescribing tool and never
+> tells anyone to stop or change a medicine. The absence of a warning is not proof of safety.
+> Consider confirming with the prescriber.
 >
-> **It does not detect fake pills.** "Counterfeit risk" means matching medicines against official
-> recall and alert lists, plus a physical-verification checklist (packaging, batch, seal, price,
-> supplier).
+> **It does not detect fake pills.** "Counterfeit risk" means matching medicines and batch
+> numbers against official recall and quality-alert lists (US FDA, India's CDSCO), plus a
+> sourced checklist for inspecting the pack.
 
-**Status:** Stages 1–4 of 10 done: real data loaded (RxNorm, DDInter, openFDA recalls and
-labels, RxClass/MED-RT, curated Indian brands), drug-name normalisation and the interaction
-engine are working and tested. The user interface arrives in Stage 7. The full README
-(screenshots, architecture, evaluation) comes in Stage 10. See [docs/PLAN.md](docs/PLAN.md),
-[docs/DATA_FEASIBILITY.md](docs/DATA_FEASIBILITY.md) and [docs/DECISIONS.md](docs/DECISIONS.md).
+## What it does
 
-## Run it on Windows (Docker)
+- **Recognises medicines** as staff write them: Indian brands (Dolo 650, Telma 40), INN/British
+  names (paracetamol, frusemide), US names, typos, salts and strengths. Below the confidence
+  threshold it never guesses; it asks the user to pick.
+- **Reads printed prescriptions** from a phone photo (Tesseract, on our server). Every line is
+  shown next to its crop and nothing is added without a tap; handwriting is flagged as
+  unreliable.
+- **Checks** pairwise interactions (DDInter 2.0, MED-RT, FDA label text), duplicated ingredients
+  and drug classes, and combination risks from a declarative rule table (bleeding, serotonin,
+  QT, sedation, potassium, kidney "triple whammy").
+- **Flags recalls and alerts**: batch-level, product-level and similar-brand matches against openFDA
+  enforcement reports and CDSCO not-of-standard-quality / spurious drug alerts.
+- **Patient context**: MED-RT contraindications (pregnancy, kidney, liver) and quoted
+  label sections to check.
+- **Works on cheap phones**: 360 px layouts, 44 px touch targets, WCAG 2.2 AA (axe-audited),
+  installable PWA, **offline checks** from an opt-in 1.4 MB data pack (clearly labelled as
+  partial), print / save as PDF, English plus Hindi and Kannada (machine-translated, marked
+  as needing review).
+- **Privacy**: no patient names or IDs are asked for; the medicine list lives only in the
+  browser tab; photos are processed in memory and never stored.
 
-Prerequisites: Docker Desktop (WSL 2 backend) and Git. Node 22 is only needed to run the
-frontend tests outside Docker. Tesseract OCR is installed inside the backend image, so you don't
-need it on Windows.
+## Screenshots (360 px phone width)
+
+| Medicine list | Results | Offline result | Prescription scan |
+|---|---|---|---|
+| ![Medicine list with a name to confirm, a batch number and patient context](docs/screenshots/1-medicine-list.png) | ![Results: headline, needs-attention card with sources, recall alert for a listed batch](docs/screenshots/3-results.png) | ![Offline partial check banner listing what was not checked](docs/screenshots/4-results-offline.png) | ![Scanned prescription lines with photo crops](docs/screenshots/5-scan-results.png) |
+
+| Autocomplete | About and offline set-up | Hindi (needs review) | Print view |
+|---|---|---|---|
+| ![Typo-tolerant autocomplete](docs/screenshots/2-autocomplete.png) | ![Data sources with licences and offline data panel](docs/screenshots/6-about-offline.png) | ![Hindi interface with machine-translation notice](docs/screenshots/7-hindi.png) | ![Print layout with all sections expanded](docs/screenshots/8-print-view.png) |
+
+## Architecture
+
+```mermaid
+flowchart LR
+  subgraph Phone["Phone browser (PWA)"]
+    UI["React + Vite + TS<br/>React Query, i18n"]
+    OFF["Offline engine (TypeScript)<br/>+ saved offline pack"]
+    UI -- "no connection" --> OFF
+  end
+  subgraph Server["Backend (FastAPI, Docker)"]
+    API["/api/v1: search, normalise,<br/>check, ocr, datasets, offline-pack"]
+    NORM["Normaliser<br/>(pure, rapidfuzz)"]
+    ENG["Interaction engine<br/>(pure) + rules.yaml"]
+    REC["Recall matcher<br/>(pure) + checklist"]
+    OCR["OCR pipeline<br/>OpenCV + Tesseract"]
+    API --> NORM & ENG & REC & OCR
+  end
+  DB[("PostgreSQL + pg_trgm<br/>ingredients, names, interactions,<br/>classes, labels, recalls, datasets")]
+  ING["Ingestion CLI<br/>python -m app.ingest"]
+  SRC["Public sources: RxNorm, DDInter,<br/>openFDA, RxClass/MED-RT, CDSCO,<br/>curated Indian brands"]
+  UI -- "HTTPS JSON" --> API
+  Server --> DB
+  SRC --> ING --> DB
+```
+
+- The **normaliser, engine and recall matcher are pure, deterministic modules** (no web or
+  database code inside), tested from plain data. The API layer only validates and serialises.
+- **Every finding carries evidence** (dataset, record id, dataset version, link or quote);
+  anything without a source is not shown.
+- The **offline engine** is a TypeScript port of the Python engine. Shared test vectors generated
+  by the Python engine keep the two identical (500/500 identical on random real-data lists).
+- Design decisions are recorded as ADRs in [docs/DECISIONS.md](docs/DECISIONS.md); the data
+  model and API are in [docs/PLAN.md](docs/PLAN.md).
+
+## Run it on Windows
+
+**Prerequisites:** Docker Desktop (WSL 2 backend) and Git. Node 22 is only needed to run the
+frontend tests and tools outside Docker. Tesseract is installed inside the backend image.
 
 ```powershell
 git clone <repo-url> prescriptrace; cd prescriptrace
-.\scripts\dev.ps1 up        # creates .env from .env.example on first run
+.\scripts\dev.ps1 up        # builds and starts db + backend + frontend; creates .env from .env.example
 ```
 
 - App: http://localhost:5173
 - API docs: http://localhost:8000/api/docs
 
-Load the datasets (first run takes 1–2 hours, mostly API calls; later runs reuse the cache):
+**Load the data** (first run 1–2 hours, mostly public API calls; re-runs reuse the cache and are
+idempotent):
 
 ```powershell
 docker compose run --rm backend python -m app.ingest all
+docker compose restart backend      # reloads the name vocabulary
 ```
 
-Other tasks: `.\scripts\dev.ps1 test | lint | fmt | migrate | logs | down`
-(`make <target>` does the same from bash).
+**Other tasks:** `.\scripts\dev.ps1 test | lint | fmt | migrate | logs | down | shell-db`
+(`make <target>` from bash).
 
-## Data licences (summary)
+**Configuration:** every setting is documented in [.env.example](.env.example) (thresholds,
+rate limits, OCR engine, optional LLM). Secrets go only in `.env`, which is never committed.
+The optional vision-LLM OCR and LLM rephrasing are **off by default**; the app works fully
+without any API key.
 
-The interaction data (DDInter 2.0) is **CC BY-NC-SA 4.0: non-commercial use only**. See
-[docs/DATA_FEASIBILITY.md](docs/DATA_FEASIBILITY.md) for every source and its licence.
+If Docker Desktop says "unable to start", quitting and relaunching it usually fixes it.
+
+## Tests and quality
+
+| | Command | Latest result |
+|---|---|---|
+| Backend (pytest, real Postgres) | `.\scripts\dev.ps1 test-backend` | 260 passed |
+| Frontend (Vitest + Testing Library) | `.\scripts\dev.ps1 test-frontend` | 52 passed |
+| Lint / types | `.\scripts\dev.ps1 lint` | ruff, mypy (strict), eslint, tsc clean |
+| Accessibility | `python scripts/a11y_audit.py` (app running; host Playwright) | 13 screens, 0 axe WCAG 2.2 AA problems |
+
+CI (GitHub Actions) runs lint, types and tests on an empty database; data-dependent tests skip
+there and run locally against the loaded data.
+
+## Evaluation (summary)
+
+Full numbers: [evaluation/results/REPORT.md](evaluation/results/REPORT.md). Method and caveats:
+[evaluation/METHODOLOGY.md](evaluation/METHODOLOGY.md). Run:
+`docker compose run --rm backend python /evaluation/run.py`.
+
+| Area | Result |
+|---|---|
+| Name recognition (222 cases) | Top-1 95.1%, top-3 95.6%; **0 wrong auto-accepts**; 0 of 12 non-medicine lines accepted. Misses are uncurated Indian brands, "HCQ", two combination phrasings. |
+| Interactions vs CRESCENDDI (BNF/ANSM/Micromedex; 4,276 interacting, 3,888 control pairs) | 88% of reference interactions warned; 55% of serious ones at "needs attention" (DDInter often grades them moderate). On negative controls: 1.2% at "needs attention", 14% at "worth checking" or higher. |
+| Prescription reading | Printed pages (6 degradations): 100% of medicine lines found, 96.9% added in one tap, 0 wrong. Handwriting-style **fonts** (not real handwriting, an upper bound): 80.6% found, 0 wrong. |
+| Speed (server, excluding network) | Search p50 7 ms; check of 5 medicines p50 30 ms, p95 72 ms (7.7 kB gzipped); OCR ~0.7–1.2 s per page. |
+
+## Data sources and licences
+
+| Source | Used for | Licence |
+|---|---|---|
+| [RxNorm Current Prescribable Content](https://www.nlm.nih.gov/research/umls/rxnorm/docs/prescribe.html) (NLM) | Ingredients, products, US brands | Public domain |
+| [DDInter 2.0](https://ddinter2.scbdd.com/download/) | Drug-drug interactions (215,168 records) | **CC BY-NC-SA 4.0: non-commercial use only**; derived data (incl. the offline pack) shared alike |
+| [openFDA drug labels](https://open.fda.gov/apis/drug/label/) | Label interaction text, patient-context notes, class flags | CC0 / public domain |
+| [openFDA drug enforcement](https://open.fda.gov/apis/drug/enforcement/) | US recalls | CC0 / public domain |
+| [CDSCO NSQ / spurious drug alerts](https://cdsco.gov.in/opencms/opencms/en/Notifications/nsq-drugs/) | Indian quality alerts (to Aug 2025) | Government of India public notices; no licence stated |
+| [NLM RxClass](https://lhncbc.nlm.nih.gov/RxNav/applications/RxClassIntro.html): FDA EPC classes, MED-RT, WHO ATC | Drug classes, contraindications | FDA: public domain; MED-RT: **terms to be confirmed**; ATC: © WHOCC, codes cited as evidence only |
+| Curated Indian brands (`backend/data/curated/`) | 25 common brands | Facts compiled by the project; every row cites its public source |
+| [CRESCENDDI](https://doi.org/10.6084/m9.figshare.c.5481408) | Evaluation only | CC0 |
+
+Details, alternatives considered and exclusions (DrugBank, TWOSIDES, RxNav interaction API) are
+in [docs/DATA_FEASIBILITY.md](docs/DATA_FEASIBILITY.md). Because of DDInter's licence, **this
+project as a whole is for non-commercial use**.
+
+## Known limitations
+
+- **Coverage is not completeness.** Interactions come from DDInter, MED-RT and FDA labels; many
+  real interactions are missing or graded differently from other references (see the
+  evaluation). "No known issues" is always worded as "found in our data".
+- **Indian brands**: only 25 curated brands are recognised by brand name. Others must be entered
+  by generic name; the app asks rather than guesses. A pharmacist should review the brand table.
+- **Indian alerts** stop at CDSCO notices published up to August 2025 (the newer portal was not
+  accessible). WHO alerts are not included.
+- **Handwriting** is not reliably read and was not tested on real prescriptions.
+- **Offline checks are partial**: no recalls, label notes, patient context or minor
+  interactions. The screen says so.
+- **Hindi and Kannada** cover the interface only and are unreviewed machine translations. The
+  warnings themselves stay in English.
+- **Open review items**: one label-derived class flag (metoclopramide) awaits review; MED-RT
+  licence terms and WHOCC ATC terms need confirmation before any wider deployment.
+
+## Project layout
+
+```
+backend/            FastAPI app, ingestion CLI, pure core modules, tests (pytest)
+  app/core/         normalise/, engine/ (rules.yaml), recalls/, ocr/, offline_pack.py, summary.py
+  data/curated/     hand-curated, sourced tables (Indian brands, INN synonyms, flag review)
+frontend/           React PWA (src/lib/offline = offline engine), tests (Vitest)
+evaluation/         harness, METHODOLOGY.md, results/
+docs/               PLAN, DATA_FEASIBILITY, DECISIONS (ADRs), screenshots
+scripts/            dev.ps1 (Windows tasks), a11y_audit.py
+data/               raw downloads and caches (git-ignored)
+```
+
+## Disclaimer
+
+PrescripTrace provides decision support for trained pharmacy and clinic staff. It is not a
+medical device, does not diagnose, prescribe or replace professional judgement, and does not
+detect counterfeit medicines. Data may be incomplete or out of date; check the dataset dates
+shown in the app. Consider confirming with the prescriber.

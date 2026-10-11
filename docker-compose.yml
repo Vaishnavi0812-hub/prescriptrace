@@ -32,6 +32,7 @@ services:
     volumes:
       - ./backend:/app
       - ./data:/data
+      - ./evaluation:/evaluation
     depends_on:
       db:
         condition: service_healthy

@@ -13,6 +13,10 @@ from app.core.normalise.parse import Strength, ocr_variants, parse
         ("2) Syp Calpol 5 ml TDS after food", "calpol 5 ml", "calpol"),
         ("Glycomet SR 500", "glycomet sr 500", "glycomet"),
         ("Rx: Pan 40 OD", "pan 40", "pan"),
+        # Found by the OCR evaluation: trailing instructions blocked the match.
+        ("Tab Thyronorm 50 1-0-0 empty stomach", "thyronorm 50", "thyronorm"),
+        ("Tab Atorva 10 at bedtime", "atorva 10", "atorva"),
+        ("Cap Omez 20 before breakfast", "omez 20", "omez"),
     ],
 )
 def test_parse_full_and_core(raw: str, full: str, core: str) -> None:

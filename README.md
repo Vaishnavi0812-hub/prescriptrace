@@ -115,7 +115,7 @@ If Docker Desktop says "unable to start", quitting and relaunching it usually fi
 
 | | Command | Latest result |
 |---|---|---|
-| Backend (pytest, real Postgres) | `.\scripts\dev.ps1 test-backend` | 260 passed |
+| Backend (pytest, real Postgres) | `.\scripts\dev.ps1 test-backend` | 265 passed |
 | Frontend (Vitest + Testing Library) | `.\scripts\dev.ps1 test-frontend` | 52 passed |
 | Lint / types | `.\scripts\dev.ps1 lint` | ruff, mypy (strict), eslint, tsc clean |
 | Accessibility | `python scripts/a11y_audit.py` (app running; host Playwright) | 13 screens, 0 axe WCAG 2.2 AA problems |
